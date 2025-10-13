@@ -1,9 +1,0 @@
-streamlit
-pandas
-folium
-streamlit-folium
-requests
-polyline
-openpyxl
-XlsxWriter
-

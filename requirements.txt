@@ -3,6 +3,7 @@ pandas
 folium
 streamlit-folium
 requests
-polyline-py
+polyline
 openpyxl
 XlsxWriter
+

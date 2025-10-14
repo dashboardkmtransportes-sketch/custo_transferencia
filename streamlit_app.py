@@ -1148,9 +1148,7 @@ with tab1:
                         🔄 Custo de Transferência
                         <span class="help-icon">ℹ️
                             <span class="tooltip-text">
-                                Calculado como:<br><b>(Custo CTRB ÷ Receita) × 100</b><br><br>
-                                CTRB = CTRB-R$ (KM) ou OS-R$ (Marcelo Lemos).<br><br>
-                                Viagens GYN/SPO: custo ÷ 2.
+                                Indica quanto do valor do frete foi gasto em custos de transporte entre filiais.
                             </span>
                         </span>
                     </div>
@@ -1158,10 +1156,38 @@ with tab1:
                 </div>
             """, unsafe_allow_html=True)
 
+
         with perf2:
-            st.markdown(f"<div class='kpi-container' style='text-align: center;'><div class='kpi-title'>📉 Custo / Faturamento</div><div class='kpi-value'>{formatar_percentual(custo_faturamento)}</div></div>", unsafe_allow_html=True)
+            st.markdown(f"""
+                <div class='kpi-container' style='text-align: center;'>
+                    <div class='kpi-title'>
+                        📊 Custo Total
+                        <span class="help-icon">ℹ️
+                            <span class="tooltip-text">
+                                Soma de CTRB + ICMS. Porcentagem do faturamento usada para cobrir os custos totais da viagem.
+                            </span>
+                        </span>
+                    </div>
+                    <div class='kpi-value'>{formatar_moeda(custo_total)}</div>
+                </div>
+            """, unsafe_allow_html=True)
+
+
         with perf3:
-            st.markdown(f"<div class='kpi-container' style='text-align: center;'><div class='kpi-title'>📈 Lucro Líquido (%)</div><div class='kpi-value'>{formatar_percentual(margem_lucro)}</div></div>", unsafe_allow_html=True)
+            st.markdown(f"""
+                <div class='kpi-container' style='text-align: center;'>
+                    <div class='kpi-title'>
+                        📈 Lucro Líquido (%)
+                        <span class="help-icon">ℹ️
+                            <span class="tooltip-text">
+                                Percentual que mostra quanto da receita permaneceu como lucro após todos os custos.
+                            </span>
+                        </span>
+                    </div>
+                    <div class='kpi-value'>{formatar_percentual(margem_lucro)}</div>
+                </div>
+            """, unsafe_allow_html=True)
+
 
         st.divider()
 

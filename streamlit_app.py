@@ -303,6 +303,43 @@ st.markdown("""
     .leaflet-container {
         background: #000;
     }
+            
+    /* --- NOVO ESTILO PARA O ÍCONE DE AJUDA (TOOLTIP) --- */
+    .help-icon {
+        position: relative; /* Necessário para o posicionamento do tooltip */
+        display: inline-block;
+        margin-left: 8px; /* Espaço entre o título e o ícone */
+        cursor: help; /* Muda o cursor para indicar que é um item de ajuda */
+    }
+
+    .help-icon .tooltip-text {
+        visibility: hidden; /* Oculta o balão de dica por padrão */
+        width: 250px; /* Largura do balão */
+        background-color: #2c3e50; /* Cor de fundo escura */
+        color: #fff; /* Cor do texto */
+        text-align: center;
+        border-radius: 6px;
+        padding: 8px;
+        border: 1px solid #3498db; /* Borda azul */
+        
+        /* Posicionamento do balão */
+        position: absolute;
+        z-index: 1;
+        bottom: 125%; /* Posiciona acima do ícone */
+        left: 50%;
+        margin-left: -125px; /* Metade da largura para centralizar */
+        
+        /* Efeito de fade */
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    /* Mostra o balão de dica ao passar o mouse sobre o ícone */
+    .help-icon:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+    }
+
     </style>
             
 """, unsafe_allow_html=True)
@@ -832,7 +869,7 @@ with tab1:
         capacidades_por_tipo = {
             'TOCO':    {'peso_kg': 10000, 'volume_m3': 55},
             'TRUCK':   {'peso_kg': 16000, 'volume_m3': 75},
-            'CAVALO':  {'peso_kg': 45000, 'volume_m3': 110},
+            'CAVALO':  {'peso_kg': 25000, 'volume_m3': 110},
             'PADRAO':  {'peso_kg': 25000, 'volume_m3': 80} # Valor padrão de segurança
         }
 
@@ -1031,15 +1068,55 @@ with tab1:
 
         # Ajuste no dicionário de KPIs financeiros para usar o título dinâmico
         kpis_financeiros = {
-            kpi_f1: {"titulo": "💵 Receita Total", "valor": formatar_moeda(receita_total), "classe": "receita"},
-            # A variável 'titulo_kpi_custo' é usada aqui
-            kpi_f2: {"titulo": titulo_kpi_custo, "valor": formatar_moeda(custo_ctrb_os), "classe": "custo"},
-            kpi_f3: {"titulo": "💸 ICMS", "valor": formatar_moeda(custo_icms), "classe": "custo"},
-            kpi_f4: {"titulo": "📊 Custo Total", "valor": formatar_moeda(custo_total), "classe": "custo"},
-            kpi_f5: {"titulo": "💰 Lucro Líquido", "valor": formatar_moeda(lucro_estimado), "classe": "lucro"},
-            kpi_f6: {"titulo": "📈 Margem de Lucro", "valor": formatar_percentual(margem_lucro), "classe": "lucro"}
+            kpi_f1: {
+                "titulo": "💵 Receita Total",
+                "valor": formatar_moeda(receita_total),
+                "classe": "receita"
+            },
+            kpi_f2: {
+                "titulo": titulo_kpi_custo,
+                "valor": formatar_moeda(custo_ctrb_os),
+                "classe": "custo"
+            },
+            kpi_f3: {
+                "titulo": "💸 ICMS",
+                "valor": formatar_moeda(custo_icms),
+                "classe": "custo"
+            },
+            kpi_f4: {
+                "titulo": """📊 Custo Total
+                    <span class="help-icon">ℹ️
+                        <span class="tooltip-text">
+                            Soma de CTRB + ICMS.<br>
+                            Representa o custo total da viagem.
+                        </span>
+                    </span>""",
+                "valor": formatar_moeda(custo_total),
+                "classe": "custo"
+            },
+            kpi_f5: {
+                "titulo": """💰 Lucro Líquido
+                    <span class="help-icon">ℹ️
+                        <span class="tooltip-text">
+                            Receita − (CTRB + ICMS).<br>
+                            Lucro final após custos.
+                        </span>
+                    </span>""",
+                "valor": formatar_moeda(lucro_estimado),
+                "classe": "lucro"
+            },
+            kpi_f6: {
+                "titulo": """📈 Margem de Lucro
+                    <span class="help-icon">ℹ️
+                        <span class="tooltip-text">
+                            (Lucro ÷ Receita) × 100.<br>
+                            Percentual de ganho líquido.
+                        </span>
+                    </span>""",
+                "valor": formatar_percentual(margem_lucro),
+                "classe": "lucro"
+            }
         }
-
 
         # Itera sobre o dicionário para criar cada KPI
         for coluna, info in kpis_financeiros.items():
@@ -1065,7 +1142,22 @@ with tab1:
         custo_faturamento = (custo_total / receita_total * 100) if receita_total > 0 else 0
 
         with perf1:
-            st.markdown(f"<div class='kpi-container' style='text-align: center;'><div class='kpi-title'>🔄 Custo de Transferência</div><div class='kpi-value'>{formatar_percentual(custo_transferencia)}</div></div>", unsafe_allow_html=True)
+            st.markdown(f"""
+                <div class='kpi-container' style='text-align: center;'>
+                    <div class='kpi-title'>
+                        🔄 Custo de Transferência
+                        <span class="help-icon">ℹ️
+                            <span class="tooltip-text">
+                                Calculado como:<br><b>(Custo CTRB ÷ Receita) × 100</b><br><br>
+                                CTRB = CTRB-R$ (KM) ou OS-R$ (Marcelo Lemos).<br><br>
+                                Viagens GYN/SPO: custo ÷ 2.
+                            </span>
+                        </span>
+                    </div>
+                    <div class='kpi-value'>{formatar_percentual(custo_transferencia)}</div>
+                </div>
+            """, unsafe_allow_html=True)
+
         with perf2:
             st.markdown(f"<div class='kpi-container' style='text-align: center;'><div class='kpi-title'>📉 Custo / Faturamento</div><div class='kpi-value'>{formatar_percentual(custo_faturamento)}</div></div>", unsafe_allow_html=True)
         with perf3:
@@ -1074,9 +1166,7 @@ with tab1:
         st.divider()
 
         # ==============================
-                # ==============================
-                # ==============================
-        # 5. DETALHES OPERACIONAIS (LÓGICA DE SOMA CORRIGIDA)
+        # 5. DETALHES OPERACIONAIS (COM NOVOS KPIS)
         # ==============================
         st.subheader("⚙️ Detalhes Operacionais")
 
@@ -1084,8 +1174,14 @@ with tab1:
         if rota_sel_visivel != "(Todos)":
             # --- MODO VIAGEM ÚNICA: Exibe detalhes específicos da viagem selecionada ---
             
+            # 1. CALCULAR OS NOVOS VALORES
+            qtd_ctrc_total = df_filtrado.get('QTDE_CTRC', pd.Series(0)).sum()
+            volumes_total = df_filtrado.get('VOLUMES', pd.Series(0)).sum()
+            
             custo_por_km = valor_por_km 
-            col1, col2, col3, col4, col5 = st.columns(5)
+            
+            # 2. AJUSTAR O NÚMERO DE COLUNAS PARA 7
+            col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
 
             # Card 1: Custo por KM
             with col1:
@@ -1114,8 +1210,26 @@ with tab1:
                     </div>
                 """, unsafe_allow_html=True)
 
-            # Card 4: Volume
+            # Card 4: QTD CTRC (NOVO)
             with col4:
+                st.markdown(f"""
+                    <div class="kpi-container" style="text-align:center;">
+                        <div class="kpi-title">📄 Qtd. CTRCs</div>
+                        <div class="kpi-value">{formatar_numero(qtd_ctrc_total)}</div>
+                    </div>
+                """, unsafe_allow_html=True)
+
+            # Card 5: VOLUMES (NOVO)
+            with col5:
+                st.markdown(f"""
+                    <div class="kpi-container" style="text-align:center;">
+                        <div class="kpi-title">📦 Volumes</div>
+                        <div class="kpi-value">{formatar_numero(volumes_total)}</div>
+                    </div>
+                """, unsafe_allow_html=True)
+
+            # Card 6: Volume M³
+            with col6:
                 volume_exibicao = volume_total
                 try:
                     if volume_exibicao > 100:
@@ -1125,13 +1239,13 @@ with tab1:
                 volume_formatado_correto = f"{volume_exibicao:,.3f}".replace(",", "X").replace(".", ",").replace("X", ".")
                 st.markdown(f"""
                     <div class="kpi-container" style="text-align:center;">
-                        <div class="kpi-title">📦 Volume (M³)</div>
+                        <div class="kpi-title">🧊 Volume (M³)</div>
                         <div class="kpi-value">{volume_formatado_correto}</div>
                     </div>
                 """, unsafe_allow_html=True)
             
-            # Card 5: Distância
-            with col5:
+            # Card 7: Distância
+            with col7:
                 st.markdown(f"""
                     <div class="kpi-container" style="text-align:center;">
                         <div class="kpi-title">🗺️ Distância (KM)</div>
@@ -1145,11 +1259,8 @@ with tab1:
             # 1. Calcula os novos KPIs agregados
             total_viagens = df_filtrado.groupby(['PLACA_CAVALO', 'DIA_EMISSAO_STR']).ngroups if not df_filtrado.empty else 0
             
-            # ▼▼▼ ALTERAÇÃO PRINCIPAL AQUI ▼▼▼
             if not df_filtrado.empty:
-                # 1. Agrupa por viagem para contar as entregas de cada uma
                 entregas_por_viagem = df_filtrado.groupby(['PLACA_CAVALO', 'DIA_EMISSAO_STR'])['DEST_MANIF'].nunique()
-                # 2. Soma o resultado para obter o total correto
                 total_entregas = entregas_por_viagem.sum()
             else:
                 total_entregas = 0
@@ -1168,7 +1279,7 @@ with tab1:
                     </div>
                 """, unsafe_allow_html=True)
 
-            # Card 2: Total de Entregas (AGORA COM O VALOR CORRETO)
+            # Card 2: Total de Entregas
             with col2:
                 st.markdown(f"""
                     <div class="kpi-container" style="text-align:center;">
@@ -1203,8 +1314,6 @@ with tab1:
                         <div class="kpi-value">{formatar_numero(distancia_estimada_km, casas_decimais=0)} KM</div>
                     </div>
                 """, unsafe_allow_html=True)
-
-
 
         st.divider()
 
@@ -1280,18 +1389,35 @@ with tab1:
             color: #FFFFFF;
         }
 
-        /* O resto do seu CSS continua igual */
-        .info-ociosidade {
-            margin-top: 6px;
-            font-size: 1.1rem;
-            color: #FFFFFF;
-            font-weight: 500;
+        /* --- NOVO ESTILO PARA OS CARDS DE OCIOSIDADE --- */
+        .ociosidade-card {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); /* Gradiente cinza-azulado */
+            border-radius: 10px;
+            padding: 12px 18px;
+            margin-top: 8px;
+            border: 1px solid #4a5568;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .ociosidade-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #e2e8f0; /* Texto mais claro */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ociosidade-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ffffff;
+            background-color: rgba(0,0,0,0.2);
+            padding: 4px 10px;
+            border-radius: 6px;
         }
 
-        .info-ociosidade b {
-            font-weight: 700;
-            color: #d1d5db;
-        }
         </style>
         """, unsafe_allow_html=True)
 
@@ -1326,13 +1452,18 @@ with tab1:
             </div>
             """, unsafe_allow_html=True)
             
-            # 🔹 Informativo de Ociosidade (CÓDIGO ATUALIZADO)
+            # 🔹 Informativo de Ociosidade (NOVO DESIGN)
             st.markdown(f"""
-            <div class="info-ociosidade">
-                ⚖️ <b>Ociosidade de Peso:</b> {ociosidade_peso:.1f}% 
-                ({capacidade_peso_kg - peso_total:,.0f} KG livres)
+            <div class="ociosidade-card">
+                <div class="ociosidade-label">
+                    <i class="fa-solid fa-scale-unbalanced-flip"></i> Ociosidade de Peso KG
+                </div>
+                <div class="ociosidade-value">
+                    {ociosidade_peso:.1f}% | {capacidade_peso_kg - peso_total:,.0f} KG livres
+                </div>
             </div>
             """, unsafe_allow_html=True)
+
 
         # --- Cartão de Ocupação de Volume ---
         with col2:
@@ -1353,13 +1484,18 @@ with tab1:
             </div>
             """, unsafe_allow_html=True)
 
-            # 🔹 Informativo de Ociosidade (CÓDIGO ATUALIZADO)
+            # 🔹 Informativo de Ociosidade (NOVO DESIGN)
             st.markdown(f"""
-            <div class="info-ociosidade">
-                📦 <b>Ociosidade de Volume:</b> {ociosidade_volume:.1f}% 
-                ({capacidade_volume_m3 - volume_total_m3:,.3f} M³ livres)
+            <div class="ociosidade-card">
+                <div class="ociosidade-label">
+                    <i class="fa-solid fa-box-open"></i> Ociosidade de Volume M³
+                </div>
+                <div class="ociosidade-value">
+                    {ociosidade_volume:.1f}% | {capacidade_volume_m3 - volume_total_m3:,.3f} M³ livres
+                </div>
             </div>
             """, unsafe_allow_html=True)
+
 
 
         st.divider()

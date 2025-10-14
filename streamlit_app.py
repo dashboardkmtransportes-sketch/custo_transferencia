@@ -1527,7 +1527,7 @@ with tab1:
         st.divider()
        
         # ==============================
-        # 8. TABELA RESUMIDA (VERSÃO FINAL COM NUM_MANIF)
+        # 8. TABELA RESUMIDA (VERSÃO FINAL COM NUM_MANIF E DESTAQUE)
         # ==============================
         st.subheader("📋 Resumo das Viagens no Período")
 
@@ -1590,26 +1590,29 @@ with tab1:
             resumo_viagens['Custo (CTRB/OS)'] = resumo_viagens.apply(calcular_custo_final, axis=1)
             resumo_viagens['Nº Documento Custo'] = resumo_viagens.apply(obter_numero_documento, axis=1)
 
-            # ✅ NOVA COLUNA CTRB/Frete (%)
-            def calcular_ctrb_frete(row):
+            # --- INÍCIO DA ATUALIZAÇÃO PARA ESTILO ---
+            # 1. Função para calcular o valor NUMÉRICO do percentual
+            def calcular_ctrb_frete_numerico(row):
                 try:
-                    # Usa valores numéricos já tratados pelo conversor robusto
                     custo = float(row['Custo (CTRB/OS)'])
                     frete = float(row['FRETE-R$'])
                     destino = str(row.get('DEST_MANIF', '')).upper()
 
-                    # Divide o custo por 2 se o destino tiver GYN ou SPO
                     if "GYN" in destino or "SPO" in destino:
                         custo /= 2
 
                     if frete > 0:
-                        return f"{(custo / frete) * 100:.1f}%".replace(".", ",")
-                    return "-"
-                except Exception:
-                    return "-"
+                        return (custo / frete) * 100
+                    return 0.0
+                except (ValueError, TypeError):
+                    return 0.0
                     
-            resumo_viagens['CTRB/Frete (%)'] = resumo_viagens.apply(calcular_ctrb_frete, axis=1)
-
+            # 2. Cria a coluna numérica auxiliar para o gradiente
+            resumo_viagens['CTRB/Frete (%)_valor'] = resumo_viagens.apply(calcular_ctrb_frete_numerico, axis=1)
+            
+            # 3. Cria a coluna de texto para exibição
+            resumo_viagens['CTRB/Frete (%)'] = resumo_viagens['CTRB/Frete (%)_valor'].apply(lambda x: f"{x:.1f}%".replace(".", ","))
+            # --- FIM DA ATUALIZAÇÃO PARA ESTILO ---
 
             # Formatação
             resumo_viagens['EMIS_MANIF'] = pd.to_datetime(resumo_viagens['EMIS_MANIF']).dt.strftime('%d/%m/%Y')
@@ -1643,7 +1646,7 @@ with tab1:
 
             colunas_para_exibir = [col for col in ordem_final if col in resumo_viagens.columns]
 
-            # ✅ Compacta a coluna "Nº Manifesto"
+            # Compacta a coluna "Nº Manifesto"
             def resumir_manifestos(valor):
                 if not valor or pd.isna(valor):
                     return ""
@@ -1656,15 +1659,28 @@ with tab1:
             if 'Nº Manifesto' in resumo_viagens.columns:
                 resumo_viagens['Nº Manifesto'] = resumo_viagens['Nº Manifesto'].apply(resumir_manifestos)
 
-            # Exibe a tabela
+            # --- EXIBIÇÃO DA TABELA COM DESTAQUE ---
+            # Cria uma cópia para não afetar o DataFrame que será exportado para Excel
+            df_para_exibir = resumo_viagens[colunas_para_exibir].copy()
+
+            # Aplica o estilo de gradiente
+            styled_df = df_para_exibir.style.background_gradient(
+                cmap='Reds',  # Mapa de cores (vermelhos)
+                subset=['CTRB/Frete (%)'], # Coluna alvo para o estilo
+                gmap=resumo_viagens['CTRB/Frete (%)_valor'] # Usa os valores numéricos para calcular o gradiente
+            )
+
+            # Exibe a tabela estilizada
             st.dataframe(
-                resumo_viagens[colunas_para_exibir],
+                styled_df,
                 use_container_width=True,
                 hide_index=True
             )
+            # --- FIM DA EXIBIÇÃO COM DESTAQUE ---
 
             # --- BOTÃO PARA DOWNLOAD ---
             try:
+                # Exporta o DataFrame original, sem o estilo
                 excel_bytes = to_excel(resumo_viagens)
                 import base64
                 b64 = base64.b64encode(excel_bytes).decode()

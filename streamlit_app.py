@@ -50,69 +50,6 @@ st.markdown("""
     }
     /* ▲▲▲ FIM DO NOVO ESTILO ▲▲▲ */
             
-    /* ▼▼▼ ADICIONE ESTE NOVO BLOCO DE CSS ▼▼▼ */
-
-/* --- TABELA HTML CUSTOMIZADA --- */
-.custom-html-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    font-size: 14px;
-}
-.custom-html-table th, .custom-html-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #2C3E50;
-}
-.custom-html-table th {
-    background-color: #1A1D29;
-    color: #9CA3AF;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-.custom-html-table tr {
-    background-color: #1f2937;
-    transition: background-color 0.2s ease;
-}
-.custom-html-table tr:hover {
-    background-color: #2c3e50;
-}
-
-/* --- COMPONENTE EXPANSÍVEL (DETAILS/SUMMARY) --- */
-.manifesto-expander {
-    font-family: inherit;
-}
-.manifesto-expander summary {
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: #A5B4FC; /* Cor de destaque para indicar interatividade */
-    list-style: none; /* Remove o marcador padrão */
-}
-.manifesto-expander summary::-webkit-details-marker {
-    display: none; /* Remove o marcador no Chrome/Safari */
-}
-.manifesto-expander summary::before {
-    content: '\\f0fe'; /* Ícone de mais (quadrado) do Font Awesome */
-    font-family: "Font Awesome 6 Free";
-    font-weight: 900;
-    transition: transform 0.2s;
-}
-.manifesto-expander[open] > summary::before {
-    content: '\\f146'; /* Ícone de menos (quadrado) */
-    transform: rotate(180deg);
-}
-.manifesto-list {
-    padding-left: 25px;
-    margin-top: 8px;
-    list-style-type: none;
-}
-.manifesto-list li {
-    margin-bottom: 4px;
-}
-/* ▲▲▲ FIM DO NOVO BLOCO DE CSS ▲▲▲ */
 
     /* --- GERAL --- */
     body {
@@ -1433,7 +1370,7 @@ with tab1:
         st.subheader("📋 Resumo das Viagens no Período")
 
         df_viagens = df_filtrado.copy()
-        
+
         if not df_viagens.empty:
             # Garante que a coluna de identificação da viagem exista
             if 'VIAGEM_ID' not in df_viagens.columns:
@@ -1446,8 +1383,7 @@ with tab1:
             # Agrupamento que funciona para um ou múltiplos grupos
             resumo_viagens = df_viagens.groupby('VIAGEM_ID').agg(
                 EMISSÃO=('EMIS_MANIF', 'first'),
-                # ▼▼▼ ALTERAÇÃO 1: Adicionada a agregação para NUM_MANIF ▼▼▼
-                NUM_MANIF_LISTA=('NUM_MANIF', juntar_unicos),
+                NUM_MANIF_LISTA=('NUM_MANIF', lambda x: f"{x.dropna().astype(str).iloc[0]} (+{len(x.dropna().unique()) - 1})" if len(x.dropna().unique()) > 1 else x.dropna().astype(str).iloc[0]),
                 MOTORISTA=('MOTORISTA', 'first'),
                 PLACA=('PLACA_CAVALO', 'first'),
                 TIPO_VEICULO=('TIPO_CAVALO', 'first'),
@@ -1470,14 +1406,12 @@ with tab1:
             # Renomeia as colunas para um formato consistente
             resumo_viagens.rename(columns={
                 'VIAGEM_ID': 'VIAGEM', 'EMISSÃO': 'EMIS_MANIF', 'PLACA': 'PLACA_CAVALO', 
-                'TIPO_VEICULO': 'TIPO_CAVALO',
-                'DESTINOS': 'DEST_MANIF', 
+                'TIPO_VEICULO': 'TIPO_CAVALO', 'DESTINOS': 'DEST_MANIF', 
                 'PROPRIETARIO': 'PROPRIETARIO_CAVALO', 'CUSTO_OS_TOTAL': 'OS-R$', 
-                'CUSTO_CTRB_TOTAL': 'CTRB-R$', 'FRETE_TOTAL': 'FRETE-R$',
+                'CUSTO_CTRB_TOTAL': 'CTRB-R$', 'FRETE_TOTAL': 'FRETE-R$', 
                 'NUM_OS_LISTA': 'NUM_OS', 'NUM_CTRB_LISTA': 'NUM_CTRB', 
-                'ICMS': 'ICMS-R$', 'PESO_KG': 'PESO REAL (KG)', 'VALOR_MERCADORIA': 'MERCADORIA-R$',
-                # Mantém o nome da nova coluna para renomeação posterior
-                'NUM_MANIF_LISTA': 'NUM_MANIF'
+                'ICMS': 'ICMS-R$', 'PESO_KG': 'PESO REAL (KG)', 
+                'VALOR_MERCADORIA': 'MERCADORIA-R$', 'NUM_MANIF_LISTA': 'NUM_MANIF'
             }, inplace=True)
 
             # --- PROCESSAMENTO UNIFICADO ---
@@ -1494,6 +1428,27 @@ with tab1:
             resumo_viagens['Custo (CTRB/OS)'] = resumo_viagens.apply(calcular_custo_final, axis=1)
             resumo_viagens['Nº Documento Custo'] = resumo_viagens.apply(obter_numero_documento, axis=1)
 
+            # ✅ NOVA COLUNA CTRB/Frete (%)
+            def calcular_ctrb_frete(row):
+                try:
+                    # Usa valores numéricos já tratados pelo conversor robusto
+                    custo = float(row['Custo (CTRB/OS)'])
+                    frete = float(row['FRETE-R$'])
+                    destino = str(row.get('DEST_MANIF', '')).upper()
+
+                    # Divide o custo por 2 se o destino tiver GYN ou SPO
+                    if "GYN" in destino or "SPO" in destino:
+                        custo /= 2
+
+                    if frete > 0:
+                        return f"{(custo / frete) * 100:.1f}%".replace(".", ",")
+                    return "-"
+                except Exception:
+                    return "-"
+                    
+            resumo_viagens['CTRB/Frete (%)'] = resumo_viagens.apply(calcular_ctrb_frete, axis=1)
+
+
             # Formatação
             resumo_viagens['EMIS_MANIF'] = pd.to_datetime(resumo_viagens['EMIS_MANIF']).dt.strftime('%d/%m/%Y')
             resumo_viagens['Custo (CTRB/OS)'] = resumo_viagens['Custo (CTRB/OS)'].astype(float).apply(formatar_moeda)
@@ -1509,7 +1464,6 @@ with tab1:
             # Renomeação final para exibição
             resumo_viagens.rename(columns={
                 'EMIS_MANIF': 'EMISSÃO',
-                # ▼▼▼ ALTERAÇÃO 2: Renomeado o cabeçalho da coluna para exibição ▼▼▼
                 'NUM_MANIF': 'Nº Manifesto',
                 'PLACA_CAVALO': 'PLACA',
                 'TIPO_CAVALO': 'TIPO',
@@ -1519,39 +1473,44 @@ with tab1:
             }, inplace=True)
 
             # Ordem final das colunas
-            # ▼▼▼ ALTERAÇÃO 3: Adicionada a coluna 'Nº Manifesto' depois de 'EMISSÃO' ▼▼▼
             ordem_final = [
                 'VIAGEM', 'EMISSÃO', 'Nº Manifesto', 'MOTORISTA', 'DESTINOS', 'ENTREGAS', 
-                'PLACA', 'TIPO', 'Nº CTRB/OS', 'Custo (CTRB/OS)', 'FRETE-R$',
+                'PLACA', 'TIPO', 'Nº CTRB/OS', 'Custo (CTRB/OS)', 'CTRB/Frete (%)', 'FRETE-R$',
                 'ICMS-R$', 'PESO REAL (KG)', 'M3', 'VOLUMES', 'Qtd. CTRCs', 'MERCADORIA-R$'
             ]
-            
+
             colunas_para_exibir = [col for col in ordem_final if col in resumo_viagens.columns]
 
+            # ✅ Compacta a coluna "Nº Manifesto"
+            def resumir_manifestos(valor):
+                if not valor or pd.isna(valor):
+                    return ""
+                manifestos = [m.strip() for m in str(valor).split(",") if m.strip()]
+                if len(manifestos) > 2:
+                    return f"{manifestos[0]}, {manifestos[1]} (+{len(manifestos)-2})"
+                else:
+                    return ", ".join(manifestos)
+
+            if 'Nº Manifesto' in resumo_viagens.columns:
+                resumo_viagens['Nº Manifesto'] = resumo_viagens['Nº Manifesto'].apply(resumir_manifestos)
+
+            # Exibe a tabela
             st.dataframe(
                 resumo_viagens[colunas_para_exibir],
                 use_container_width=True,
                 hide_index=True
             )
 
-            # --- BOTÃO PARA DOWNLOAD DOS DADOS FILTRADOS (VERSÃO CUSTOMIZADA) ---
+            # --- BOTÃO PARA DOWNLOAD ---
             try:
-                # Usa a função to_excel existente no seu código
                 excel_bytes = to_excel(resumo_viagens)
-
-                # 1. Converte os bytes para base64 para usar em um link HTML
                 import base64
                 b64 = base64.b64encode(excel_bytes).decode()
-
-                # 2. Cria o link de download com o estilo customizado
                 href = f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="resumo_viagens_filtradas.xlsx" class="custom-download-button"><i class="fa-solid fa-file-excel"></i> Download Tabela (Excel)</a>'
-                
-                # 3. Exibe o botão usando st.markdown
                 st.markdown(href, unsafe_allow_html=True)
-
             except Exception as e:
                 st.error(f"❌ Erro ao gerar o arquivo Excel: {e}")
-            
+
 
 # --- ABA 2: ANÁLISE FINANCEIRA ---
 with tab2:
@@ -1810,11 +1769,35 @@ with tab4:
         resumo_viagens['VOLUMES'] = resumo_viagens['VOLUMES'].astype(int)
         resumo_viagens['ENTREGAS'] = resumo_viagens['ENTREGAS'].astype(int)
 
+        # --- CALCULA CTRB/FRETE (%) ---
+        def calcular_ctrb_frete(row):
+            try:
+                custo = float(str(row['Custo (CTRB/OS)']).replace("R$", "").replace(".", "").replace(",", "."))
+                frete = float(str(row['FRETE']).replace("R$", "").replace(".", "").replace(",", "."))
+
+                # ✅ Regra especial: se o destino tiver GYN ou SPO, divide o custo por 2
+                destino = str(row.get('DESTINOS') or row.get('Destinos da Rota') or "").upper()
+                if "GYN" in destino or "SPO" in destino:
+                    custo = custo / 2
+
+                if frete > 0:
+                    percentual = (custo / frete) * 100
+                    return f"{percentual:,.1f}%".replace(".", ",")
+                else:
+                    return "-"
+            except Exception:
+                return "-"
+
+        # Cria a nova coluna
+        resumo_viagens["CTRB/Frete (%)"] = resumo_viagens.apply(calcular_ctrb_frete, axis=1)
+
+
         # 5. DEFINE A ORDEM FINAL E EXIBE A TABELA
         # ▼▼▼ 3. ALTERAÇÃO: Usa o novo nome na ordem de exibição ▼▼▼
         ordem_final = [
-            '🧭 Viagem', 'EMISSÃO', 'PLACA', 'DESTINOS', 'ENTREGAS', 'Custo (CTRB/OS)', 'CTRB/Frete (%)', 
-            'FRETE', 'ICMS', 'LUCRO', 'MARGEM_%', 'PESO_KG', 'M3', 'VOLUMES', 'VALOR_MERC'
+            '🧭 Viagem', 'EMISSÃO', 'PLACA', 'DESTINOS', 'ENTREGAS',
+            'Custo (CTRB/OS)', 'CTRB/Frete (%)', 'FRETE', 'ICMS',
+            'LUCRO', 'MARGEM_%', 'PESO_KG', 'M3', 'VOLUMES', 'VALOR_MERC'
         ]
         # ▲▲▲ Fim da alteração 3 ▲▲▲
 
@@ -1828,8 +1811,10 @@ with tab4:
 
         # Atualiza a lista final com os nomes renomeados
         ordem_final_renomeada = [
-            '🧭 Viagem', 'EMISSÃO', 'PLACA', 'Destinos da Rota', 'ENTREGAS', 'Custo (CTRB/OS)', 'CTRB/Frete (%)',
-            'FRETE', 'ICMS', 'LUCRO', 'MARGEM_%', 'Peso Total', 'Volume Total (M³)', 'Volumes Totais', 'Valor Mercadoria'
+            '🧭 Viagem', 'EMISSÃO', 'PLACA', 'Destinos da Rota', 'ENTREGAS',
+            'Custo (CTRB/OS)', 'CTRB/Frete (%)', 'FRETE', 'ICMS',
+            'LUCRO', 'MARGEM_%', 'Peso Total', 'Volume Total (M³)',
+            'Volumes Totais', 'Valor Mercadoria'
         ]
 
         st.dataframe(
@@ -2405,5 +2390,3 @@ with tab5:
 
         except Exception as e:
             st.error(f"❌ Erro ao gerar o arquivo Excel: {e}")
-
-

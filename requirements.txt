@@ -7,3 +7,5 @@ requests
 polyline
 matplotlib
 xlsxwriter
+streamlit-option-menu
+

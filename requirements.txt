@@ -1,9 +1,9 @@
 streamlit
 pandas
-openpyxl 
+openpyxl
 folium
 streamlit-folium
 requests
 polyline
-matplotlib 
+matplotlib
 xlsxwriter

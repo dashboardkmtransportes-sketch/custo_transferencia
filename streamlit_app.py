@@ -8,6 +8,8 @@ from datetime import date
 from io import BytesIO
 import requests
 import polyline # Biblioteca para decodificar a geometria da rota
+from streamlit_option_menu import option_menu
+
 
 # --- 1. CONFIGURAÇÕES DA PÁGINA E ESTILO ---
 st.set_page_config(
@@ -19,6 +21,7 @@ st.set_page_config(
 # CSS para customizar a aparência do título baseado na imagem de referência
 st.markdown("""
     <style>
+            
     /* --- IMPORTANDO FONTES E ÍCONES --- */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap' );
     @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css' ); /* <<< ADICIONE ESTA LINHA */
@@ -683,8 +686,6 @@ with st.sidebar.expander("👨‍✈️ Filtros de Viagem", expanded=True):
             Ordena uma lista de siglas de destino com base no dicionário 'ordem_geografica'.
             Destinos não mapeados são colocados no final, em ordem alfabética.
             """
-            # O 'key' usa o dicionário para obter o valor de ordenação.
-            # O 'get(d, 99)' garante que destinos não encontrados na ordem fiquem por último (valor 99).
             return sorted(destinos_unicos, key=lambda d: ordem_geografica.get(d, 99))
 
         # 3. AGRUPAR E APLICAR A ORDENAÇÃO
@@ -694,10 +695,22 @@ with st.sidebar.expander("👨‍✈️ Filtros de Viagem", expanded=True):
             Destinos=('DEST_MANIF', lambda x: ' - '.join(ordenar_destinos(x.unique())))
         ).reset_index()
 
-        # Agora diferenciamos as rotas também pelo motorista
+        # --- INÍCIO DA ALTERAÇÃO ---
+
+        # Função para formatar o nome do motorista (primeiro e último)
+        def formatar_nome_motorista(nome_completo):
+            partes = str(nome_completo).split()
+            if len(partes) > 1:
+                return f"{partes[0]} {partes[-1]}"
+            return nome_completo # Retorna o nome original se tiver só uma palavra
+
+        # Aplica a função para criar uma coluna com o nome curto
+        rotas_df['NOME_CURTO_MOTORISTA'] = rotas_df['MOTORISTA'].apply(formatar_nome_motorista)
+
+        # Agora, cria o NOME_ROTA usando o nome curto
         rotas_df['NOME_ROTA'] = (
-            "📍 " + rotas_df['Destinos'] + " 👨‍✈️ " +
-            rotas_df['MOTORISTA'].str.split().str[:2].str.join(" ")
+            "📍 " + rotas_df['Destinos'] + 
+            " 👨‍✈️ " + rotas_df['NOME_CURTO_MOTORISTA']
         )
 
         lista_rotas_visiveis = ["(Todos)"] + sorted(rotas_df['NOME_ROTA'].unique())
@@ -893,11 +906,23 @@ with tab1:
 
 
         # Infos de identificação (necessárias para os cálculos seguintes)
-        motorista_principal = df_filtrado['MOTORISTA'].iloc[0]
+        nome_completo_motorista = df_filtrado['MOTORISTA'].iloc[0]
+
+        # --- LÓGICA PARA PEGAR O PRIMEIRO E ÚLTIMO NOME ---
+        partes_nome = nome_completo_motorista.split()
+        if len(partes_nome) > 1:
+            # Junta o primeiro nome (partes_nome[0]) com o último (partes_nome[-1])
+            motorista_principal = f"{partes_nome[0]} {partes_nome[-1]}"
+        else:
+            # Caso o nome tenha apenas uma palavra, usa o nome completo
+            motorista_principal = nome_completo_motorista
+        # --- FIM DA LÓGICA ---
+
         placa_cavalo = df_filtrado['PLACA_CAVALO'].iloc[0]
         placa_carreta = df_filtrado['PLACA_CARRETA'].iloc[0] if 'PLACA_CARRETA' in df_filtrado.columns else "N/A"
         tipo_veiculo = df_filtrado['TIPO_CAVALO'].iloc[0] if 'TIPO_CAVALO' in df_filtrado.columns else "N/A"
         proprietario_veiculo = df_filtrado['PROPRIETARIO_CAVALO'].iloc[0] if 'PROPRIETARIO_CAVALO' in df_filtrado.columns else "N/A"
+
         
         # --- CÁLCULO DE DISTÂNCIA ESTIMADA (POSICIONADO CORRETAMENTE) ---
         custo_km_por_tipo = {
@@ -934,11 +959,11 @@ with tab1:
 
 
         # ==============================
-        # 2. CABEÇALHO EXECUTIVO COM ÍCONES
+        # 2. CABEÇALHO EXECUTIVO COM ÍCONES (7 KPIs)
         # ==============================
-        st.markdown(f"""
+        st.markdown("""
         <style>
-        .card-info {{
+        .card-info {
             background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
             border-radius: 14px;
             padding: 20px;
@@ -946,52 +971,99 @@ with tab1:
             box-shadow: 0 6px 16px rgba(0,0,0,0.3);
             text-align: center;
             transition: all 0.3s ease;
-        }}
-        .card-info:hover {{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 110px;
+        }
+        .card-info:hover {
             transform: translateY(-3px);
             border-color: #3b82f6;
             box-shadow: 0 10px 24px rgba(59,130,246,0.4);
-        }}
-        .card-title {{
+        }
+        .card-title {
             font-size: 14px;
             font-weight: 600;
             color: #9ca3af;
             text-transform: uppercase;
             margin-bottom: 8px;
-        }}
-        .card-value {{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .card-value {
             font-size: 22px;
             font-weight: 700;
             color: #fff;
             line-height: 1.3;
-        }}
+        }
         </style>
+        """, unsafe_allow_html=True)
 
-        <div style="display:flex; flex-wrap:wrap; gap:15px; justify-content:space-around; margin:15px 0;">
-            <div class="card-info" style="flex:1; min-width:180px;">
+        # Cria 7 colunas para acomodar todos os KPIs
+        kpi1, kpi2, kpi3, kpi4, kpi5, kpi6, kpi7 = st.columns(7)
+
+        with kpi1:
+            st.markdown(f"""
+            <div class="card-info">
                 <div class="card-title"><i class="fa-solid fa-user-tie"></i> Motorista</div>
                 <div class="card-value">{motorista_principal}</div>
             </div>
-            <div class="card-info" style="flex:1; min-width:180px;">
-                <div class="card-title"><i class="fa-solid fa-truck"></i> Veículo</div>
-                <div class="card-value">{placa_cavalo} ({tipo_veiculo})</div>
+            """, unsafe_allow_html=True)
+
+        # --- KPI PLACA CAVALO (RENOMEADO) ---
+        with kpi2:
+            st.markdown(f"""
+            <div class="card-info">
+                <div class="card-title"><i class="fa-solid fa-truck-front"></i> Placa Cavalo</div>
+                <div class="card-value">{placa_cavalo}</div>
             </div>
-            <div class="card-info" style="flex:1; min-width:180px;">
+            """, unsafe_allow_html=True)
+
+        # --- NOVO KPI: PLACA CARRETA ---
+        with kpi3:
+            st.markdown(f"""
+            <div class="card-info">
+                <div class="card-title"><i class="fa-solid fa-trailer"></i> Placa Carreta</div>
+                <div class="card-value">{placa_carreta}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with kpi4:
+            st.markdown(f"""
+            <div class="card-info">
+                <div class="card-title"><i class="fa-solid fa-gear"></i> Tipo Veículo</div>
+                <div class="card-value">{tipo_veiculo}</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with kpi5:
+            proprietario_curto = 'KM TRANSPORTES' if proprietario_veiculo == 'KM TRANSPORTES ROD. DE CARGAS LTDA' else proprietario_veiculo
+            st.markdown(f"""
+            <div class="card-info">
                 <div class="card-title"><i class="fa-solid fa-building-user"></i> Proprietário</div>
-                <div class="card-value">
-                    {'KM TRANSPORTES' if proprietario_veiculo == 'KM TRANSPORTES ROD. DE CARGAS LTDA' else proprietario_veiculo}
-                </div>
+                <div class="card-value">{proprietario_curto}</div>
             </div>
-            <div class="card-info" style="flex:1; min-width:180px;">
+            """, unsafe_allow_html=True)
+
+        with kpi6:
+            st.markdown(f"""
+            <div class="card-info">
                 <div class="card-title"><i class="fa-solid fa-map-location-dot"></i> Destino</div>
                 <div class="card-value">{destino_principal}</div>
             </div>
-            <div class="card-info" style="flex:1; min-width:180px;">
+            """, unsafe_allow_html=True)
+
+        with kpi7:
+            st.markdown(f"""
+            <div class="card-info">
                 <div class="card-title"><i class="fa-solid fa-calendar-day"></i> Emissão</div>
                 <div class="card-value">{data_emissao.strftime('%d/%m/%Y')}</div>
             </div>
-        </div>
-        """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
+
+
 
 
         # ==============================
@@ -1343,195 +1415,571 @@ with tab1:
 
         st.divider()
 
-        # ==============================
-        # ==============================
-        # 6. OCIOSIDADE (VERSÃO MODERNA COM BARRAS DE PROGRESSO)
-        # ==============================
-        st.subheader("📊 Análise de Ocupação da Carga")
-
-        # --- CSS para os cartões de progresso ---
+        # 🌟 CSS PROFISSIONAL PARA OS CARDS E O NOVO TÍTULO
         st.markdown("""
         <style>
-        /* ▼▼▼ NOME DA CLASSE ALTERADO PARA SER MAIS ESPECÍFICO ▼▼▼ */
-        .ocupacao-card-custom {
-            background: linear-gradient(135deg, #1e2139 0%, #262a47 100%);
-            border-radius: 12px;
-            padding: 24px;
-            border: 1px solid #3a4063;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            margin-bottom: 1rem;
+            /* Estilo para o título principal da seção */
+            .titulo-secao-centralizado {
+                font-size: 1.5rem; /* Tamanho da fonte */
+                font-weight: 700; /* Negrito */
+                color: #EAEAEA; /* Cor do texto */
+                text-align: center; /* Centraliza o texto */
+                margin-bottom: 25px; /* Espaço abaixo do título */
+                display: flex; /* Habilita o flexbox para alinhar ícone e texto */
+                align-items: center; /* Alinha verticalmente */
+                justify-content: center; /* Centraliza horizontalmente */
+                gap: 12px; /* Espaço entre o ícone e o texto */
+            }
+            
+            /* Cor específica para o ícone do título */
+            .titulo-secao-centralizado .fa-scale-balanced {
+                color: #4ADE80; /* Verde claro, como no exemplo */
+            }
 
-            /* CONTROLE DE ALTURA E ALINHAMENTO */
-            min-height: 180px;      /* <--- AUMENTEI UM POUCO PARA VER A DIFERENÇA */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+            .frota-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
 
-        /* Ajustes para os elementos internos do novo card */
-        .ocupacao-card-custom .progress-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
+            .ocupacao-card-custom {
+                background-color: #1E1E2E;
+                border-radius: 14px;
+                padding: 18px;
+                margin-bottom: 16px;
+                box-shadow: 0px 2px 6px rgba(0,0,0,0.3);
+                transition: transform 0.2s ease;
+            }
+            .ocupacao-card-custom:hover {
+                transform: scale(1.01);
+            }
 
-        .ocupacao-card-custom .progress-card-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #E5E7EB;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+            .progress-card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+            .progress-card-title {
+                font-size: 1rem;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .progress-card-value {
+                font-size: 1.4rem;
+                font-weight: 700;
+            }
 
-        .ocupacao-card-custom .progress-card-value {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: #7c3aed;
-        }
+            .progress-bar-container {
+                width: 100%;
+                height: 10px;
+                background-color: #3A3A4A;
+                border-radius: 4px;
+                overflow: hidden;
+                margin-bottom: 10px;
+            }
+            .ocupacao-card-custom .progress-bar-fill {
+                height: 10px;
+                background: linear-gradient(90deg, #7C3AED, #8B5CF6); /* Roxo para Truck */
+            }
+            .ocupacao-card-cavalo .progress-bar-fill {
+                height: 10px;
+                background: linear-gradient(90deg, #F97316, #FB923C); /* Laranja para Carreta */
+            }
 
-        .ocupacao-card-custom .progress-bar-container {
-            width: 100%;
-            background-color: #374151;
-            border-radius: 8px;
-            height: 16px;
-            overflow: hidden;
-            margin-top: 12px;
-        }
-
-        .ocupacao-card-custom .progress-bar-fill {
-            height: 100%;
-            border-radius: 8px;
-            background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
-            transition: width 0.5s ease-in-out;
-        }
-
-        .ocupacao-card-custom .progress-card-footer {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
-            font-size: 0.8rem;
-            color: #FFFFFF;
-        }
-
-        /* --- NOVO ESTILO PARA OS CARDS DE OCIOSIDADE --- */
-        .ociosidade-card {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); /* Gradiente cinza-azulado */
-            border-radius: 10px;
-            padding: 12px 18px;
-            margin-top: 8px;
-            border: 1px solid #4a5568;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .ociosidade-label {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #e2e8f0; /* Texto mais claro */
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .ociosidade-value {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #ffffff;
-            background-color: rgba(0,0,0,0.2);
-            padding: 4px 10px;
-            border-radius: 6px;
-        }
-
+            .progress-card-footer {
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.9rem;
+                color: #d1d1d1;
+            }
         </style>
         """, unsafe_allow_html=True)
 
+        # 1. O TÍTULO AGORA VEM PRIMEIRO E USA O NOVO ESTILO CENTRALIZADO
+        st.markdown("<div class='titulo-secao-centralizado'><i class='fa-solid fa-scale-balanced'></i> Análise de Ocupação de Carga - Por Tipo de Veículo</div>", unsafe_allow_html=True)
 
+        # ===============================================
+        # 🧭 OPTION MENU DE SELEÇÃO DE FROTA (LÓGICA ATUALIZADA)
+        # ===============================================
 
-        # --- Cálculos ---
-        # Ocupação é o inverso da ociosidade
-        ocupacao_peso_perc = (peso_total / capacidade_peso_kg) * 100 if capacidade_peso_kg > 0 else 0
-        ocupacao_peso_perc = min(ocupacao_peso_perc, 100)
+        # Define um valor padrão inicial
+        frota_default = "AMBAS"
 
-        ocupacao_volume_perc = (volume_total_m3 / capacidade_volume_m3) * 100 if capacidade_volume_m3 > 0 else 0
-        ocupacao_volume_perc = min(ocupacao_volume_perc, 100)
-
-        col1, col2 = st.columns(2)
-
-        # --- Cartão de Ocupação de Peso ---
-        with col1:
-            # ▼▼▼ ALTERAÇÃO AQUI: class="progress-card" virou class="ocupacao-card-custom" ▼▼▼
-            st.markdown(f"""
-            <div class="ocupacao-card-custom"> 
-                <div class="progress-card-header">
-                    <div class="progress-card-title">⚖️ Ocupação de Peso KG</div>
-                    <div class="progress-card-value">{ocupacao_peso_perc:.1f}%</div>
-                </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar-fill" style="width: {ocupacao_peso_perc}%;"></div>
-                </div>
-                <div class="progress-card-footer">
-                    <span>{peso_total:,.0f} KG</span>
-                    <span>Capacidade: {capacidade_peso_kg:,.0f} KG</span>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+        # --- INÍCIO DA NOVA LÓGICA ---
+        # 1. VERIFICA SE UMA PLACA ESPECÍFICA FOI SELECIONADA NA SIDEBAR
+        if placa_sel != "(Todos)":
+            # Encontra o tipo de veículo para a placa selecionada
+            tipo_veiculo_da_placa = df_original[df_original['PLACA_CAVALO'] == placa_sel]['TIPO_CAVALO'].iloc[0]
             
-            # 🔹 Informativo de Ociosidade (NOVO DESIGN)
-            st.markdown(f"""
-            <div class="ociosidade-card">
-                <div class="ociosidade-label">
-                    <i class="fa-solid fa-scale-unbalanced-flip"></i> Ociosidade de Peso KG
-                </div>
-                <div class="ociosidade-value">
-                    {ociosidade_peso:.1f}% | {capacidade_peso_kg - peso_total:,.0f} KG livres
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+            if tipo_veiculo_da_placa == 'TRUCK':
+                frota_default = "FROTA TRUCK"
+            elif tipo_veiculo_da_placa == 'CAVALO':
+                frota_default = "FROTA CARRETA"
+
+        # 2. SE NENHUMA PLACA FOI SELECIONADA, USA A LÓGICA DA ROTA (como antes)
+        elif rota_sel_visivel != "(Todos)":
+            tipos_encontrados = df_filtrado['TIPO_CAVALO'].dropna().unique()
+            tipos_upper = [t.upper() for t in tipos_encontrados]
+
+            if "TRUCK" in tipos_upper and "CAVALO" in tipos_upper:
+                frota_default = "AMBAS"
+            elif "TRUCK" in tipos_upper:
+                frota_default = "FROTA TRUCK"
+            elif "CAVALO" in tipos_upper:
+                frota_default = "FROTA CARRETA"
+
+        # --- NOVO SELECTOR DE FROTA (Glass Style Modernizado) ---
+        selecionar_frota = option_menu(
+            menu_title=None,
+            options=["FROTA TRUCK", "FROTA CARRETA", "AMBAS"],
+            icons=["truck-moving", "trailer", "layer-group"],
+            menu_icon="cast",
+            default_index=["FROTA TRUCK", "FROTA CARRETA", "AMBAS"].index(frota_default),
+            orientation="horizontal",
+            styles={
+                # 🔹 Container principal (fundo translúcido com leve blur)
+                "container": {
+                    "padding": "6px",
+                    "background-color": "rgba(30, 30, 40, 0.4)",
+                    "border-radius": "16px",
+                    "backdrop-filter": "blur(10px)",
+                    "box-shadow": "0 4px 15px rgba(0, 0, 0, 0.3)",
+                    "justify-content": "center",
+                },
+                # 🔹 Ícones
+                "icon": {
+                    "color": "#A3A3A3",
+                    "font-size": "18px",
+                },
+                # 🔹 Botões inativos
+                "nav-link": {
+                    "font-size": "14px",
+                    "font-weight": "600",
+                    "color": "#E5E7EB",
+                    "padding": "10px 26px",
+                    "border-radius": "12px",
+                    "margin": "0px 6px",
+                    "background-color": "rgba(255, 255, 255, 0.05)",
+                    "transition": "all 0.3s ease-in-out",
+                },
+                # 🔹 Efeito hover
+                "nav-link:hover": {
+                    "background-color": "rgba(255,255,255,0.12)",
+                    "color": "#fff",
+                    "transform": "translateY(-2px)",
+                },
+                # 🔹 Botão selecionado — gradiente verde + brilho
+                "nav-link-selected": {
+                    "background": "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
+                    "color": "white",
+                    "box-shadow": "0 0 10px rgba(34,197,94,0.5)",
+                    "transform": "translateY(-2px)",
+                },
+            },
+        )
+
+        # ===============================================
+        # 🔁 RESTANTE DO CÓDIGO ORIGINAL (SEM ALTERAÇÕES)
+        # ===============================================
+        # toda a lógica de cálculo e exibição que você já tem
+        # permanece exatamente igual
 
 
-        # --- Cartão de Ocupação de Volume ---
-        with col2:
-            # ▼▼▼ ALTERAÇÃO AQUI: class="progress-card" virou class="ocupacao-card-custom" ▼▼▼
-            st.markdown(f"""
-            <div class="ocupacao-card-custom">
-                <div class="progress-card-header">
-                    <div class="progress-card-title">📦 Ocupação de Volume M³</div>
-                    <div class="progress-card-value">{ocupacao_volume_perc:.1f}%</div>
-                </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar-fill" style="width: {ocupacao_volume_perc}%;"></div>
-                </div>
-                <div class="progress-card-footer">
-                    <span>{volume_total_m3:,.3f} M³</span>
-                    <span>Capacidade: {capacidade_volume_m3:,.0f} M³</span>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
+        # ===============================================
+        # LÓGICA ORIGINAL (reutilizada)
+        # ===============================================
+        if rota_sel_visivel == "(Todos)":
 
-            # 🔹 Informativo de Ociosidade (NOVO DESIGN)
-            st.markdown(f"""
-            <div class="ociosidade-card">
-                <div class="ociosidade-label">
-                    <i class="fa-solid fa-box-open"></i> Ociosidade de Volume M³
+            capacidades_por_tipo = {
+                'TRUCK':  {'peso_kg': 16000, 'volume_m3': 75},
+                'CAVALO': {'peso_kg': 25000, 'volume_m3': 110},
+                'PADRAO': {'peso_kg': 25000, 'volume_m3': 80}
+            }
+
+            def calcular_dados_ocupacao(tipo_veiculo, df_dados):
+                df_tipo = df_dados[df_dados['TIPO_CAVALO'].fillna('').astype(str).str.upper() == tipo_veiculo]
+                if df_tipo.empty:
+                    return None
+
+                capacidade = capacidades_por_tipo.get(tipo_veiculo, capacidades_por_tipo['PADRAO'])
+                num_viagens = df_tipo.groupby(['PLACA_CAVALO', 'DIA_EMISSAO_STR']).ngroups
+                if num_viagens == 0:
+                    return None
+
+                dados = {}
+                dados['cap_total_peso'] = num_viagens * capacidade['peso_kg']
+                dados['total_peso'] = df_tipo['PESO REAL (KG)'].sum()
+                dados['ocup_peso_perc'] = (dados['total_peso'] / dados['cap_total_peso'] * 100) if dados['cap_total_peso'] > 0 else 0
+
+                dados['cap_total_volume'] = num_viagens * capacidade['volume_m3']
+                dados['total_volume'] = df_tipo['M3'].sum() if 'M3' in df_tipo.columns else 0
+                if dados['total_volume'] > 1000:
+                    dados['total_volume'] /= 10000
+                dados['ocup_volume_perc'] = (dados['total_volume'] / dados['cap_total_volume'] * 100) if dados['cap_total_volume'] > 0 else 0
+
+                return dados
+
+            dados_truck = calcular_dados_ocupacao('TRUCK', df_filtrado)
+            dados_carreta = calcular_dados_ocupacao('CAVALO', df_filtrado)
+
+            if selecionar_frota == "FROTA TRUCK":
+                if dados_truck:
+                    st.markdown("<div class='frota-title'><i class='fa-solid fa-truck-moving'></i> FROTA TRUCK</div>", unsafe_allow_html=True)
+                    
+                    col1, col2 = st.columns([1, 1], gap="large")
+
+                    # --- Card e Aviso de Ociosidade de PESO ---
+                    with col1:
+                        # Card de Ocupação de Peso
+                        st.markdown(f"""
+                        <div class="ocupacao-card-custom"> 
+                            <div class="progress-card-header">
+                                <div class="progress-card-title">⚖️ Ocupação de Peso (KG)</div>
+                                <div class="progress-card-value">{dados_truck['ocup_peso_perc']:.1f}%</div>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: {min(dados_truck['ocup_peso_perc'], 100)}%;"></div>
+                            </div>
+                            <div class="progress-card-footer">
+                                <span>Total: {formatar_numero(dados_truck['total_peso'])} KG</span>
+                                <span>Capacidade: {formatar_numero(dados_truck['cap_total_peso'])} KG</span>
+                            </div>
+                        </div>""", unsafe_allow_html=True)
+
+                        # Aviso de Ociosidade de Peso (com mais margem superior)
+                        ociosidade_peso = 100 - dados_truck['ocup_peso_perc']
+                        st.markdown(f"""
+                        <div style="
+                            background-color:#1E1E2E;
+                            border-left: 5px solid #facc15;
+                            padding: 12px 20px;
+                            border-radius: 8px;
+                            margin-top: 5px; /* <<< ALTERADO AQUI */
+                            color:#e4e4e7;
+                            font-size: 0.95rem;">
+                            ⚠️ <b>Ociosidade de Peso:</b> <b>{ociosidade_peso:.1f}%</b>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+                    # --- Card e Aviso de Ociosidade de CUBAGEM ---
+                    with col2:
+                        # Card de Ocupação de Cubagem
+                        st.markdown(f"""
+                        <div class="ocupacao-card-custom">
+                            <div class="progress-card-header">
+                                <div class="progress-card-title">📦 Ocupação de Cubagem (M³)</div>
+                                <div class="progress-card-value">{dados_truck['ocup_volume_perc']:.1f}%</div>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: {min(dados_truck['ocup_volume_perc'], 100)}%;"></div>
+                            </div>
+                            <div class="progress-card-footer">
+                                <span>Total: {formatar_numero(dados_truck['total_volume'], 3)} M³</span>
+                                <span>Capacidade: {formatar_numero(dados_truck['cap_total_volume'])} M³</span>
+                            </div>
+                        </div>""", unsafe_allow_html=True)
+
+                        # Aviso de Ociosidade de Cubagem (com mais margem superior)
+                        ociosidade_volume = 100 - dados_truck['ocup_volume_perc']
+                        st.markdown(f"""
+                        <div style="
+                            background-color:#1E1E2E;
+                            border-left: 5px solid #facc15;
+                            padding: 12px 20px;
+                            border-radius: 8px;
+                            margin-top: 5px; /* <<< ALTERADO AQUI */
+                            color:#e4e4e7;
+                            font-size: 0.95rem;">
+                            ⚠️ <b>Ociosidade de Cubagem (M³):</b> <b>{ociosidade_volume:.1f}%</b>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+            elif selecionar_frota == "FROTA CARRETA":
+                if dados_carreta:
+                    st.markdown("<div class='frota-title'><i class='fa-solid fa-trailer'></i> FROTA CARRETA</div>", unsafe_allow_html=True)
+                    
+                    col1, col2 = st.columns([1, 1], gap="large")
+
+                    with col1:
+                        st.markdown(f"""
+                        <div class="ocupacao-card-custom ocupacao-card-cavalo"> 
+                            <div class="progress-card-header">
+                                <div class="progress-card-title">⚖️ Ocupação de Peso (KG)</div>
+                                <div class="progress-card-value">{dados_carreta['ocup_peso_perc']:.1f}%</div>
+                            </div>
+                            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: {min(dados_carreta['ocup_peso_perc'], 100)}%;"></div></div>
+                            <div class="progress-card-footer">
+                                <span>Total: {formatar_numero(dados_carreta['total_peso'])} KG</span>
+                                <span>Capacidade: {formatar_numero(dados_carreta['cap_total_peso'])} KG</span>
+                            </div>
+                        </div>""", unsafe_allow_html=True)
+
+                        ociosidade_peso_carreta = 100 - dados_carreta['ocup_peso_perc']
+                        st.markdown(f"""
+                        <div style="
+                            background-color:#1E1E2E;
+                            border-left: 5px solid #facc15;
+                            padding: 12px 20px;
+                            border-radius: 8px;
+                            margin-top: 5px; /* <<< AJUSTADO PARA 5PX */
+                            color:#e4e4e7;
+                            font-size: 0.95rem;">
+                            ⚠️ <b>Ociosidade de Peso:</b> <b>{ociosidade_peso_carreta:.1f}%</b>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+                    with col2:
+                        st.markdown(f"""
+                        <div class="ocupacao-card-custom ocupacao-card-cavalo">
+                            <div class="progress-card-header">
+                                <div class="progress-card-title">📦 Ocupação de Cubagem (M³)</div>
+                                <div class="progress-card-value">{dados_carreta['ocup_volume_perc']:.1f}%</div>
+                            </div>
+                            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: {min(dados_carreta['ocup_volume_perc'], 100)}%;"></div></div>
+                            <div class="progress-card-footer">
+                                <span>Total: {formatar_numero(dados_carreta['total_volume'], 3)} M³</span>
+                                <span>Capacidade: {formatar_numero(dados_carreta['cap_total_volume'])} M³</span>
+                            </div>
+                        </div>""", unsafe_allow_html=True)
+
+                        ociosidade_volume_carreta = 100 - dados_carreta['ocup_volume_perc']
+                        st.markdown(f"""
+                        <div style="
+                            background-color:#1E1E2E;
+                            border-left: 5px solid #facc15;
+                            padding: 12px 20px;
+                            border-radius: 8px;
+                            margin-top: 5px; /* <<< AJUSTADO PARA 5PX */
+                            color:#e4e4e7;
+                            font-size: 0.95rem;">
+                            ⚠️ <b>Ociosidade de Cubagem (M³):</b> <b>{ociosidade_volume_carreta:.1f}%</b>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+            elif selecionar_frota == "AMBAS":
+                # --- Cria duas colunas principais para dividir as frotas ---
+                col_truck, col_carreta = st.columns(2, gap="large")
+
+                # --- COLUNA DA ESQUERDA: FROTA TRUCK ---
+                with col_truck:
+                    if dados_truck:
+                        st.markdown("<div class='frota-title'><i class='fa-solid fa-truck-moving'></i> FROTA TRUCK</div>", unsafe_allow_html=True)
+                        
+                        # Card de Peso (Truck)
+                        st.markdown(f"""
+                        <div class="ocupacao-card-custom"> 
+                            <div class="progress-card-header">
+                                <div class="progress-card-title">⚖️ Ocupação de Peso (KG)</div>
+                                <div class="progress-card-value">{dados_truck['ocup_peso_perc']:.1f}%</div>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: {min(dados_truck['ocup_peso_perc'], 100)}%;"></div>
+                            </div>
+                            <div class="progress-card-footer">
+                                <span>Total: {formatar_numero(dados_truck['total_peso'])} KG</span>
+                                <span>Capacidade: {formatar_numero(dados_truck['cap_total_peso'])} KG</span>
+                            </div>
+                        </div>""", unsafe_allow_html=True)
+
+                        # Aviso de Ociosidade de Peso (Truck)
+                        ociosidade_peso = 100 - dados_truck['ocup_peso_perc']
+                        st.markdown(f"""
+                        <div style="background-color:#1E1E2E; border-left: 5px solid #facc15; padding: 12px 20px; border-radius: 8px; margin-top: 5px; color:#e4e4e7; font-size: 0.95rem;">
+                            ⚠️ <b>Ociosidade de Peso:</b> <b>{ociosidade_peso:.1f}%</b>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+                        # Espaçamento vertical entre as seções
+                        st.markdown("<br>", unsafe_allow_html=True)
+
+                        # Card de Cubagem (Truck)
+                        st.markdown(f"""
+                        <div class="ocupacao-card-custom">
+                            <div class="progress-card-header">
+                                <div class="progress-card-title">📦 Ocupação de Cubagem (M³)</div>
+                                <div class="progress-card-value">{dados_truck['ocup_volume_perc']:.1f}%</div>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: {min(dados_truck['ocup_volume_perc'], 100)}%;"></div>
+                            </div>
+                            <div class="progress-card-footer">
+                                <span>Total: {formatar_numero(dados_truck['total_volume'], 3)} M³</span>
+                                <span>Capacidade: {formatar_numero(dados_truck['cap_total_volume'])} M³</span>
+                            </div>
+                        </div>""", unsafe_allow_html=True)
+
+                        # Aviso de Ociosidade de Cubagem (Truck)
+                        ociosidade_volume = 100 - dados_truck['ocup_volume_perc']
+                        st.markdown(f"""
+                        <div style="background-color:#1E1E2E; border-left: 5px solid #facc15; padding: 12px 20px; border-radius: 8px; margin-top: 5px; color:#e4e4e7; font-size: 0.95rem;">
+                            ⚠️ <b>Ociosidade de Cubagem (M³):</b> <b>{ociosidade_volume:.1f}%</b>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    else:
+                        st.markdown("<div class='frota-title'><i class='fa-solid fa-truck-moving'></i> FROTA TRUCK</div>", unsafe_allow_html=True)
+                        st.info("Nenhum dado de Truck encontrado para o período.")
+
+                # --- COLUNA DA DIREITA: FROTA CARRETA ---
+                with col_carreta:
+                    if dados_carreta:
+                        st.markdown("<div class='frota-title'><i class='fa-solid fa-trailer'></i> FROTA CARRETA</div>", unsafe_allow_html=True)
+                        
+                        # Card de Peso (Carreta)
+                        st.markdown(f"""
+                        <div class="ocupacao-card-custom ocupacao-card-cavalo"> 
+                            <div class="progress-card-header">
+                                <div class="progress-card-title">⚖️ Ocupação de Peso (KG)</div>
+                                <div class="progress-card-value">{dados_carreta['ocup_peso_perc']:.1f}%</div>
+                            </div>
+                            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: {min(dados_carreta['ocup_peso_perc'], 100)}%;"></div></div>
+                            <div class="progress-card-footer">
+                                <span>Total: {formatar_numero(dados_carreta['total_peso'])} KG</span>
+                                <span>Capacidade: {formatar_numero(dados_carreta['cap_total_peso'])} KG</span>
+                            </div>
+                        </div>""", unsafe_allow_html=True)
+
+                        # Aviso de Ociosidade de Peso (Carreta)
+                        ociosidade_peso_carreta = 100 - dados_carreta['ocup_peso_perc']
+                        st.markdown(f"""
+                        <div style="background-color:#1E1E2E; border-left: 5px solid #facc15; padding: 12px 20px; border-radius: 8px; margin-top: 5px; color:#e4e4e7; font-size: 0.95rem;">
+                            ⚠️ <b>Ociosidade de Peso:</b> <b>{ociosidade_peso_carreta:.1f}%</b>
+                        </div>
+                        """, unsafe_allow_html=True)
+
+                        # Espaçamento vertical entre as seções
+                        st.markdown("<br>", unsafe_allow_html=True)
+
+                        # Card de Cubagem (Carreta)
+                        st.markdown(f"""
+                        <div class="ocupacao-card-custom ocupacao-card-cavalo">
+                            <div class="progress-card-header">
+                                <div class="progress-card-title">📦 Ocupação de Cubagem (M³)</div>
+                                <div class="progress-card-value">{dados_carreta['ocup_volume_perc']:.1f}%</div>
+                            </div>
+                            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: {min(dados_carreta['ocup_volume_perc'], 100)}%;"></div></div>
+                            <div class="progress-card-footer">
+                                <span>Total: {formatar_numero(dados_carreta['total_volume'], 3)} M³</span>
+                                <span>Capacidade: {formatar_numero(dados_carreta['cap_total_volume'])} M³</span>
+                            </div>
+                        </div>""", unsafe_allow_html=True)
+
+                        # Aviso de Ociosidade de Cubagem (Carreta)
+                        ociosidade_volume_carreta = 100 - dados_carreta['ocup_volume_perc']
+                        st.markdown(f"""
+                        <div style="background-color:#1E1E2E; border-left: 5px solid #facc15; padding: 12px 20px; border-radius: 8px; margin-top: 5px; color:#e4e4e7; font-size: 0.95rem;">
+                            ⚠️ <b>Ociosidade de Cubagem (M³):</b> <b>{ociosidade_volume_carreta:.1f}%</b>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    else:
+                        st.markdown("<div class='frota-title'><i class='fa-solid fa-trailer'></i> FROTA CARRETA</div>", unsafe_allow_html=True)
+                        st.info("Nenhum dado de Carreta encontrado para o período.")
+
+        # Substitua o bloco "else:" do modo de viagem única por este:
+        else:
+            # --- MODO VIAGEM ÚNICA (lógica existente com novo visual) ---
+            ocupacao_peso_perc = (peso_total / capacidade_peso_kg) * 100 if capacidade_peso_kg > 0 else 0
+            ociosidade_peso = 100 - ocupacao_peso_perc
+            ocupacao_volume_perc = (volume_total_m3 / capacidade_volume_m3) * 100 if capacidade_volume_m3 > 0 else 0
+            ociosidade_volume = 100 - ocupacao_volume_perc
+
+            barra_peso = min(ocupacao_peso_perc, 100)
+            barra_volume = min(ocupacao_volume_perc, 100)
+
+            col1, col2 = st.columns(2)
+            with col1:
+                # Card de Ocupação de Peso (sem alterações)
+                st.markdown(f"""
+                <div class="ocupacao-card-custom"> 
+                    <div class="progress-card-header">
+                        <div class="progress-card-title">⚖️ Peso KG</div>
+                        <div class="progress-card-value">{ocupacao_peso_perc:.1f}%</div>
+                    </div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: {barra_peso}%;"></div></div>
+                    <div class="progress-card-footer">
+                        <span>{formatar_numero(peso_total)} KG</span>
+                        <span>Capacidade: {formatar_numero(capacidade_peso_kg)} KG</span>
+                    </div>
+                </div>""", unsafe_allow_html=True)
+
+                # ▼▼▼ NOVO AVISO DE OCIOSIDADE DE PESO ▼▼▼
+                st.markdown(f"""
+                <div style="
+                    background-color:#1E1E2E;
+                    border-left: 5px solid #facc15; /* Borda amarela à esquerda */
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    margin-top: 10px; /* Espaço acima do aviso */
+                    color:#e4e4e7;
+                    font-size: 0.95rem;">
+                    ⚠️ <b>Ociosidade de Peso:</b> {ociosidade_peso:.1f}%
                 </div>
-                <div class="ociosidade-value">
-                    {ociosidade_volume:.1f}% | {capacidade_volume_m3 - volume_total_m3:,.3f} M³ livres
+                """, unsafe_allow_html=True)
+
+            with col2:
+                # Card de Ocupação de Cubagem (sem alterações)
+                st.markdown(f"""
+                <div class="ocupacao-card-custom">
+                    <div class="progress-card-header">
+                        <div class="progress-card-title">📦 Cubagem M³</div>
+                        <div class="progress-card-value">{ocupacao_volume_perc:.1f}%</div>
+                    </div>
+                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: {barra_volume}%;"></div></div>
+                    <div class="progress-card-footer">
+                        <span>{formatar_numero(volume_total_m3, 3)} M³</span>
+                        <span>Capacidade: {formatar_numero(capacidade_volume_m3)} M³</span>
+                    </div>
+                </div>""", unsafe_allow_html=True)
+
+                # ▼▼▼ NOVO AVISO DE OCIOSIDADE DE CUBAGEM ▼▼▼
+                st.markdown(f"""
+                <div style="
+                    background-color:#1E1E2E;
+                    border-left: 5px solid #facc15; /* Borda amarela à esquerda */
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    margin-top: 10px; /* Espaço acima do aviso */
+                    color:#e4e4e7;
+                    font-size: 0.95rem;">
+                    ⚠️ <b>Ociosidade de Cubagem (M³):</b> {ociosidade_volume:.1f}%
                 </div>
-            </div>
-            """, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
+
+
+            # --- FIM DA NOVA LÓGICA CONDICIONAL ---
 
 
 
         st.divider()
+
        
         # ==============================
         # 8. TABELA RESUMIDA (VERSÃO FINAL COM NUM_MANIF E DESTAQUE)
         # ==============================
         st.subheader("📋 Resumo das Viagens no Período")
 
-        df_viagens = df_filtrado.copy()
+        # --- INÍCIO DA NOVA LÓGICA DE FILTRO PARA A TABELA ---
+        df_para_tabela = df_filtrado.copy() # Começa com todos os dados filtrados
+
+        # Aplica o filtro do option_menu APENAS se não estivermos em modo de viagem única
+        if rota_sel_visivel == "(Todos)":
+            if selecionar_frota == "FROTA TRUCK":
+                # Mantém apenas as linhas onde TIPO_CAVALO é 'TRUCK'
+                df_para_tabela = df_para_tabela[df_para_tabela['TIPO_CAVALO'].str.upper() == 'TRUCK']
+            elif selecionar_frota == "FROTA CARRETA":
+                # Mantém apenas as linhas onde TIPO_CAVALO é 'CAVALO'
+                df_para_tabela = df_para_tabela[df_para_tabela['TIPO_CAVALO'].str.upper() == 'CAVALO']
+            # Se for "AMBAS", não fazemos nada, pois df_para_tabela já contém tudo.
+
+        # A variável 'df_viagens' agora será baseada no DataFrame já filtrado pelo tipo de frota
+        df_viagens = df_para_tabela.copy()
+        # --- FIM DA NOVA LÓGICA DE FILTRO ---
+
 
         if not df_viagens.empty:
             # Garante que a coluna de identificação da viagem exista
@@ -2299,7 +2747,7 @@ with tab5:
                     st.markdown(f"""
                     <div class="occupancy-card">
                         <div class="occupancy-header">
-                            <div class="occupancy-title">⚖️ Ocupação de Peso KG</div>
+                            <div class="occupancy-title">⚖️ Peso KG</div>
                             <div class="occupancy-percentage">{ocupacao_peso_perc:.1f}%</div>
                         </div>
                         <div class="occupancy-progress-bar-container">
@@ -2317,7 +2765,7 @@ with tab5:
                     st.markdown(f"""
                     <div class="occupancy-card">
                         <div class="occupancy-header">
-                            <div class="occupancy-title">📦 Ocupação de Volume M³</div>
+                            <div class="occupancy-title">📦 Cubagem M³</div>
                             <div class="occupancy-percentage">{ocupacao_volume_perc:.1f}%</div>
                         </div>
                         <div class="occupancy-progress-bar-container">

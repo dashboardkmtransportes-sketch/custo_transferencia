@@ -699,14 +699,30 @@ with st.sidebar.expander("👨‍✈️ Filtros de Viagem", expanded=True):
             Destinos=('DEST_MANIF', lambda x: ' - '.join(ordenar_destinos(x.unique())))
         ).reset_index()
 
-        # --- INÍCIO DA ALTERAÇÃO ---
 
-        # Função para formatar o nome do motorista (primeiro e último)
+        # --- VERSÃO FINAL (Lida com nomes compostos como "dos Santos") ---
         def formatar_nome_motorista(nome_completo):
-            partes = str(nome_completo).split()
-            if len(partes) > 1:
-                return f"{partes[0]} {partes[-1]}"
-            return nome_completo # Retorna o nome original se tiver só uma palavra
+            """Formata o nome do motorista para ser mais legível."""
+            partes = str(nome_completo).strip().split()
+            
+            # Se não houver nome, retorna vazio
+            if not partes:
+                return ""
+                
+            # Se o nome tiver 3 ou mais partes e a segunda for uma preposição curta
+            preposicoes_curtas = ['DA', 'DE', 'DO', 'DOS']
+            if len(partes) >= 3 and partes[1].upper() in preposicoes_curtas:
+                # Pega as três primeiras partes (ex: MARCIANO DOS SANTOS)
+                return f"{partes[0]} {partes[1]} {partes[2]}"
+                
+            # Se tiver 2 ou mais partes (e a segunda não for preposição), pega as duas primeiras
+            elif len(partes) >= 2:
+                # Pega as duas primeiras partes (ex: RAUL SANTOS)
+                return f"{partes[0]} {partes[1]}"
+                
+            # Se tiver apenas uma palavra, retorna essa palavra
+            else:
+                return partes[0]
 
         # Aplica a função para criar uma coluna com o nome curto
         rotas_df['NOME_CURTO_MOTORISTA'] = rotas_df['MOTORISTA'].apply(formatar_nome_motorista)
@@ -1473,7 +1489,7 @@ with tab1:
 
         st.divider()
 
-        # 🌟 CSS PROFISSIONAL PARA OS CARDS E O NOVO TÍTULO
+                # 🌟 CSS PROFISSIONAL PARA OS CARDS E O NOVO TÍTULO
         st.markdown("""
         <style>
             /* ▼▼▼ SUBSTITUA O ESTILO DO TÍTULO ANTERIOR POR ESTE ▼▼▼ */
@@ -1488,23 +1504,23 @@ with tab1:
                 box-sizing: border-box;
                 display: flex;
                 align-items: center;
-                justify-content: center; /* <<< ADICIONE ESTA LINHA PARA CENTRALIZAR */
+                justify-content: center;
                 gap: 15px;
                 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             }
 
             .title-block-modern h2 {
-                font-family: "Poppins", "Segoe UI", sans-serif; /* Fonte mais moderna */
-                font-size: 1.8rem; /* Tamanho da fonte bem maior */
-                font-weight: 700; /* Negrito */
-                color: #ffffff; /* Cor do texto (branco) */
-                margin: 0; /* Remove margens padrão do h2 */
-                letter-spacing: 0.5px; /* Leve espaçamento entre letras */
+                font-family: "Poppins", "Segoe UI", sans-serif;
+                font-size: 1.8rem;
+                font-weight: 700;
+                color: #ffffff;
+                margin: 0;
+                letter-spacing: 0.5px;
             }
 
             .title-block-modern .fa-scale-balanced {
-                font-size: 2.2rem; /* Ícone maior */
-                color: #22c55e; /* Cor verde do ícone */
+                font-size: 2.2rem;
+                color: #22c55e;
             }
             /* ▲▲▲ FIM DO NOVO ESTILO ▲▲▲ */
 
@@ -1517,14 +1533,18 @@ with tab1:
                 gap: 8px;
             }
             
-            /* O resto do seu CSS continua aqui... */
+            /* --- CORREÇÃO APLICADA AQUI --- */
             .ocupacao-card-custom {
                 background-color: #1E1E2E;
                 border-radius: 14px;
                 padding: 18px;
-                margin-bottom: 16px;
+                /* margin-bottom: 16px; */ /* Removido para controlar o espaço com o aviso */
                 box-shadow: 0px 2px 6px rgba(0,0,0,0.3);
                 transition: transform 0.2s ease;
+                min-height: 120px; /* Garante altura mínima para o card */
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
             }
             .ocupacao-card-custom:hover {
                 transform: scale(1.01);
@@ -1548,21 +1568,24 @@ with tab1:
                 font-weight: 700;
             }
 
+            /* --- CORREÇÃO DE ALTURA DA BARRA --- */
             .progress-bar-container {
                 width: 100%;
-                height: 10px;
+                height: 18px; /* <<< ALTURA AUMENTADA */
                 background-color: #3A3A4A;
-                border-radius: 4px;
+                border-radius: 8px;
                 overflow: hidden;
                 margin-bottom: 10px;
             }
             .ocupacao-card-custom .progress-bar-fill {
-                height: 10px;
+                height: 18px; /* <<< ALTURA CORRIGIDA (igual ao container) */
                 background: linear-gradient(90deg, #7C3AED, #8B5CF6); /* Roxo para Truck */
+                border-radius: 8px;
             }
             .ocupacao-card-cavalo .progress-bar-fill {
-                height: 10px;
+                height: 18px; /* <<< ALTURA CORRIGIDA (igual ao container) */
                 background: linear-gradient(90deg, #F97316, #FB923C); /* Laranja para Carreta */
+                border-radius: 8px;
             }
 
             .progress-card-footer {
@@ -1571,8 +1594,21 @@ with tab1:
                 font-size: 0.9rem;
                 color: #d1d1d1;
             }
+
+            /* --- NOVO ESTILO PARA O AVISO DE OCIOSIDADE --- */
+            .aviso-ociosidade {
+                background-color:#1E1E2E;
+                border-left: 5px solid #facc15;
+                padding: 12px 20px;
+                border-radius: 8px;
+                margin-top: 10px;
+                margin-bottom: 20px;
+                color:#e4e4e7;
+                font-size: 0.95rem;
+            }
         </style>
         """, unsafe_allow_html=True)
+
 
 
         # --- TÍTULO MODERNIZADO ---
@@ -1665,13 +1701,6 @@ with tab1:
         )
 
         # ===============================================
-        # 🔁 RESTANTE DO CÓDIGO ORIGINAL (SEM ALTERAÇÕES)
-        # ===============================================
-        # toda a lógica de cálculo e exibição que você já tem
-        # permanece exatamente igual
-
-
-        # ===============================================
         # LÓGICA ORIGINAL (reutilizada)
         # ===============================================
         if rota_sel_visivel == "(Todos)":
@@ -1710,7 +1739,6 @@ with tab1:
 
             if selecionar_frota == "FROTA TRUCK":
                 if dados_truck:
-                    st.markdown("<div class='frota-title'><i class='fa-solid fa-truck-moving'></i> FROTA TRUCK</div>", unsafe_allow_html=True)
                     
                     col1, col2 = st.columns([1, 1], gap="large")
 
@@ -1782,7 +1810,6 @@ with tab1:
 
             elif selecionar_frota == "FROTA CARRETA":
                 if dados_carreta:
-                    st.markdown("<div class='frota-title'><i class='fa-solid fa-trailer'></i> FROTA CARRETA</div>", unsafe_allow_html=True)
                     
                     col1, col2 = st.columns([1, 1], gap="large")
 
@@ -2028,17 +2055,12 @@ with tab1:
                     font-size: 0.95rem;">
                     ⚠️ <b>Ociosidade de Cubagem (M³):</b> {ociosidade_volume:.1f}%
                 </div>
-                """, unsafe_allow_html=True)
-
-
-            # --- FIM DA NOVA LÓGICA CONDICIONAL ---
-
-
+                """, unsafe_allow_html=True)         
 
         st.divider()
 
-       
-                # ==============================
+
+        # ==============================
         # 8. TABELA RESUMIDA E DETALHES DA VIAGEM
         # ==============================
         st.subheader("📋 Resumo das Viagens no Período")
@@ -2249,8 +2271,6 @@ with tab3:
     st.info("Conteúdo da análise de performance será implementado aqui.")
 
 
-# --- INÍCIO DO CÓDIGO FINAL ---
-
 # Substitua a seção "with tab4:" inteira pelo código abaixo
 
 with tab4:
@@ -2259,69 +2279,46 @@ with tab4:
         st.warning("⚠️ Nenhum registro encontrado para os filtros selecionados.")
     else:
         # -----------------------------
-        # 1️⃣ PREPARAÇÃO DE DADOS (BASE PARA OS NOVOS KPIs)
+        # 1️⃣ PREPARAÇÃO DE DADOS E KPIs (sem alterações)
         # -----------------------------
         df_aux = df_filtrado.copy()
         df_aux["DATA_EMISSAO"] = df_aux["EMIS_MANIF"].dt.date
         df_aux["VIAGEM_ID"] = df_aux.groupby(["MOTORISTA", "PLACA_CAVALO", "DATA_EMISSAO"], sort=False).ngroup() + 1
 
-        # Dicionário de capacidades para o cálculo de ocupação
         capacidades = {
-            'TOCO': {'peso_kg': 10000, 'volume_m3': 55},
-            'TRUCK': {'peso_kg': 16000, 'volume_m3': 75},
-            'CAVALO': {'peso_kg': 25000, 'volume_m3': 110},
-            'PADRAO': {'peso_kg': 25000, 'volume_m3': 80}
+            'TOCO': {'peso_kg': 10000, 'volume_m3': 55}, 'TRUCK': {'peso_kg': 16000, 'volume_m3': 75},
+            'CAVALO': {'peso_kg': 25000, 'volume_m3': 110}, 'PADRAO': {'peso_kg': 25000, 'volume_m3': 80}
         }
         df_aux['CAPACIDADE_PESO'] = df_aux['TIPO_CAVALO'].map(lambda x: capacidades.get(str(x).upper(), capacidades['PADRAO'])['peso_kg'])
-
-        # Calcula o custo dinâmico por linha
-        df_aux["CUSTO_POR_LINHA"] = df_aux.apply(
-            lambda r: r["CTRB-R$"] if r.get("PROPRIETARIO_CAVALO") == "KM TRANSPORTES ROD. DE CARGAS LTDA" else r.get("OS-R$"),
-            axis=1
-        )
+        df_aux["CUSTO_POR_LINHA"] = df_aux.apply(lambda r: r["CTRB-R$"] if r.get("PROPRIETARIO_CAVALO") == "KM TRANSPORTES ROD. DE CARGAS LTDA" else r.get("OS-R$"), axis=1)
         
-        # --- NOVOS CÁLCULOS OPERACIONAIS POR VIAGEM ---
         resumo_por_viagem = df_aux.groupby('VIAGEM_ID').agg(
-            MOTORISTA=('MOTORISTA', 'first'),
-            FRETE_VIAGEM=('FRETE-R$', 'sum'),
-            CUSTO_UNICO_VIAGEM=('CUSTO_POR_LINHA', 'max'),
-            PESO_VIAGEM=('PESO REAL (KG)', 'sum'),
-            ENTREGAS_VIAGEM=('DEST_MANIF', 'nunique'),
-            CAPACIDADE_PESO_VIAGEM=('CAPACIDADE_PESO', 'first'),
-            # Adicionando distância (usando a estimativa já calculada)
+            MOTORISTA=('MOTORISTA', 'first'), FRETE_VIAGEM=('FRETE-R$', 'sum'),
+            CUSTO_UNICO_VIAGEM=('CUSTO_POR_LINHA', 'max'), PESO_VIAGEM=('PESO REAL (KG)', 'sum'),
+            ENTREGAS_VIAGEM=('DEST_MANIF', 'nunique'), CAPACIDADE_PESO_VIAGEM=('CAPACIDADE_PESO', 'first'),
             DISTANCIA_ESTIMADA=('DISTANCIA_ESTIMADA_KM', 'first')
         ).reset_index()
 
-        # --- AGRUPAMENTO FINAL POR MOTORISTA ---
         resumo_motorista = resumo_por_viagem.groupby('MOTORISTA').agg(
-            TOTAL_VIAGENS=('VIAGEM_ID', 'nunique'),
-            FRETE_TOTAL=('FRETE_VIAGEM', 'sum'),
-            CUSTO_OS_CTRB_TOTAL=('CUSTO_UNICO_VIAGEM', 'sum'),
-            PESO_TOTAL=('PESO_VIAGEM', 'sum'),
-            TOTAL_ENTREGAS=('ENTREGAS_VIAGEM', 'sum'),
-            CAPACIDADE_TOTAL_PESO=('CAPACIDADE_PESO_VIAGEM', 'sum'),
+            TOTAL_VIAGENS=('VIAGEM_ID', 'nunique'), FRETE_TOTAL=('FRETE_VIAGEM', 'sum'),
+            CUSTO_OS_CTRB_TOTAL=('CUSTO_UNICO_VIAGEM', 'sum'), PESO_TOTAL=('PESO_VIAGEM', 'sum'),
+            TOTAL_ENTREGAS=('ENTREGAS_VIAGEM', 'sum'), CAPACIDADE_TOTAL_PESO=('CAPACIDADE_PESO_VIAGEM', 'sum'),
             DISTANCIA_TOTAL=('DISTANCIA_ESTIMADA', 'sum')
         ).reset_index()
 
-        # --- CÁLCULO DOS KPIs FINAIS ---
         resumo_motorista["DISTANCIA_MEDIA_VIAGEM"] = (resumo_motorista["DISTANCIA_TOTAL"] / resumo_motorista["TOTAL_VIAGENS"]).fillna(0)
         resumo_motorista["MEDIA_ENTREGAS_VIAGEM"] = (resumo_motorista["TOTAL_ENTREGAS"] / resumo_motorista["TOTAL_VIAGENS"]).fillna(0)
         resumo_motorista["PESO_MEDIO_VIAGEM"] = (resumo_motorista["PESO_TOTAL"] / resumo_motorista["TOTAL_VIAGENS"]).fillna(0)
         resumo_motorista["OCUPACAO_MEDIA_CARGA"] = (resumo_motorista["PESO_TOTAL"] / resumo_motorista["CAPACIDADE_TOTAL_PESO"] * 100).fillna(0)
         resumo_motorista["PERC_CUSTO_FRETE"] = (resumo_motorista["CUSTO_OS_CTRB_TOTAL"] / resumo_motorista["FRETE_TOTAL"] * 100).fillna(0)
 
-        # -----------------------------
-        # 2️⃣ SELEÇÃO DOS DADOS PARA EXIBIÇÃO
-        # -----------------------------
         if motorista_sel != "(Todos)" and motorista_sel in resumo_motorista["MOTORISTA"].values:
             df_motorista = df_aux[df_aux["MOTORISTA"] == motorista_sel]
             dados_m = resumo_motorista[resumo_motorista["MOTORISTA"] == motorista_sel].iloc[0]
         else:
             df_motorista = df_aux.copy()
-            # Para a visão "Todos", calculamos as médias e somas agregadas
             dados_m = pd.Series({
-                "TOTAL_VIAGENS": resumo_motorista["TOTAL_VIAGENS"].sum(),
-                "TOTAL_ENTREGAS": resumo_motorista["TOTAL_ENTREGAS"].sum(), # <<< LINHA CORRIGIDA/ADICIONADA
+                "TOTAL_VIAGENS": resumo_motorista["TOTAL_VIAGENS"].sum(), "TOTAL_ENTREGAS": resumo_motorista["TOTAL_ENTREGAS"].sum(),
                 "DISTANCIA_MEDIA_VIAGEM": resumo_motorista["DISTANCIA_TOTAL"].sum() / resumo_motorista["TOTAL_VIAGENS"].sum() if resumo_motorista["TOTAL_VIAGENS"].sum() > 0 else 0,
                 "MEDIA_ENTREGAS_VIAGEM": resumo_motorista["TOTAL_ENTREGAS"].sum() / resumo_motorista["TOTAL_VIAGENS"].sum() if resumo_motorista["TOTAL_VIAGENS"].sum() > 0 else 0,
                 "PESO_MEDIO_VIAGEM": resumo_motorista["PESO_TOTAL"].sum() / resumo_motorista["TOTAL_VIAGENS"].sum() if resumo_motorista["TOTAL_VIAGENS"].sum() > 0 else 0,
@@ -2329,40 +2326,64 @@ with tab4:
                 "PERC_CUSTO_FRETE": resumo_motorista["CUSTO_OS_CTRB_TOTAL"].sum() / resumo_motorista["FRETE_TOTAL"].sum() * 100 if resumo_motorista["FRETE_TOTAL"].sum() > 0 else 0,
             })
 
-        # --- BLOCO DE IDENTIFICAÇÃO DO MOTORISTA (sem alterações) ---
+        # --- BLOCO DE IDENTIFICAÇÃO DO MOTORISTA (ATUALIZADO) ---
         if motorista_sel != "(Todos)":
             st.markdown("### <i class='fa-solid fa-id-card-clip'></i> Identificação do Motorista", unsafe_allow_html=True)
+            
+            # Inicializa as variáveis para o caso de o dataframe estar vazio
+            placa_frequente, tipo_veiculo_frequente, destino_frequente, ultima_viagem_data = "N/A", "N/A", "N/A", "N/A"
+            capacidade_kg_frequente = 0
+
             if not df_motorista.empty:
                 placa_frequente = df_motorista['PLACA_CAVALO'].mode()[0]
+                tipo_veiculo_frequente = df_motorista['TIPO_CAVALO'].mode()[0]
                 destino_frequente = df_motorista['CIDADE_UF_DEST'].mode()[0]
                 ultima_viagem_data = df_motorista['EMIS_MANIF'].max().strftime('%d/%m/%Y')
-            else:
-                placa_frequente, destino_frequente, ultima_viagem_data = "N/A", "N/A", "N/A"
+                
+                # ▼▼▼ BUSCA A CAPACIDADE CORRESPONDENTE AO TIPO DE VEÍCULO ▼▼▼
+                capacidade_info = capacidades.get(str(tipo_veiculo_frequente).upper(), capacidades['PADRAO'])
+                capacidade_kg_frequente = capacidade_info['peso_kg']
+
+            # Layout com 5 colunas
+            id1, id2, id3, id4, id5 = st.columns(5)
             
-            id1, id2, id3, id4 = st.columns(4)
             with id1:
                 partes_nome = motorista_sel.split()
                 nome_formatado = f"{partes_nome[0]} {partes_nome[1]}" if len(partes_nome) > 1 else motorista_sel
                 st.markdown(f"<div class='kpi-container' style='text-align: center;'><div class='kpi-title'><i class='fa-solid fa-user-tie'></i> Motorista</div><div class='kpi-value'>{nome_formatado}</div></div>", unsafe_allow_html=True)
+            
             with id2:
                 st.markdown(f"<div class='kpi-container' style='text-align: center;'><div class='kpi-title'><i class='fa-solid fa-truck'></i> Veículo Frequente</div><div class='kpi-value'>{placa_frequente}</div></div>", unsafe_allow_html=True)
+            
+                        # ▼▼▼ KPI CORRIGIDO PARA FICAR NA MESMA LINHA ▼▼▼
             with id3:
-                st.markdown(f"<div class='kpi-container' style='text-align: center;'><div class='kpi-title'><i class='fa-solid fa-map-location-dot'></i> Destino Frequente</div><div class='kpi-value'>{destino_frequente}</div></div>", unsafe_allow_html=True)
+                # Formata a capacidade para exibição (ex: "Cap. 16.000 kg")
+                capacidade_formatada = f"Cap. {formatar_numero(capacidade_kg_frequente)} kg"
+                
+                st.markdown(f"""
+                    <div class='kpi-container' style='text-align: center;'>
+                        <div class='kpi-title'><i class='fa-solid fa-gear'></i> Tipo / Capacidade</div>
+                        <div class='kpi-value'>
+                            {tipo_veiculo_frequente}<br>
+                            <span style='font-size: 16px; color: #d1d5db; font-weight: 500;'>{capacidade_formatada}</span>
+                        </div>
+                    </div>
+                """, unsafe_allow_html=True)
+
+
             with id4:
+                st.markdown(f"<div class='kpi-container' style='text-align: center;'><div class='kpi-title'><i class='fa-solid fa-map-location-dot'></i> Destino Frequente</div><div class='kpi-value'>{destino_frequente}</div></div>", unsafe_allow_html=True)
+            
+            with id5:
                 st.markdown(f"<div class='kpi-container' style='text-align: center;'><div class='kpi-title'><i class='fa-solid fa-calendar-days'></i> Última Viagem</div><div class='kpi-value'>{ultima_viagem_data}</div></div>", unsafe_allow_html=True)
+            
             st.divider()
 
-        # -----------------------------
-        # 3️⃣ KPIs OPERACIONAIS (LAYOUT ATUALIZADO)
-        # -----------------------------
+        # ... (Restante do código da tab4 permanece o mesmo) ...
         st.markdown("### 🎯 Indicadores de Desempenho Operacional")
-
         def fmt_num(v, suf=""): return f"{v:,.0f}{suf}".replace(",", ".")
-        def fmt_dec(v, suf=""): return f"{v:,.1f}{suf}".replace(".", ",").replace(",0", "")
         def fmt_perc(v): return f"{v:.1f}%".replace(".", ",")
-
         kpi1, kpi2, kpi3, kpi4, kpi5, kpi6 = st.columns(6)
-        
         kpis_operacionais = {
             kpi1: {"titulo": "🚛 Total de Viagens", "valor": fmt_num(dados_m["TOTAL_VIAGENS"])},
             kpi2: {"titulo": "🗺️ Distância Média", "valor": fmt_num(dados_m["DISTANCIA_MEDIA_VIAGEM"], " km")},
@@ -2371,147 +2392,116 @@ with tab4:
             kpi5: {"titulo": "📈 Ocupação Média", "valor": fmt_perc(dados_m["OCUPACAO_MEDIA_CARGA"])},
             kpi6: {"titulo": "📊 % Custo / Frete", "valor": fmt_perc(dados_m["PERC_CUSTO_FRETE"])},
         }
-
         for coluna, info in kpis_operacionais.items():
-            with coluna:
-                st.markdown(f"""
-                    <div class='kpi-container' style='text-align: center;'>
-                        <div class='kpi-title'>{info['titulo']}</div>
-                        <div class='kpi-value'>{info['valor']}</div>
-                    </div>
-                """, unsafe_allow_html=True)
-
+            with coluna: st.markdown(f"<div class='kpi-container' style='text-align: center;'><div class='kpi-title'>{info['titulo']}</div><div class='kpi-value'>{info['valor']}</div></div>", unsafe_allow_html=True)
         st.divider()
 
-        # -----------------------------
-        # 4️⃣ TÍTULO DINÂMICO PARA A TABELA
-        # -----------------------------
         if motorista_sel != "(Todos)":
-            st.markdown(f"### 📋 Resumo das Viagens de {motorista_sel.split()[0]}")
+            st.markdown(f"### 📋 Resumo das Viagens 👨‍✈️{motorista_sel}")
         else:
             st.markdown("### 📋 Resumo de Todas as Viagens no Período")
 
-        # -----------------------------
-        # 5️⃣ TABELA RESUMIDA POR VIAGEM
-        # -----------------------------
         df_agrupado = df_motorista.copy()
-
         resumo_viagens = df_agrupado.groupby('VIAGEM_ID').agg(
-            EMISSÃO=('EMIS_MANIF', 'first'),
-            PLACA=('PLACA_CAVALO', 'first'),
-            TIPO=('TIPO_CAVALO', 'first'),
-            MOTORISTA=('MOTORISTA', 'first'),
-            DESTINOS=('DEST_MANIF', lambda x: ' / '.join(x.unique())),
-            FRETE=('FRETE-R$', 'sum'),
-            CUSTO_OS=('OS-R$', 'max'),
-            CUSTO_CTRB=('CTRB-R$', 'max'),
-            PROPRIETARIO=('PROPRIETARIO_CAVALO', 'first'),
-            ICMS=('ICMS-R$', 'sum'),
-            PESO_KG=('PESO REAL (KG)', 'sum'),
-            M3=('M3', 'sum'),
-            VOLUMES=('VOLUMES', 'sum'),
-            VALOR_MERC=('MERCADORIA-R$', 'sum'),
-            ENTREGAS=('DEST_MANIF', 'nunique'),
-            QTDE_CTRC=('QTDE_CTRC', 'sum')
+            EMISSÃO=('EMIS_MANIF', 'first'), PLACA=('PLACA_CAVALO', 'first'), TIPO=('TIPO_CAVALO', 'first'),
+            MOTORISTA=('MOTORISTA', 'first'), DESTINOS=('DEST_MANIF', lambda x: ' / '.join(x.unique())),
+            FRETE=('FRETE-R$', 'sum'), CUSTO_OS=('OS-R$', 'max'), CUSTO_CTRB=('CTRB-R$', 'max'),
+            PROPRIETARIO=('PROPRIETARIO_CAVALO', 'first'), ICMS=('ICMS-R$', 'sum'), PESO_KG=('PESO REAL (KG)', 'sum'),
+            M3=('M3', 'sum'), VOLUMES=('VOLUMES', 'sum'), VALOR_MERC=('MERCADORIA-R$', 'sum'),
+            ENTREGAS=('DEST_MANIF', 'nunique'), QTDE_CTRC=('QTDE_CTRC', 'sum')
         ).reset_index()
 
         def calcular_custo_viagem(row):
-            if row['PROPRIETARIO'] == 'MARCELO H LEMOS BERALDO E CIA LTDA ME':
-                return row['CUSTO_OS']
-            return row['CUSTO_CTRB']
+            return row['CUSTO_OS'] if row['PROPRIETARIO'] == 'MARCELO H LEMOS BERALDO E CIA LTDA ME' else row['CUSTO_CTRB']
 
         resumo_viagens['Custo (CTRB/OS)'] = resumo_viagens.apply(calcular_custo_viagem, axis=1)
         resumo_viagens['CTRB/Frete (%)'] = ((resumo_viagens['Custo (CTRB/OS)'] / resumo_viagens['FRETE']) * 100).fillna(0)
-        resumo_viagens['LUCRO'] = resumo_viagens['FRETE'] - (resumo_viagens['Custo (CTRB/OS)'] + resumo_viagens['ICMS'])
-
-        custo_km_por_tipo = {
-            'TOCO': 3.50, 'TRUCK': 4.50, 'CAVALO': 6.75, 'CARRETA': 6.75
-        }
-
-        # ==================================================================
-        # ▼▼▼ BLOCO DE CÓDIGO CORRIGIDO (USE ESTE) ▼▼▼
-        # ==================================================================
-
-        def calcular_custo_viagem(row):
-            if row['PROPRIETARIO'] == 'MARCELO H LEMOS BERALDO E CIA LTDA ME':
-                return row['CUSTO_OS']
-            return row['CUSTO_CTRB']
-
-        resumo_viagens['Custo (CTRB/OS)'] = resumo_viagens.apply(calcular_custo_viagem, axis=1)
-        resumo_viagens['CTRB/Frete (%)'] = ((resumo_viagens['Custo (CTRB/OS)'] / resumo_viagens['FRETE']) * 100).fillna(0)
-        resumo_viagens['LUCRO'] = resumo_viagens['FRETE'] - (resumo_viagens['Custo (CTRB/OS)'] + resumo_viagens['ICMS'])
-
-        custo_km_por_tipo = {
-            'TOCO': 3.50, 'TRUCK': 4.50, 'CAVALO': 6.75, 'CARRETA': 6.75
-        }
-
+        
         def calcular_distancia_por_viagem(row):
             tipo_veiculo = str(row.get('TIPO', 'PADRAO')).upper()
             valor_por_km = custo_km_por_tipo.get(tipo_veiculo, 0)
             custo_da_viagem = row['Custo (CTRB/OS)']
-            if valor_por_km > 0 and custo_da_viagem > 0:
-                return custo_da_viagem / valor_por_km
-            return 0
+            return (custo_da_viagem / valor_por_km) if valor_por_km > 0 and custo_da_viagem > 0 else 0
 
         resumo_viagens['Distância (KM)'] = resumo_viagens.apply(calcular_distancia_por_viagem, axis=1)
-
         def corrigir_volume_numerico(valor):
             try:
                 valor_float = float(valor)
                 return valor_float / 10000 if valor_float > 1000 else valor_float
-            except (ValueError, TypeError):
-                return 0.0
-
+            except (ValueError, TypeError): return 0.0
         resumo_viagens['M3_corrigido'] = resumo_viagens['M3'].apply(corrigir_volume_numerico)
 
-        # --- Renomear colunas ---
         resumo_viagens.rename(columns={
-            'VIAGEM_ID': '🧭 Viagem',
-            'TIPO': 'Tipo Veículo',
-            'DESTINOS': 'Destinos da Rota',
-            'PESO_KG': 'Peso Total',
-            'M3_corrigido': 'Volume Total (M³)',
-            'VOLUMES': 'Volumes Totais',
-            'VALOR_MERC': 'Valor Mercadoria',
-            'QTDE_CTRC': 'Qtd. CTRCs'
+            'VIAGEM_ID': '🧭 Viagem', 'TIPO': 'Tipo Veículo', 'DESTINOS': 'Destinos da Rota', 'PESO_KG': 'Peso Total',
+            'M3_corrigido': 'Volume Total (M³)', 'VOLUMES': 'Volumes Totais', 'VALOR_MERC': 'Valor Mercadoria', 'QTDE_CTRC': 'Qtd. CTRCs'
         }, inplace=True)
 
         ordem_final_renomeada = [
-            '🧭 Viagem', 'EMISSÃO', 'PLACA', 'Tipo Veículo', 'Destinos da Rota',
-            'MOTORISTA', 'Distância (KM)', 'ENTREGAS', 'Custo (CTRB/OS)',
-            'CTRB/Frete (%)', 'FRETE', 'ICMS', 'LUCRO', 'Peso Total',
+            '🧭 Viagem', 'EMISSÃO', 'PLACA', 'Tipo Veículo', 'Destinos da Rota', 'MOTORISTA', 'Distância (KM)',
+            'ENTREGAS', 'Custo (CTRB/OS)', 'CTRB/Frete (%)', 'FRETE', 'ICMS', 'Peso Total',
             'Volume Total (M³)', 'Qtd. CTRCs', 'Volumes Totais', 'Valor Mercadoria'
         ]
-
         colunas_para_exibir_e_exportar = [col for col in ordem_final_renomeada if col in resumo_viagens.columns]
         df_para_exportar = resumo_viagens[colunas_para_exibir_e_exportar].copy()
 
-        # --- Formatações ---
-        if 'EMISSÃO' in resumo_viagens.columns:
-            resumo_viagens['EMISSÃO'] = resumo_viagens['EMISSÃO'].dt.strftime('%d/%m/%Y')
-
+        if 'EMISSÃO' in resumo_viagens.columns: resumo_viagens['EMISSÃO'] = resumo_viagens['EMISSÃO'].dt.strftime('%d/%m/%Y')
         resumo_viagens['Distância (KM)'] = resumo_viagens['Distância (KM)'].apply(lambda x: f"{int(x)} km")
-
-        # --- LINHA CORRIGIDA AQUI ---
         if 'Volume Total (M³)' in resumo_viagens.columns:
-            resumo_viagens['Volume Total (M³)'] = resumo_viagens['Volume Total (M³)'].apply(
-                lambda x: f"{x:,.3f}".replace(",", "X").replace(".", ",").replace("X", ".")
-            )
+            resumo_viagens['Volume Total (M³)'] = resumo_viagens['Volume Total (M³)'].apply(lambda x: f"{x:,.3f}".replace(",", "X").replace(".", ",").replace("X", "."))
 
-        # --- Exibição no Streamlit ---
-        st.dataframe(
-            resumo_viagens[colunas_para_exibir_e_exportar],
-            use_container_width=True,
-            hide_index=True
-        )
-
+        st.dataframe(resumo_viagens[colunas_para_exibir_e_exportar], use_container_width=True, hide_index=True)
+        
         excel_bytes = to_excel(df_para_exportar)
         st.download_button(
-            label="📤 Exportar Resumo para Excel",
-            data=excel_bytes,
+            label="📤 Exportar Resumo para Excel", data=excel_bytes,
             file_name=f"resumo_viagens_{motorista_sel.replace(' ', '_')}.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
+        
+        if motorista_sel != "(Todos)":
+            st.divider() 
+            st.subheader("📄 Detalhes dos Documentos da Viagem")
+
+            df_detalhado = df_motorista.copy()
+            colunas_detalhadas = [
+                'EMIS_MANIF', 'NUM_MANIF', 'SITUACAO', 'MOTORISTA', 'DEST_MANIF', 'PLACA_CAVALO', 'TIPO_CAVALO',
+                'NUM_CTRB', 'CTRB-R$', 'NUM_OS', 'OS-R$', 'FRETE-R$', 'ICMS-R$', 'PESO REAL (KG)',
+                'M3', 'VOLUMES', 'QTDE_CTRC', 'MERCADORIA-R$'
+            ]
+            colunas_existentes_det = [col for col in colunas_detalhadas if col in df_detalhado.columns]
+            df_detalhado = df_detalhado[colunas_existentes_det]
+
+            df_detalhado.rename(columns={
+                'EMIS_MANIF': 'EMISSÃO', 'NUM_MANIF': 'Nº Manifesto', 'SITUACAO': 'SITUAÇÃO',
+                'DEST_MANIF': 'Destino', 'PLACA_CAVALO': 'PLACA', 'TIPO_CAVALO': 'TIPO',
+                'NUM_CTRB': 'Nº CTRB', 'NUM_OS': 'Nº OS', 'CTRB-R$': 'Custo CTRB',
+                'OS-R$': 'Custo OS', 'QTDE_CTRC': 'Qtd. CTRCs'
+            }, inplace=True)
+
+            df_detalhado['EMISSÃO'] = pd.to_datetime(df_detalhado['EMISSÃO']).dt.strftime('%d/%m/%Y')
+            colunas_moeda_det = ['Custo CTRB', 'Custo OS', 'FRETE-R$', 'ICMS-R$', 'MERCADORIA-R$']
+            for col in colunas_moeda_det:
+                if col in df_detalhado.columns: df_detalhado[col] = df_detalhado[col].apply(formatar_moeda)
+            if 'PESO REAL (KG)' in df_detalhado.columns:
+                df_detalhado['PESO REAL (KG)'] = df_detalhado['PESO REAL (KG)'].apply(lambda x: formatar_numero(x, 2) + ' kg')
+            if 'M3' in df_detalhado.columns:
+                df_detalhado['M3'] = (df_detalhado['M3'].astype(float) / 10000).apply(lambda x: formatar_numero(x, 3))
+
+            st.dataframe(df_detalhado, use_container_width=True, hide_index=True)
+            
+            try:
+                excel_bytes_detalhado = to_excel(df_detalhado)
+                st.download_button(
+                    label="📥 Download Detalhado (Excel)",
+                    data=excel_bytes_detalhado,
+                    file_name=f"detalhes_motorista_{motorista_sel.replace(' ', '_')}.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    key="download_detalhado_motorista"
+                )
+            except Exception as e:
+                st.error(f"❌ Erro ao gerar o arquivo Excel detalhado: {e}")
+
+
 
 
     # --- ABA 5: ANÁLISE DE ROTAS ---

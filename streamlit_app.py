@@ -252,9 +252,11 @@ st.markdown("""
     
     .kpi-container:hover {
         transform: translateY(-3px);
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
-        border-color: #4a90e2;
+        /* Sombra 1: Brilho azul | Sombra 2: Sombra escura para profundidade */
+        box-shadow: 0 0 15px rgba(74, 144, 226, 0.5), 0 8px 25px rgba(0, 0, 0, 0.3);
+        border-color: #4a90e2; 
     }
+
     
     /* DEPOIS */
     .kpi-title {
@@ -344,6 +346,171 @@ st.markdown("""
         visibility: visible;
         opacity: 1;
     }
+            
+    /* ▼▼▼ NOVO ESTILO PARA O TÍTULO DA ABA DE MOTORISTAS ▼▼▼ */
+    .title-block-motoristas {
+        background: #1C1A29; /* Fundo escuro */
+        
+        /* Bordas laterais na cor roxa para combinar com a aba */
+        border-left: 5px solid #8b5cf6;
+        border-right: 5px solid #8b5cf6;
+        
+        padding: 5px 30px;
+        margin: 10px 0 25px 0;
+        border-radius: 12px;
+        width: 100%;
+        box-sizing: border-box;
+        
+        /* Centraliza o ícone e o texto */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .title-block-motoristas h2 {
+        font-family: "Poppins", "Segoe UI", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0;
+        letter-spacing: 0.5px;
+    }
+
+    .title-block-motoristas .fa-bullseye {
+        font-size: 2.0rem; /* Tamanho do ícone */
+        color: #8b5cf6;   /* Cor do ícone (roxo) */
+    }
+    /* ▲▲▲ FIM DO NOVO ESTILO ▲▲▲ */
+            
+
+    /* ▼▼▼ NOVO ESTILO PARA O TÍTULO DA ABA DE ROTAS ▼▼▼ */
+    .title-block-rotas {
+        background: #1C1A29; /* Fundo escuro */
+        
+        /* Bordas laterais na cor vermelha para combinar com a aba */
+        border-left: 5px solid #ef4444;
+        border-right: 5px solid #ef4444;
+        
+        padding: 5px 30px;
+        margin: 10px 0 25px 0;
+        border-radius: 12px;
+        width: 100%;
+        box-sizing: border-box;
+        
+        /* Centraliza o ícone e o texto */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .title-block-rotas h2 {
+        font-family: "Poppins", "Segoe UI", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0;
+        letter-spacing: 0.5px;
+    }
+
+    .title-block-rotas .fa-route {
+        font-size: 2.0rem; /* Tamanho do ícone */
+        color: #ef4444;   /* Cor do ícone (vermelho) */
+    }
+    /* ▲▲▲ FIM DO NOVO ESTILO ▲▲▲ */
+            
+
+    /* ▼▼▼ ESTILO CORRIGIDO PARA O TÍTULO DA ABA FINANCEIRA ▼▼▼ */
+    .title-block-financeira {
+        background: #1C1A29;
+        border-left: 5px solid #22c55e; /* Borda verde */
+        border-right: 5px solid #22c55e; /* Borda verde */
+        padding: 5px 30px;
+        margin: 10px 0 25px 0;
+        border-radius: 12px;
+        width: 100%;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .title-block-financeira h2 {
+        font-family: "Poppins", "Segoe UI", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0;
+        letter-spacing: 0.5px;
+    }
+
+    /* Regra genérica para QUALQUER ícone dentro deste bloco de título */
+    .title-block-financeira i {
+        font-size: 2.0rem;
+        color: #22c55e;   /* Cor do ícone (VERDE) */
+    }
+    /* ▲▲▲ FIM DO ESTILO CORRIGIDO ▲▲▲ */
+            
+    /* ▼▼▼ ADICIONE ESTE NOVO ESTILO PARA O TÍTULO DE PERFORMANCE ▼▼▼ */
+    .title-block-performance {
+        background: #1C1A29;
+        
+        /* Bordas laterais para combinar com a aba de Performance (Laranja) */
+        border-left: 5px solid #f97316;
+        border-right: 5px solid #f97316;
+        
+        padding: 5px 30px;
+        margin: 20px 0 25px 0; /* Aumenta a margem superior para dar espaço */
+        border-radius: 12px;
+        width: 100%;
+        box-sizing: border-box;
+        
+        /* Centraliza o ícone e o texto */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .title-block-performance h2 {
+        font-family: "Poppins", "Segoe UI", sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0;
+        letter-spacing: 0.5px;
+    }
+
+    /* Ícone específico para este bloco de título */
+    .title-block-performance .fa-chart-line {
+        font-size: 2.0rem;
+        color: #f97316;   /* Cor do ícone (Laranja) */
+    }
+    /* ▲▲▲ FIM DO NOVO ESTILO ▲▲▲ */
+            
+    /* ▼▼▼ ESTILO ATUALIZADO PARA TÍTULOS DE SEÇÃO MODERNOS ▼▼▼ */
+    .section-title-modern {
+        font-family: "Poppins", "Segoe UI", sans-serif;
+        font-size: 1.5rem; /* Aumentei um pouco para mais destaque */
+        font-weight: 700;  /* <<< PRINCIPAL MUDANÇA AQUI: de 600 para 700 (bold) */
+        color: #FFFFFF;    /* Cor branca pura para mais contraste */
+        margin-top: 25px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        letter-spacing: 0.5px; /* Adiciona um leve espaçamento entre as letras */
+    }
+    /* ▲▲▲ FIM DO ESTILO ATUALIZADO ▲▲▲ */
 
     </style>
             
@@ -364,13 +531,70 @@ def carregar_dados(caminho):
         if col in df.columns:
             df[col] = pd.to_datetime(df[col], errors='coerce')
             
-    # --- ALTERAÇÃO AQUI ---
     # Garante que as colunas de texto sejam do tipo string
     for col_texto in ['LACRES', 'SITUACAO']:
         if col_texto in df.columns:
             df[col_texto] = df[col_texto].astype(str)
             
     return df
+
+@st.cache_data
+def carregar_capacidades(caminho_capacidades):
+    """Carrega os dados de capacidade, convertendo toneladas para KG."""
+    try:
+        df_caps = pd.read_excel(caminho_capacidades)
+        
+        # 1. Limpa os nomes das colunas
+        df_caps.columns = df_caps.columns.str.strip().str.upper()
+        
+        # 2. Encontra a coluna de placa
+        coluna_placa_encontrada = None
+        nomes_placa_possiveis = ['PLACA_CARRETA', 'PLACA'] 
+        for nome in nomes_placa_possiveis:
+            if nome in df_caps.columns:
+                coluna_placa_encontrada = nome
+                break 
+        
+        if not coluna_placa_encontrada:
+            raise KeyError(f"Nenhuma coluna de PLACA encontrada. Colunas disponíveis: {list(df_caps.columns)}")
+
+        # 3. Encontra a coluna de capacidade
+        coluna_capacidade_encontrada = None
+        nomes_capacidade_possiveis = ['CAPACIDADE_KG', 'CAPACIDADE', 'PESO', 'CAPACIDADE (KG)'] 
+        for nome in nomes_capacidade_possiveis:
+            if nome in df_caps.columns:
+                coluna_capacidade_encontrada = nome
+                break
+
+        if not coluna_capacidade_encontrada:
+            raise KeyError(f"Nenhuma coluna de CAPACIDADE encontrada. Colunas disponíveis: {list(df_caps.columns)}")
+
+        # --- ▼▼▼ A MÁGICA ACONTECE AQUI ▼▼▼ ---
+        # 4. Converte o valor da capacidade de Toneladas para KG
+        #    Garante que o valor seja numérico antes de multiplicar
+        df_caps[coluna_capacidade_encontrada] = pd.to_numeric(df_caps[coluna_capacidade_encontrada], errors='coerce').fillna(0) * 1000
+        # --- ▲▲▲ FIM DA MUDANÇA ▲▲▲ ---
+
+        # 5. Renomeia as colunas para o padrão do script
+        df_caps.rename(columns={
+            coluna_placa_encontrada: 'PLACA_CARRETA',
+            coluna_capacidade_encontrada: 'CAPACIDADE_KG'
+        }, inplace=True)
+
+        # Garante que a coluna da placa seja do tipo texto para a junção
+        df_caps['PLACA_CARRETA'] = df_caps['PLACA_CARRETA'].astype(str)
+        return df_caps
+
+    except FileNotFoundError:
+        st.error(f"❌ **Erro: O arquivo de capacidades '{caminho_capacidades}' não foi encontrado.**")
+        return pd.DataFrame()
+    except KeyError as e: 
+        st.error(f"❌ **Erro de Coluna no arquivo 'cadastro_veiculos.xlsx':** {e}")
+        return pd.DataFrame()
+    except Exception as e:
+        st.error(f"❌ Erro inesperado ao ler o arquivo de capacidades: {e}")
+        return pd.DataFrame()
+
 
 def to_excel(df):
     """
@@ -441,6 +665,55 @@ if df_original.empty:
 # --- FIM DA MUDANÇA ---
 
 
+# ▼▼▼ INÍCIO DA NOVA LÓGICA DE CAPACIDADE ▼▼▼
+
+# 1. Carrega o arquivo com as capacidades dos veículos
+caminho_capacidades = os.path.join("data", "cadastro_veiculos.xlsx") 
+df_capacidades = carregar_capacidades(caminho_capacidades)
+
+# 2. Junta (merge) o DataFrame de viagens com o de capacidades da CARRETA
+if not df_capacidades.empty:
+    df_original = pd.merge(
+        df_original,
+        df_capacidades[['PLACA_CARRETA', 'CAPACIDADE_KG']],
+        on='PLACA_CARRETA',
+        how='left'
+    )
+    df_original['CAPACIDADE_KG'].fillna(25000, inplace=True)
+else:
+    df_original['CAPACIDADE_KG'] = 25000
+    st.warning("⚠️ Arquivo de cadastro de veículos não encontrado para CARRETA. Usando capacidade padrão de 25.000 kg.")
+
+# ▲▲▲ FIM DA NOVA LÓGICA DE CAPACIDADE ▲▲▲
+
+
+# --- ### INÍCIO DA CORREÇÃO DEFINITIVA ### ---
+# 3. CRIA A COLUNA 'CAPAC_CAVALO' NO ESCOPO GLOBAL
+
+if not df_capacidades.empty:
+    # Prepara o DataFrame de capacidades para a junção com a placa do cavalo
+    df_capacidades_cavalo = df_capacidades.rename(columns={'PLACA_CARRETA': 'PLACA_CAVALO', 'CAPACIDADE_KG': 'CAPAC_CAVALO'})
+    
+    # Junta o df_original com as capacidades do cavalo
+    df_original = pd.merge(
+        df_original,
+        df_capacidades_cavalo[['PLACA_CAVALO', 'CAPAC_CAVALO']],
+        on='PLACA_CAVALO',
+        how='left'
+    )
+    # Preenche com 0 ou um valor padrão se o cavalo/truck não for encontrado no cadastro
+    df_original['CAPAC_CAVALO'].fillna(0, inplace=True)
+else:
+    # Se o arquivo de cadastro não existir, cria a coluna com valor 0
+    df_original['CAPAC_CAVALO'] = 0
+    st.warning("⚠️ Arquivo de cadastro de veículos não encontrado para CAVALO/TRUCK. Capacidade definida como 0.")
+# --- ### FIM DA CORREÇÃO DEFINITIVA ### ---
+
+
+# ▼▼▼ ADICIONE O NOVO CÓDIGO AQUI ▼▼▼
+# (O resto do seu código continua a partir daqui)
+
+
 # ▼▼▼ ADICIONE O NOVO CÓDIGO AQUI ▼▼▼
 
 # --- NOVO FILTRO PARA REMOVER DADOS INDESEJADOS ---
@@ -454,11 +727,12 @@ df_original = df_original[~df_original['MOTORISTA'].isin(motoristas_para_excluir
 df_original = df_original[~df_original['PLACA_CAVALO'].isin(placas_para_excluir)]
 # --- FIM DO NOVO FILTRO ---
 
-
-# ✅ Conversão automática para colunas numéricas (corrige formatos BR e EUA)
-colunas_numericas = ['FRETE-R$', 'CTRB-R$', 'OS-R$', 'ICMS-R$', 'PESO REAL (KG)', 'M3', 'MERCADORIA-R$', 'VOLUMES']
-
-
+# --- GARANTE A EXISTÊNCIA DA COLUNA DIA_EMISSAO_STR ---
+if 'EMIS_MANIF' in df_original.columns:
+    df_original['DIA_EMISSAO_STR'] = df_original['EMIS_MANIF'].dt.strftime('%d/%m/%Y')
+else:
+    df_original['DIA_EMISSAO_STR'] = ''
+# --- FIM DO AJUSTE ---
 
 # ✅ Conversão automática para colunas numéricas (corrige formatos BR e EUA)
 colunas_numericas = ['FRETE-R$', 'CTRB-R$', 'OS-R$', 'ICMS-R$', 'PESO REAL (KG)', 'M3', 'MERCADORIA-R$', 'VOLUMES']
@@ -856,12 +1130,15 @@ if not df_filtrado.empty:
     if valor_por_km > 0 and custo_ctrb_os > 0:
         distancia_estimada_km = custo_ctrb_os / valor_por_km
 
-# Adiciona a coluna de distância ao DataFrame principal para uso global (ex: na tab4).
-# Usar .loc para evitar o SettingWithCopyWarning.
-df_filtrado.loc[:, 'DISTANCIA_ESTIMADA_KM'] = distancia_estimada_km
-
+# --- INÍCIO DA CORREÇÃO ---
+# Adiciona a coluna SOMENTE se o DataFrame não estiver vazio para evitar o ValueError
+if not df_filtrado.empty:
+    df_filtrado.loc[:, 'DISTANCIA_ESTIMADA_KM'] = distancia_estimada_km
+else:
+    # Se o DataFrame estiver vazio, mas a coluna for esperada em outras partes do código,
+    # é uma boa prática garantir que ela exista, mesmo que vazia.
+    df_filtrado['DISTANCIA_ESTIMADA_KM'] = pd.Series(dtype='float64')
 # --- FIM DA CORREÇÃO ---
-
 
 # TÍTULO PRINCIPAL COM ESTILO DAS IMAGENS DE REFERÊNCIA
 st.markdown("""
@@ -883,7 +1160,7 @@ with tab1:
     if df_filtrado.empty:
         st.warning("⚠️ Nenhum registro encontrado para os filtros selecionados.")
     else:
-               # ==============================
+        # ==============================
         # 1. CÁLCULOS PRINCIPAIS (COM LÓGICA DE CUSTO DINÂMICO E DISTÂNCIA)
         # ==============================
         receita_total = df_filtrado.get('FRETE-R$', pd.Series(0)).sum()
@@ -935,11 +1212,7 @@ with tab1:
         lucro_estimado = receita_total - custo_total
         margem_lucro = (lucro_estimado / receita_total * 100) if receita_total > 0 else 0
 
-        # ▼▼▼ ADICIONE ESTA LINHA ▼▼▼
         valor_mercadoria_total = df_filtrado.get('MERCADORIA-R$', pd.Series(0)).sum()
-
-        # Cálculos operacionais
-        peso_total = df_filtrado.get('PESO REAL (KG)', pd.Series(0)).sum()
 
         # Cálculos operacionais
         peso_total = df_filtrado.get('PESO REAL (KG)', pd.Series(0)).sum()
@@ -948,38 +1221,34 @@ with tab1:
         volume_total = df_filtrado.get('M3', pd.Series(0)).sum()
 
         # --- Correção: normalização da unidade do volume ---
-        # Se o valor total for muito grande, assume que está em litros e converte para m³
         if volume_total > 1000:  
             volume_total_m3 = volume_total / 10000
         else:
             volume_total_m3 = volume_total  # já está em m³
 
-        # --- Capacidades e ociosidade (LÓGICA DINÂMICA) ---
+        # --- Capacidades e ociosidade (LÓGICA UNIFICADA E CORRIGIDA) ---
 
-
-        # 1. Dicionário com as capacidades por tipo de veículo
-        capacidades_por_tipo = {
-            'TOCO':    {'peso_kg': 10000, 'volume_m3': 55},
-            'TRUCK':   {'peso_kg': 16000, 'volume_m3': 75},
-            'CAVALO':  {'peso_kg': 25000, 'volume_m3': 110},
-            'PADRAO':  {'peso_kg': 25000, 'volume_m3': 80} # Valor padrão de segurança
+        # 1. Define a capacidade de PESO dinamicamente a partir da coluna do arquivo externo.
+        #    Usa a média se houver múltiplos veículos ou um padrão de 25000 kg se a coluna não existir.
+        capacidade_peso_kg = df_filtrado['CAPACIDADE_KG'].mean() if 'CAPACIDADE_KG' in df_filtrado.columns and not df_filtrado.empty else 25000
+        
+        # 2. Define a capacidade de VOLUME a partir de um dicionário (pois não vem do arquivo).
+        capacidades_volume_por_tipo = {
+            'TOCO': 55, 'TRUCK': 75, 'CAVALO': 110, 'PADRAO': 80
         }
+        tipo_veiculo_selecionado = df_filtrado['TIPO_CAVALO'].iloc[0] if not df_filtrado.empty and 'TIPO_CAVALO' in df_filtrado.columns else "PADRAO"
+        capacidade_volume_m3 = capacidades_volume_por_tipo.get(str(tipo_veiculo_selecionado).upper(), 80)
 
-        # 2. Identifica o tipo do veículo a partir dos dados filtrados
-        tipo_veiculo_selecionado = "PADRAO" # Padrão inicial
-        if not df_filtrado.empty and 'TIPO_CAVALO' in df_filtrado.columns:
-            tipo_veiculo_selecionado = df_filtrado['TIPO_CAVALO'].iloc[0]
-
-        # 3. Busca a capacidade correta no dicionário
-        capacidade_veiculo = capacidades_por_tipo.get(str(tipo_veiculo_selecionado).upper(), capacidades_por_tipo['PADRAO'])
-
-        # 4. Define as variáveis de capacidade que o resto do código utiliza
-        capacidade_peso_kg = capacidade_veiculo['peso_kg']
-        capacidade_volume_m3 = capacidade_veiculo['volume_m3']
-
-        # O cálculo de ociosidade agora usa os valores corretos e dinâmicos
+        # 3. Calcula a ociosidade com base nas capacidades definidas acima.
         ociosidade_peso = (1 - (peso_total / capacidade_peso_kg)) * 100 if capacidade_peso_kg > 0 else 0
         ociosidade_volume = (1 - (volume_total_m3 / capacidade_volume_m3)) * 100 if capacidade_volume_m3 > 0 else 0
+        
+        # --- FIM DO BLOCO CORRIGIDO ---
+
+
+        # Infos de identificação (necessárias para os cálculos seguintes)
+        nome_completo_motorista = df_filtrado['MOTORISTA'].iloc[0]
+
 
         # Infos de identificação (necessárias para os cálculos seguintes)
         nome_completo_motorista = df_filtrado['MOTORISTA'].iloc[0]
@@ -1141,7 +1410,17 @@ with tab1:
         # ==============================
         # 3. KPIs FINANCEIROS COM ÍCONES (COM TÍTULO DINÂMICO)
         # ==============================
-        st.subheader("💰 Análise Financeira")
+        # Substitua a linha st.subheader("...") por este bloco:
+        st.markdown("""
+            <div class="title-block-financeira">
+                <i class="fa-solid fa-chart-pie"></i>
+                <h2>Painel de Desempenho Geral</h2>
+            </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown('<h3 class="section-title-modern"><i class="fa-solid fa-coins"></i> Análise Financeira</h3>', unsafe_allow_html=True)
+
+
         kpi_f1, kpi_f2, kpi_f3, kpi_f4, kpi_f5, kpi_f6 = st.columns(6)
 
 
@@ -1168,7 +1447,7 @@ with tab1:
         def formatar_percentual(valor):
             """Formata um número como percentual com vírgula (ex: 82,1%)."""
             try:
-                return f"{valor:.1f}%".replace('.', ',')
+                return f"{valor:.0f}%"
             except (ValueError, TypeError):
                 return "0,0%"
 
@@ -1276,11 +1555,10 @@ with tab1:
 
         st.divider()
 
-
         # ==============================
         # 4. INDICADORES DE PERFORMANCE
         # ==============================
-        st.subheader("📊 Indicadores de Performance")
+        st.markdown('<h3 class="section-title-modern"><i class="fa-solid fa-chart-simple"></i> Indicadores de Performance</h3>', unsafe_allow_html=True)
         perf1, perf2, perf3 = st.columns(3)
 
         # CORREÇÃO: Usando a variável 'custo_ctrb_os' que foi definida na seção de cálculos
@@ -1340,7 +1618,7 @@ with tab1:
         # ==============================
         # 5. DETALHES OPERACIONAIS (COM NOVOS KPIS)
         # ==============================
-        st.subheader("⚙️ Detalhes Operacionais")
+        st.markdown('<h3 class="section-title-modern"><i class="fa-solid fa-gears"></i> Detalhes Operacionais</h3>', unsafe_allow_html=True)
 
         # --- LÓGICA PARA KPIs DINÂMICOS ---
         if rota_sel_visivel != "(Todos)":
@@ -1489,7 +1767,7 @@ with tab1:
 
         st.divider()
 
-                # 🌟 CSS PROFISSIONAL PARA OS CARDS E O NOVO TÍTULO
+        # 🌟 CSS PROFISSIONAL PARA OS CARDS E O NOVO TÍTULO
         st.markdown("""
         <style>
             /* ▼▼▼ SUBSTITUA O ESTILO DO TÍTULO ANTERIOR POR ESTE ▼▼▼ */
@@ -1568,7 +1846,7 @@ with tab1:
                 font-weight: 700;
             }
 
-            /* --- CORREÇÃO DE ALTURA DA BARRA --- */
+            /* --- CORREÇÃO DE ALTURA E ANIMAÇÃO DA BARRA --- */
             .progress-bar-container {
                 width: 100%;
                 height: 18px; /* <<< ALTURA AUMENTADA */
@@ -1577,11 +1855,18 @@ with tab1:
                 overflow: hidden;
                 margin-bottom: 10px;
             }
+
             .ocupacao-card-custom .progress-bar-fill {
                 height: 18px; /* <<< ALTURA CORRIGIDA (igual ao container) */
-                background: linear-gradient(90deg, #7C3AED, #8B5CF6); /* Roxo para Truck */
+                background: linear-gradient(90deg, #7C3AED, #8B5CF6); /* Roxo para Truck (padrão) */
                 border-radius: 8px;
+
+                /* ▼▼▼ ANIMAÇÃO DE CRESCIMENTO ADICIONADA AQUI ▼▼▼ */
+                transition: width 1.2s ease-in-out; 
+                /* ▲▲▲ FIM DA ANIMAÇÃO ▲▲▲ */
             }
+
+            /* Este seletor já existe e aplica a cor para a carreta */
             .ocupacao-card-cavalo .progress-bar-fill {
                 height: 18px; /* <<< ALTURA CORRIGIDA (igual ao container) */
                 background: linear-gradient(90deg, #F97316, #FB923C); /* Laranja para Carreta */
@@ -1598,7 +1883,7 @@ with tab1:
             /* --- NOVO ESTILO PARA O AVISO DE OCIOSIDADE --- */
             .aviso-ociosidade {
                 background-color:#1E1E2E;
-                border-left: 5px solid #facc15;
+                border-left: 5px solid #facc15; /* Amarelo/Dourado */
                 padding: 12px 20px;
                 border-radius: 8px;
                 margin-top: 10px;
@@ -1608,8 +1893,6 @@ with tab1:
             }
         </style>
         """, unsafe_allow_html=True)
-
-
 
         # --- TÍTULO MODERNIZADO ---
         st.markdown("""
@@ -1650,7 +1933,7 @@ with tab1:
             elif "CAVALO" in tipos_upper:
                 frota_default = "FROTA CARRETA"
 
-        # --- NOVO SELECTOR DE FROTA (Glass Style Modernizado) ---
+        # --- NOVO SELECTOR DE FROTA (Glass Style com Animação Suave) ---
         selecionar_frota = option_menu(
             menu_title=None,
             options=["FROTA TRUCK", "FROTA CARRETA", "AMBAS"],
@@ -1682,380 +1965,338 @@ with tab1:
                     "border-radius": "12px",
                     "margin": "0px 6px",
                     "background-color": "rgba(255, 255, 255, 0.05)",
-                    "transition": "all 0.3s ease-in-out",
+                    # ▼▼▼ TRANSIÇÃO ADICIONADA AQUI ▼▼▼
+                    "transition": "all 0.4s ease-in-out", 
                 },
                 # 🔹 Efeito hover
                 "nav-link:hover": {
-                    "background-color": "rgba(255,255,255,0.12)",
+                    "background-color": "rgba(255, 255, 255, 0.12)",
                     "color": "#fff",
                     "transform": "translateY(-2px)",
                 },
-                # 🔹 Botão selecionado — gradiente verde + brilho
+                # 🔹 Botão selecionado — Estilo refinado
                 "nav-link-selected": {
-                    "background": "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
-                    "color": "white",
-                    "box-shadow": "0 0 10px rgba(34,197,94,0.5)",
+                    "background-color": "#222433", # Fundo azul escuro
+                    "color": "#FFFFFF",           # Texto branco
+                    "border": "1.5px solid #5D9CEC", # Borda azul clara
+                    "box-shadow": "0 0 15px rgba(93, 156, 236, 0.6)", # Brilho (glow) azul
                     "transform": "translateY(-2px)",
                 },
             },
         )
 
         # ===============================================
-        # LÓGICA ORIGINAL (reutilizada)
+        # LÓGICA DE OCUPAÇÃO (MODO VISÃO GERAL)
         # ===============================================
         if rota_sel_visivel == "(Todos)":
 
+            # --- 1. FUNÇÕES DE LÓGICA DE COR (COM AJUSTE) ---
+            def obter_cor_ocupacao(percentual):
+                """Retorna gradiente para a barra de OCUPAÇÃO (verde = alto)."""
+                if percentual < 50: return "linear-gradient(90deg, #dc2626 0%, #ef4444 100%)"  # Vermelho
+                elif percentual < 80: return "linear-gradient(90deg, #f59e0b 0%, #facc15 100%)" # Amarelo
+                else: return "linear-gradient(90deg, #16a34a 0%, #22c55e 100%)" # Verde
+
+            def obter_cor_ociosidade(percentual):
+                """Retorna SEMPRE um gradiente amarelo para a barra de OCIOSIDADE."""
+                # A lógica condicional foi removida. Agora a cor é fixa.
+                return "linear-gradient(90deg, #f59e0b 0%, #facc15 100%)" # Amarelo Fixo
+
+            # --- 2. CÁLCULO DOS DADOS AGREGADOS POR TIPO DE FROTA ---
             capacidades_por_tipo = {
                 'TRUCK':  {'peso_kg': 16000, 'volume_m3': 75},
                 'CAVALO': {'peso_kg': 25000, 'volume_m3': 110},
                 'PADRAO': {'peso_kg': 25000, 'volume_m3': 80}
             }
 
+            # --- 2. CÁLCULO DOS DADOS AGREGADOS POR TIPO DE FROTA (VERSÃO FINAL CORRIGIDA) ---
             def calcular_dados_ocupacao(tipo_veiculo, df_dados):
                 df_tipo = df_dados[df_dados['TIPO_CAVALO'].fillna('').astype(str).str.upper() == tipo_veiculo]
                 if df_tipo.empty:
                     return None
 
-                capacidade = capacidades_por_tipo.get(tipo_veiculo, capacidades_por_tipo['PADRAO'])
-                num_viagens = df_tipo.groupby(['PLACA_CAVALO', 'DIA_EMISSAO_STR']).ngroups
-                if num_viagens == 0:
+                dados = {}
+                viagens_unicas = df_tipo.drop_duplicates(subset=['PLACA_CAVALO', 'DIA_EMISSAO_STR'])
+
+                # --- ### INÍCIO DA LÓGICA CONDICIONAL DE CAPACIDADE ### ---
+
+                # Define qual coluna de capacidade usar com base no tipo de veículo
+                if tipo_veiculo == 'CAVALO':
+                    coluna_capacidade = 'CAPACIDADE_KG' # Para carretas, a capacidade está na carreta
+                else: # Para 'TRUCK' ou qualquer outro
+                    coluna_capacidade = 'CAPAC_CAVALO'  # Para trucks, a capacidade é do próprio veículo
+
+                # Verifica se a coluna de capacidade correta existe
+                if coluna_capacidade not in viagens_unicas.columns:
+                    st.error(f"Erro Crítico: A coluna de capacidade '{coluna_capacidade}' não foi encontrada para a frota {tipo_veiculo}.")
                     return None
 
-                dados = {}
-                dados['cap_total_peso'] = num_viagens * capacidade['peso_kg']
+                # Soma a capacidade da coluna correta para cada viagem única
+                dados['cap_total_peso'] = viagens_unicas[coluna_capacidade].sum()
+                
+                # --- ### FIM DA LÓGICA CONDICIONAL DE CAPACIDADE ### ---
+
+                # O resto da função continua o mesmo, agora usando a capacidade correta
                 dados['total_peso'] = df_tipo['PESO REAL (KG)'].sum()
                 dados['ocup_peso_perc'] = (dados['total_peso'] / dados['cap_total_peso'] * 100) if dados['cap_total_peso'] > 0 else 0
+                dados['ociosidade_peso_perc'] = 100 - dados['ocup_peso_perc']
+                dados['potencial_nao_utilizado_kg'] = dados['cap_total_peso'] - dados['total_peso']
 
-                dados['cap_total_volume'] = num_viagens * capacidade['volume_m3']
-                dados['total_volume'] = df_tipo['M3'].sum() if 'M3' in df_tipo.columns else 0
+                # --- CÁLCULO DE VOLUME (sem alteração na lógica) ---
+                capacidades_volume_por_tipo = { 'TRUCK': 75, 'CAVALO': 110, 'PADRAO': 80 }
+                capacidade_unitaria_volume = capacidades_volume_por_tipo.get(tipo_veiculo, 80)
+                num_viagens_volume = len(viagens_unicas)
+                
+                dados['cap_total_volume'] = num_viagens_volume * capacidade_unitaria_volume
+                dados['total_volume'] = df_tipo['M3'].sum()
+                
                 if dados['total_volume'] > 1000:
                     dados['total_volume'] /= 10000
-                dados['ocup_volume_perc'] = (dados['total_volume'] / dados['cap_total_volume'] * 100) if dados['cap_total_volume'] > 0 else 0
 
+                dados['ocup_volume_perc'] = (dados['total_volume'] / dados['cap_total_volume'] * 100) if dados['cap_total_volume'] > 0 else 0
+                dados['ociosidade_volume_perc'] = 100 - dados['ocup_volume_perc']
+                dados['potencial_nao_utilizado_m3'] = dados['cap_total_volume'] - dados['total_volume']
+                
                 return dados
 
             dados_truck = calcular_dados_ocupacao('TRUCK', df_filtrado)
             dados_carreta = calcular_dados_ocupacao('CAVALO', df_filtrado)
 
-            if selecionar_frota == "FROTA TRUCK":
-                if dados_truck:
+            # --- ▼▼▼ INÍCIO DA NOVA LÓGICA DE UNIFICAÇÃO ▼▼▼ ---
+            dados_ambas = None
+            # Só calcula se ambos os conjuntos de dados existirem
+            if dados_truck and dados_carreta:
+                dados_ambas = {
+                    # Soma os valores absolutos (peso, capacidade, etc.)
+                    'total_peso': dados_truck['total_peso'] + dados_carreta['total_peso'],
+                    'cap_total_peso': dados_truck['cap_total_peso'] + dados_carreta['cap_total_peso'],
+                    'potencial_nao_utilizado_kg': dados_truck['potencial_nao_utilizado_kg'] + dados_carreta['potencial_nao_utilizado_kg'],
                     
-                    col1, col2 = st.columns([1, 1], gap="large")
+                    'total_volume': dados_truck['total_volume'] + dados_carreta['total_volume'],
+                    'cap_total_volume': dados_truck['cap_total_volume'] + dados_carreta['cap_total_volume'],
+                    'potencial_nao_utilizado_m3': dados_truck['potencial_nao_utilizado_m3'] + dados_carreta['potencial_nao_utilizado_m3'],
+                }
+                # Recalcula os percentuais com base nos totais somados
+                dados_ambas['ocup_peso_perc'] = (dados_ambas['total_peso'] / dados_ambas['cap_total_peso'] * 100) if dados_ambas['cap_total_peso'] > 0 else 0
+                dados_ambas['ociosidade_peso_perc'] = 100 - dados_ambas['ocup_peso_perc']
+                
+                dados_ambas['ocup_volume_perc'] = (dados_ambas['total_volume'] / dados_ambas['cap_total_volume'] * 100) if dados_ambas['cap_total_volume'] > 0 else 0
+                dados_ambas['ociosidade_volume_perc'] = 100 - dados_ambas['ocup_volume_perc']
 
-                    # --- Card e Aviso de Ociosidade de PESO ---
-                    with col1:
-                        # Card de Ocupação de Peso
-                        st.markdown(f"""
-                        <div class="ocupacao-card-custom"> 
-                            <div class="progress-card-header">
-                                <div class="progress-card-title">⚖️ Ocupação de Peso (KG)</div>
-                                <div class="progress-card-value">{dados_truck['ocup_peso_perc']:.1f}%</div>
-                            </div>
-                            <div class="progress-bar-container">
-                                <div class="progress-bar-fill" style="width: {min(dados_truck['ocup_peso_perc'], 100)}%;"></div>
-                            </div>
-                            <div class="progress-card-footer">
-                                <span>Total: {formatar_numero(dados_truck['total_peso'])} KG</span>
-                                <span>Capacidade: {formatar_numero(dados_truck['cap_total_peso'])} KG</span>
-                            </div>
-                        </div>""", unsafe_allow_html=True)
+            # Caso apenas uma das frotas tenha dados no período
+            elif dados_truck:
+                dados_ambas = dados_truck
+            elif dados_carreta:
+                dados_ambas = dados_carreta
+            # --- ▲▲▲ FIM DA NOVA LÓGICA DE UNIFICAÇÃO ▲▲▲ ---
 
-                        # Aviso de Ociosidade de Peso (com mais margem superior)
-                        ociosidade_peso = 100 - dados_truck['ocup_peso_perc']
-                        st.markdown(f"""
-                        <div style="
-                            background-color:#1E1E2E;
-                            border-left: 5px solid #facc15;
-                            padding: 12px 20px;
-                            border-radius: 8px;
-                            margin-top: 5px; /* <<< ALTERADO AQUI */
-                            color:#e4e4e7;
-                            font-size: 0.95rem;">
-                            ⚠️ <b>Ociosidade de Peso:</b> <b>{ociosidade_peso:.1f}%</b>
+            # --- 3. FUNÇÃO PARA RENDERIZAR OS CARDS (MODIFICADA) ---
+            def renderizar_card_ocupacao(dados, tipo_metrica, container):
+                if not dados:
+                    return
+
+                if tipo_metrica == 'peso':
+                    titulo = "⚖️ Ocupação de Peso (KG)"
+                    ocup_perc = dados['ocup_peso_perc']
+                    total_valor = dados['total_peso']
+                    cap_total = dados['cap_total_peso']
+                    unidade = "KG"
+                    ociosidade_perc = dados['ociosidade_peso_perc']
+                    potencial_nao_utilizado = dados['potencial_nao_utilizado_kg']
+                    icone_ociosidade = "fa-solid fa-scale-unbalanced-flip"
+                    titulo_ociosidade = "Ociosidade de Peso"
+                else: # volume
+                    titulo = "📦 Ocupação de Cubagem (M³)"
+                    ocup_perc = dados['ocup_volume_perc']
+                    total_valor = dados['total_volume']
+                    cap_total = dados['cap_total_volume']
+                    unidade = "M³"
+                    ociosidade_perc = dados['ociosidade_volume_perc']
+                    potencial_nao_utilizado = dados['potencial_nao_utilizado_m3']
+                    icone_ociosidade = "fa-solid fa-box-open"
+                    titulo_ociosidade = "Ociosidade de Cubagem (M³)"
+
+                cor_ocup = obter_cor_ocupacao(ocup_perc)
+                cor_ocios = obter_cor_ociosidade(ociosidade_perc)
+                borda_ocios = cor_ocios.split(',')[1].strip()
+
+                with container:
+                    st.markdown(f"""
+                    <div class="ocupacao-card-custom"> 
+                        <div class="progress-card-header">
+                            <div class="progress-card-title">{titulo}</div>
+                            <div class="progress-card-value">{ocup_perc:.0f}%</div>
                         </div>
-                        """, unsafe_allow_html=True)
-
-                    # --- Card e Aviso de Ociosidade de CUBAGEM ---
-                    with col2:
-                        # Card de Ocupação de Cubagem
-                        st.markdown(f"""
-                        <div class="ocupacao-card-custom">
-                            <div class="progress-card-header">
-                                <div class="progress-card-title">📦 Ocupação de Cubagem (M³)</div>
-                                <div class="progress-card-value">{dados_truck['ocup_volume_perc']:.1f}%</div>
-                            </div>
-                            <div class="progress-bar-container">
-                                <div class="progress-bar-fill" style="width: {min(dados_truck['ocup_volume_perc'], 100)}%;"></div>
-                            </div>
-                            <div class="progress-card-footer">
-                                <span>Total: {formatar_numero(dados_truck['total_volume'], 3)} M³</span>
-                                <span>Capacidade: {formatar_numero(dados_truck['cap_total_volume'])} M³</span>
-                            </div>
-                        </div>""", unsafe_allow_html=True)
-
-                        # Aviso de Ociosidade de Cubagem (com mais margem superior)
-                        ociosidade_volume = 100 - dados_truck['ocup_volume_perc']
-                        st.markdown(f"""
-                        <div style="
-                            background-color:#1E1E2E;
-                            border-left: 5px solid #facc15;
-                            padding: 12px 20px;
-                            border-radius: 8px;
-                            margin-top: 5px; /* <<< ALTERADO AQUI */
-                            color:#e4e4e7;
-                            font-size: 0.95rem;">
-                            ⚠️ <b>Ociosidade de Cubagem (M³):</b> <b>{ociosidade_volume:.1f}%</b>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: {min(ocup_perc, 100)}%; background: {cor_ocup};"></div>
                         </div>
-                        """, unsafe_allow_html=True)
+                        <div class="progress-card-footer">
+                            <span>Total: {formatar_numero(total_valor, 3 if unidade == 'M³' else 0)} {unidade}</span>
+                            <span>Capacidade: {formatar_numero(cap_total)} {unidade}</span>
+                        </div>
+                    </div>""", unsafe_allow_html=True)
+                    
+                    st.markdown(f"""
+                    <div style="display: flex; align-items: center; justify-content: space-between; background-color: #1E1E2E; border-left: 5px solid {borda_ocios}; padding: 10px 16px; border-radius: 8px; margin-top: 10px; color: #e4e4e7; font-size: 0.95rem;">
+                        <span><i class="{icone_ociosidade}"></i> <b>{titulo_ociosidade}:</b> {ociosidade_perc:.0f}%</span>
+                        <div style="flex: 1; height: 10px; margin: 0 15px; background-color: #2a2a3a; border-radius: 5px; overflow: hidden;">
+                            <div style="width: {min(ociosidade_perc, 100)}%; height: 100%; background: {cor_ocios};"></div>
+                        </div>
+                        <span style="font-weight: bold; white-space: nowrap;">{formatar_numero(potencial_nao_utilizado, 2 if unidade == 'M³' else 0)} {unidade}</span>
+                    </div>""", unsafe_allow_html=True)
+
+
+
+            # --- 4. RENDERIZAÇÃO CONDICIONAL (CORREÇÃO FINAL) ---
+            if selecionar_frota == "FROTA TRUCK":
+                st.markdown("<div class='frota-title' style='width: 100%; text-align: center;'><i class='fa-solid fa-truck-moving'></i> FROTA TRUCK</div>", unsafe_allow_html=True)
+                col1, col2 = st.columns(2, gap="large")
+                renderizar_card_ocupacao(dados_truck, 'peso', col1)
+                renderizar_card_ocupacao(dados_truck, 'volume', col2)
 
             elif selecionar_frota == "FROTA CARRETA":
-                if dados_carreta:
-                    
-                    col1, col2 = st.columns([1, 1], gap="large")
-
-                    with col1:
-                        st.markdown(f"""
-                        <div class="ocupacao-card-custom ocupacao-card-cavalo"> 
-                            <div class="progress-card-header">
-                                <div class="progress-card-title">⚖️ Ocupação de Peso (KG)</div>
-                                <div class="progress-card-value">{dados_carreta['ocup_peso_perc']:.1f}%</div>
-                            </div>
-                            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: {min(dados_carreta['ocup_peso_perc'], 100)}%;"></div></div>
-                            <div class="progress-card-footer">
-                                <span>Total: {formatar_numero(dados_carreta['total_peso'])} KG</span>
-                                <span>Capacidade: {formatar_numero(dados_carreta['cap_total_peso'])} KG</span>
-                            </div>
-                        </div>""", unsafe_allow_html=True)
-
-                        ociosidade_peso_carreta = 100 - dados_carreta['ocup_peso_perc']
-                        st.markdown(f"""
-                        <div style="
-                            background-color:#1E1E2E;
-                            border-left: 5px solid #facc15;
-                            padding: 12px 20px;
-                            border-radius: 8px;
-                            margin-top: 5px; /* <<< AJUSTADO PARA 5PX */
-                            color:#e4e4e7;
-                            font-size: 0.95rem;">
-                            ⚠️ <b>Ociosidade de Peso:</b> <b>{ociosidade_peso_carreta:.1f}%</b>
-                        </div>
-                        """, unsafe_allow_html=True)
-
-                    with col2:
-                        st.markdown(f"""
-                        <div class="ocupacao-card-custom ocupacao-card-cavalo">
-                            <div class="progress-card-header">
-                                <div class="progress-card-title">📦 Ocupação de Cubagem (M³)</div>
-                                <div class="progress-card-value">{dados_carreta['ocup_volume_perc']:.1f}%</div>
-                            </div>
-                            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: {min(dados_carreta['ocup_volume_perc'], 100)}%;"></div></div>
-                            <div class="progress-card-footer">
-                                <span>Total: {formatar_numero(dados_carreta['total_volume'], 3)} M³</span>
-                                <span>Capacidade: {formatar_numero(dados_carreta['cap_total_volume'])} M³</span>
-                            </div>
-                        </div>""", unsafe_allow_html=True)
-
-                        ociosidade_volume_carreta = 100 - dados_carreta['ocup_volume_perc']
-                        st.markdown(f"""
-                        <div style="
-                            background-color:#1E1E2E;
-                            border-left: 5px solid #facc15;
-                            padding: 12px 20px;
-                            border-radius: 8px;
-                            margin-top: 5px; /* <<< AJUSTADO PARA 5PX */
-                            color:#e4e4e7;
-                            font-size: 0.95rem;">
-                            ⚠️ <b>Ociosidade de Cubagem (M³):</b> <b>{ociosidade_volume_carreta:.1f}%</b>
-                        </div>
-                        """, unsafe_allow_html=True)
+                st.markdown("<div class='frota-title' style='width: 100%; text-align: center;'><i class='fa-solid fa-trailer'></i> FROTA CARRETA</div>", unsafe_allow_html=True)
+                col1, col2 = st.columns(2, gap="large")
+                renderizar_card_ocupacao(dados_carreta, 'peso', col1)
+                renderizar_card_ocupacao(dados_carreta, 'volume', col2)
 
             elif selecionar_frota == "AMBAS":
-                # --- Cria duas colunas principais para dividir as frotas ---
-                col_truck, col_carreta = st.columns(2, gap="large")
+                # --- MODO AMBAS (UNIFICADO) ---
+                st.markdown("<div class='frota-title' style='width: 100%; text-align: center;'><i class='fa-solid fa-layer-group'></i> FROTA COMPLETA (TRUCK + CARRETA)</div>", unsafe_allow_html=True)
+                
+                # Define as colunas 'col1' e 'col2' que serão usadas pela função
+                col1, col2 = st.columns(2, gap="large")
+                
+                # Chama a função de renderização passando os dados unificados ('dados_ambas')
+                renderizar_card_ocupacao(dados_ambas, 'peso', col1)
+                renderizar_card_ocupacao(dados_ambas, 'volume', col2)
 
-                # --- COLUNA DA ESQUERDA: FROTA TRUCK ---
-                with col_truck:
-                    if dados_truck:
-                        st.markdown("<div class='frota-title'><i class='fa-solid fa-truck-moving'></i> FROTA TRUCK</div>", unsafe_allow_html=True)
-                        
-                        # Card de Peso (Truck)
-                        st.markdown(f"""
-                        <div class="ocupacao-card-custom"> 
-                            <div class="progress-card-header">
-                                <div class="progress-card-title">⚖️ Ocupação de Peso (KG)</div>
-                                <div class="progress-card-value">{dados_truck['ocup_peso_perc']:.1f}%</div>
-                            </div>
-                            <div class="progress-bar-container">
-                                <div class="progress-bar-fill" style="width: {min(dados_truck['ocup_peso_perc'], 100)}%;"></div>
-                            </div>
-                            <div class="progress-card-footer">
-                                <span>Total: {formatar_numero(dados_truck['total_peso'])} KG</span>
-                                <span>Capacidade: {formatar_numero(dados_truck['cap_total_peso'])} KG</span>
-                            </div>
-                        </div>""", unsafe_allow_html=True)
+            # Adicione uma verificação final para o caso de nenhuma das condições ser atendida
+            # (Isso é uma boa prática para evitar erros caso 'selecionar_frota' fique com um valor inesperado)
+            else:
+                st.warning("Selecione um tipo de frota para visualizar os dados.")
 
-                        # Aviso de Ociosidade de Peso (Truck)
-                        ociosidade_peso = 100 - dados_truck['ocup_peso_perc']
-                        st.markdown(f"""
-                        <div style="background-color:#1E1E2E; border-left: 5px solid #facc15; padding: 12px 20px; border-radius: 8px; margin-top: 5px; color:#e4e4e7; font-size: 0.95rem;">
-                            ⚠️ <b>Ociosidade de Peso:</b> <b>{ociosidade_peso:.1f}%</b>
-                        </div>
-                        """, unsafe_allow_html=True)
 
-                        # Espaçamento vertical entre as seções
-                        st.markdown("<br>", unsafe_allow_html=True)
 
-                        # Card de Cubagem (Truck)
-                        st.markdown(f"""
-                        <div class="ocupacao-card-custom">
-                            <div class="progress-card-header">
-                                <div class="progress-card-title">📦 Ocupação de Cubagem (M³)</div>
-                                <div class="progress-card-value">{dados_truck['ocup_volume_perc']:.1f}%</div>
-                            </div>
-                            <div class="progress-bar-container">
-                                <div class="progress-bar-fill" style="width: {min(dados_truck['ocup_volume_perc'], 100)}%;"></div>
-                            </div>
-                            <div class="progress-card-footer">
-                                <span>Total: {formatar_numero(dados_truck['total_volume'], 3)} M³</span>
-                                <span>Capacidade: {formatar_numero(dados_truck['cap_total_volume'])} M³</span>
-                            </div>
-                        </div>""", unsafe_allow_html=True)
+                # 🔹 FROTA TRUCK
+                with col_truck_container:
+                    st.markdown("<div class='frota-title' style='text-align:center; margin-bottom:10px;'><i class='fa-solid fa-truck-moving'></i> FROTA TRUCK</div>", unsafe_allow_html=True)
 
-                        # Aviso de Ociosidade de Cubagem (Truck)
-                        ociosidade_volume = 100 - dados_truck['ocup_volume_perc']
-                        st.markdown(f"""
-                        <div style="background-color:#1E1E2E; border-left: 5px solid #facc15; padding: 12px 20px; border-radius: 8px; margin-top: 5px; color:#e4e4e7; font-size: 0.95rem;">
-                            ⚠️ <b>Ociosidade de Cubagem (M³):</b> <b>{ociosidade_volume:.1f}%</b>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    else:
-                        st.markdown("<div class='frota-title'><i class='fa-solid fa-truck-moving'></i> FROTA TRUCK</div>", unsafe_allow_html=True)
-                        st.info("Nenhum dado de Truck encontrado para o período.")
+                    container_truck_peso = st.container()
+                    renderizar_card_ocupacao(dados_truck, 'peso', container_truck_peso)
 
-                # --- COLUNA DA DIREITA: FROTA CARRETA ---
-                with col_carreta:
-                    if dados_carreta:
-                        st.markdown("<div class='frota-title'><i class='fa-solid fa-trailer'></i> FROTA CARRETA</div>", unsafe_allow_html=True)
-                        
-                        # Card de Peso (Carreta)
-                        st.markdown(f"""
-                        <div class="ocupacao-card-custom ocupacao-card-cavalo"> 
-                            <div class="progress-card-header">
-                                <div class="progress-card-title">⚖️ Ocupação de Peso (KG)</div>
-                                <div class="progress-card-value">{dados_carreta['ocup_peso_perc']:.1f}%</div>
-                            </div>
-                            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: {min(dados_carreta['ocup_peso_perc'], 100)}%;"></div></div>
-                            <div class="progress-card-footer">
-                                <span>Total: {formatar_numero(dados_carreta['total_peso'])} KG</span>
-                                <span>Capacidade: {formatar_numero(dados_carreta['cap_total_peso'])} KG</span>
-                            </div>
-                        </div>""", unsafe_allow_html=True)
+                    st.markdown("<div style='height:20px;'></div>", unsafe_allow_html=True)  # espaço entre cards
 
-                        # Aviso de Ociosidade de Peso (Carreta)
-                        ociosidade_peso_carreta = 100 - dados_carreta['ocup_peso_perc']
-                        st.markdown(f"""
-                        <div style="background-color:#1E1E2E; border-left: 5px solid #facc15; padding: 12px 20px; border-radius: 8px; margin-top: 5px; color:#e4e4e7; font-size: 0.95rem;">
-                            ⚠️ <b>Ociosidade de Peso:</b> <b>{ociosidade_peso_carreta:.1f}%</b>
-                        </div>
-                        """, unsafe_allow_html=True)
+                    container_truck_volume = st.container()
+                    renderizar_card_ocupacao(dados_truck, 'volume', container_truck_volume)
 
-                        # Espaçamento vertical entre as seções
-                        st.markdown("<br>", unsafe_allow_html=True)
+                # 🔹 FROTA CARRETA
+                with col_carreta_container:
+                    st.markdown("<div class='frota-title' style='text-align:center; margin-bottom:10px;'><i class='fa-solid fa-trailer'></i> FROTA CARRETA</div>", unsafe_allow_html=True)
 
-                        # Card de Cubagem (Carreta)
-                        st.markdown(f"""
-                        <div class="ocupacao-card-custom ocupacao-card-cavalo">
-                            <div class="progress-card-header">
-                                <div class="progress-card-title">📦 Ocupação de Cubagem (M³)</div>
-                                <div class="progress-card-value">{dados_carreta['ocup_volume_perc']:.1f}%</div>
-                            </div>
-                            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: {min(dados_carreta['ocup_volume_perc'], 100)}%;"></div></div>
-                            <div class="progress-card-footer">
-                                <span>Total: {formatar_numero(dados_carreta['total_volume'], 3)} M³</span>
-                                <span>Capacidade: {formatar_numero(dados_carreta['cap_total_volume'])} M³</span>
-                            </div>
-                        </div>""", unsafe_allow_html=True)
+                    container_carreta_peso = st.container()
+                    renderizar_card_ocupacao(dados_carreta, 'peso', container_carreta_peso)
 
-                        # Aviso de Ociosidade de Cubagem (Carreta)
-                        ociosidade_volume_carreta = 100 - dados_carreta['ocup_volume_perc']
-                        st.markdown(f"""
-                        <div style="background-color:#1E1E2E; border-left: 5px solid #facc15; padding: 12px 20px; border-radius: 8px; margin-top: 5px; color:#e4e4e7; font-size: 0.95rem;">
-                            ⚠️ <b>Ociosidade de Cubagem (M³):</b> <b>{ociosidade_volume_carreta:.1f}%</b>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    else:
-                        st.markdown("<div class='frota-title'><i class='fa-solid fa-trailer'></i> FROTA CARRETA</div>", unsafe_allow_html=True)
-                        st.info("Nenhum dado de Carreta encontrado para o período.")
+                    st.markdown("<div style='height:20px;'></div>", unsafe_allow_html=True)  # espaço entre cards
+
+                    container_carreta_volume = st.container()
+                    renderizar_card_ocupacao(dados_carreta, 'volume', container_carreta_volume)
 
         # Substitua o bloco "else:" do modo de viagem única por este:
         else:
-            # --- MODO VIAGEM ÚNICA (lógica existente com novo visual) ---
+            # --- MODO VIAGEM ÚNICA (COM ÍCONES ESPECÍFICOS PARA CADA OCIOSIDADE) ---
             ocupacao_peso_perc = (peso_total / capacidade_peso_kg) * 100 if capacidade_peso_kg > 0 else 0
             ociosidade_peso = 100 - ocupacao_peso_perc
             ocupacao_volume_perc = (volume_total_m3 / capacidade_volume_m3) * 100 if capacidade_volume_m3 > 0 else 0
             ociosidade_volume = 100 - ocupacao_volume_perc
 
+            potencial_nao_utilizado_kg = capacidade_peso_kg - peso_total
+            potencial_nao_utilizado_m3 = capacidade_volume_m3 - volume_total_m3
+
+            # --- FUNÇÕES DE LÓGICA DE COR (sem alteração) ---
+            def obter_cor_ocupacao(percentual):
+                if percentual < 50: return "linear-gradient(90deg, #dc2626 0%, #ef4444 100%)"
+                elif percentual < 80: return "linear-gradient(90deg, #f59e0b 0%, #facc15 100%)"
+                else: return "linear-gradient(90deg, #16a34a 0%, #22c55e 100%)"
+
+            def obter_cor_ociosidade(percentual):
+                if percentual > 50: return "linear-gradient(90deg, #dc2626 0%, #ef4444 100%)"
+                elif percentual > 20: return "linear-gradient(90deg, #f59e0b 0%, #facc15 100%)"
+                else: return "linear-gradient(90deg, #16a34a 0%, #22c55e 100%)"
+
+            # --- CÁLCULOS PARA RENDERIZAÇÃO (sem alteração) ---
             barra_peso = min(ocupacao_peso_perc, 100)
             barra_volume = min(ocupacao_volume_perc, 100)
+            barra_ociosidade_peso = min(ociosidade_peso, 100)
+            barra_ociosidade_volume = min(ociosidade_volume, 100)
+
+            cor_ocupacao_peso = obter_cor_ocupacao(ocupacao_peso_perc)
+            cor_ocupacao_volume = obter_cor_ocupacao(ocupacao_volume_perc)
+            cor_ociosidade_peso = obter_cor_ociosidade(ociosidade_peso)
+            cor_ociosidade_volume = obter_cor_ociosidade(ociosidade_volume)
+            
+            cor_borda_ociosidade_peso = cor_ociosidade_peso.split(',')[1].strip()
+            cor_borda_ociosidade_volume = cor_ociosidade_volume.split(',')[1].strip()
 
             col1, col2 = st.columns(2)
+
             with col1:
-                # Card de Ocupação de Peso (sem alterações)
+                # Card de Ocupação de Peso
                 st.markdown(f"""
                 <div class="ocupacao-card-custom"> 
                     <div class="progress-card-header">
                         <div class="progress-card-title">⚖️ Peso KG</div>
-                        <div class="progress-card-value">{ocupacao_peso_perc:.1f}%</div>
+                        <div class="progress-card-value">{ocupacao_peso_perc:.0f}%</div>
                     </div>
-                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: {barra_peso}%;"></div></div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: {barra_peso}%; background: {cor_ocupacao_peso};"></div>
+                    </div>
                     <div class="progress-card-footer">
                         <span>{formatar_numero(peso_total)} KG</span>
                         <span>Capacidade: {formatar_numero(capacidade_peso_kg)} KG</span>
                     </div>
-                </div>""", unsafe_allow_html=True)
+                </div>
+                """, unsafe_allow_html=True)
 
-                # ▼▼▼ NOVO AVISO DE OCIOSIDADE DE PESO ▼▼▼
+                # AVISO DE OCIOSIDADE DE PESO (com ícone de balança)
                 st.markdown(f"""
-                <div style="
-                    background-color:#1E1E2E;
-                    border-left: 5px solid #facc15; /* Borda amarela à esquerda */
-                    padding: 12px 20px;
-                    border-radius: 8px;
-                    margin-top: 10px; /* Espaço acima do aviso */
-                    color:#e4e4e7;
-                    font-size: 0.95rem;">
-                    ⚠️ <b>Ociosidade de Peso:</b> {ociosidade_peso:.1f}%
+                <div style="display: flex; align-items: center; justify-content: space-between; background-color: #1E1E2E; border-left: 5px solid {cor_borda_ociosidade_peso}; padding: 10px 16px; border-radius: 8px; margin-top: 10px; color: #e4e4e7; font-size: 0.95rem;">
+                    <span><i class="fa-solid fa-scale-unbalanced-flip"></i> <b>Ociosidade de Peso:</b> {ociosidade_peso:.0f}%</span>
+                    <div style="flex: 1; height: 10px; margin: 0 15px; background-color: #2a2a3a; border-radius: 5px; overflow: hidden;">
+                        <div style="width: {barra_ociosidade_peso}%; height: 100%; background: {cor_ociosidade_peso};"></div>
+                    </div>
+                    <span style="font-weight: bold; white-space: nowrap;">{formatar_numero(potencial_nao_utilizado_kg)} KG</span>
                 </div>
                 """, unsafe_allow_html=True)
 
             with col2:
-                # Card de Ocupação de Cubagem (sem alterações)
+                # Card de Ocupação de Cubagem
                 st.markdown(f"""
                 <div class="ocupacao-card-custom">
                     <div class="progress-card-header">
                         <div class="progress-card-title">📦 Cubagem M³</div>
                         <div class="progress-card-value">{ocupacao_volume_perc:.1f}%</div>
                     </div>
-                    <div class="progress-bar-container"><div class="progress-bar-fill" style="width: {barra_volume}%;"></div></div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: {barra_volume}%; background: {cor_ocupacao_volume};"></div>
+                    </div>
                     <div class="progress-card-footer">
                         <span>{formatar_numero(volume_total_m3, 3)} M³</span>
                         <span>Capacidade: {formatar_numero(capacidade_volume_m3)} M³</span>
                     </div>
-                </div>""", unsafe_allow_html=True)
-
-                # ▼▼▼ NOVO AVISO DE OCIOSIDADE DE CUBAGEM ▼▼▼
-                st.markdown(f"""
-                <div style="
-                    background-color:#1E1E2E;
-                    border-left: 5px solid #facc15; /* Borda amarela à esquerda */
-                    padding: 12px 20px;
-                    border-radius: 8px;
-                    margin-top: 10px; /* Espaço acima do aviso */
-                    color:#e4e4e7;
-                    font-size: 0.95rem;">
-                    ⚠️ <b>Ociosidade de Cubagem (M³):</b> {ociosidade_volume:.1f}%
                 </div>
-                """, unsafe_allow_html=True)         
+                """, unsafe_allow_html=True)
+
+                # AVISO DE OCIOSIDADE DE CUBAGEM (com ícone de caixa)
+                st.markdown(f"""
+                <div style="display: flex; align-items: center; justify-content: space-between; background-color: #1E1E2E; border-left: 5px solid {cor_borda_ociosidade_volume}; padding: 10px 16px; border-radius: 8px; margin-top: 10px; color: #e4e4e7; font-size: 0.95rem;">
+                    <span><i class="fa-solid fa-box-open"></i> <b>Ociosidade de Cubagem (M³):</b> {ociosidade_volume:.1f}%</span>
+                    <div style="flex: 1; height: 10px; margin: 0 15px; background-color: #2a2a3a; border-radius: 5px; overflow: hidden;">
+                        <div style="width: {barra_ociosidade_volume}%; height: 100%; background: {cor_ociosidade_volume};"></div>
+                    </div>
+                    <span style="font-weight: bold; white-space: nowrap;">{formatar_numero(potencial_nao_utilizado_m3, 2)} M³</span>
+                </div>
+                """, unsafe_allow_html=True)
 
         st.divider()
 
@@ -2082,22 +2323,19 @@ with tab1:
                 df_viagens['VIAGEM_ID'] = df_viagens.groupby(['MOTORISTA', 'PLACA_CAVALO', 'DIA_EMISSAO_STR']).ngroup() + 1
             
             def juntar_unicos(series):
-                # Junta os valores únicos da série, removendo NAs e convertendo para string
                 return ', '.join(series.dropna().astype(str).unique())
 
-            # Corrige o valor de M3 antes de agrupar
-            if "M3" in df_viagens.columns:
-                # Cria uma cópia para evitar SettingWithCopyWarning
-                df_viagens = df_viagens.copy()
-                df_viagens["M3"] = df_viagens["M3"].astype(float) / 10000
 
             # Agrupamento para criar a tabela unificada
             resumo_viagens = df_viagens.groupby('VIAGEM_ID').agg(
                 EMISSÃO=('EMIS_MANIF', 'first'),
                 NUM_MANIF_LISTA=('NUM_MANIF', lambda x: f"{x.dropna().astype(str).iloc[0]} (+{len(x.dropna().unique()) - 1})" if len(x.dropna().unique()) > 1 else (x.dropna().astype(str).iloc[0] if not x.dropna().empty else "")),
-                SITUACAO=('SITUACAO', 'first'), # <<< ADICIONADO AQUI PARA PEGAR A SITUAÇÃO
+                SITUACAO=('SITUACAO', 'first'),
                 MOTORISTA=('MOTORISTA', 'first'),
-                PLACA=('PLACA_CAVALO', 'first'),
+                PLACA_CAVALO=('PLACA_CAVALO', 'first'),
+                CAPAC_CAVALO=('CAPAC_CAVALO', 'first'), # <<< NOVA COLUNA AGREGADA
+                PLACA_CARRETA=('PLACA_CARRETA', 'first'),
+                CAP_CARRETA=('CAPACIDADE_KG', 'first'), 
                 TIPO_VEICULO=('TIPO_CAVALO', 'first'),
                 DESTINOS=('DEST_MANIF', lambda x: ' / '.join(x.unique())),
                 PROPRIETARIO=('PROPRIETARIO_CAVALO', 'first'),
@@ -2115,9 +2353,9 @@ with tab1:
                 QTDE_CTRC=('QTDE_CTRC', 'sum')
             ).reset_index()
 
-            # Renomeia colunas para processamento
+            # Renomeia colunas para processamento (sem alteração aqui)
             resumo_viagens.rename(columns={
-                'VIAGEM_ID': 'VIAGEM', 'EMISSÃO': 'EMIS_MANIF', 'PLACA': 'PLACA_CAVALO',
+                'VIAGEM_ID': 'VIAGEM', 'EMISSÃO': 'EMIS_MANIF', 
                 'TIPO_VEICULO': 'TIPO_CAVALO', 'DESTINOS': 'DEST_MANIF',
                 'PROPRIETARIO': 'PROPRIETARIO_CAVALO', 'CUSTO_OS_TOTAL': 'OS-R$',
                 'CUSTO_CTRB_TOTAL': 'CTRB-R$', 'FRETE_TOTAL': 'FRETE-R$',
@@ -2126,7 +2364,7 @@ with tab1:
                 'VALOR_MERCADORIA': 'MERCADORIA-R$', 'NUM_MANIF_LISTA': 'NUM_MANIF'
             }, inplace=True)
 
-            # Funções de cálculo para as colunas finais
+            # Funções de cálculo para as colunas finais (sem alteração aqui)
             def calcular_custo_final(row):
                 custo_base = row['OS-R$'] if row['PROPRIETARIO_CAVALO'] == 'MARCELO H LEMOS BERALDO E CIA LTDA ME' else row['CTRB-R$']
                 destinos_str = str(row.get('DEST_MANIF', '')).upper()
@@ -2162,23 +2400,31 @@ with tab1:
             resumo_viagens['VOLUMES'] = resumo_viagens['VOLUMES'].astype(int)
             resumo_viagens['ENTREGAS'] = resumo_viagens['ENTREGAS'].astype(int)
             resumo_viagens['QTDE_CTRC'] = resumo_viagens['QTDE_CTRC'].astype(int)
+            
+            # Formata as colunas de capacidade
+            resumo_viagens['CAP_CARRETA'] = resumo_viagens['CAP_CARRETA'].astype(float).apply(lambda x: formatar_numero(x, 0) + ' kg')
+            resumo_viagens['CAPAC_CAVALO'] = resumo_viagens['CAPAC_CAVALO'].astype(float).apply(lambda x: formatar_numero(x, 0) + ' kg') # <<< FORMATAÇÃO DA NOVA COLUNA
 
             resumo_viagens.rename(columns={
-                'EMIS_MANIF': 'EMISSÃO', 'NUM_MANIF': 'Nº Manifesto', 'PLACA_CAVALO': 'PLACA',
+                'EMIS_MANIF': 'EMISSÃO', 'NUM_MANIF': 'Nº Manifesto',
                 'TIPO_CAVALO': 'TIPO', 'DEST_MANIF': 'DESTINOS', 'Nº Documento Custo': 'Nº CTRB/OS',
                 'QTDE_CTRC': 'Qtd. CTRCs',
-                'SITUACAO': 'SITUAÇÃO' # <<< RENOMEADO AQUI
+                'SITUACAO': 'SITUAÇÃO'
             }, inplace=True)
 
-            # Define a ordem final, com a SITUAÇÃO após o Manifesto
+            # Define a ordem final, com a nova coluna no lugar certo
             ordem_final = [
-                'VIAGEM', 'EMISSÃO', 'Nº Manifesto', 'SITUAÇÃO', 'MOTORISTA', 'DESTINOS', 'ENTREGAS', # <<< ORDEM AJUSTADA AQUI
-                'PLACA', 'TIPO', 'Nº CTRB/OS', 'Custo (CTRB/OS)', 'CTRB/Frete (%)', 'FRETE-R$',
-                'ICMS-R$', 'PESO REAL (KG)', 'M3', 'VOLUMES', 'Qtd. CTRCs', 'MERCADORIA-R$'
+                'VIAGEM', 'EMISSÃO', 'Nº Manifesto', 'SITUAÇÃO', 'MOTORISTA', 'DESTINOS', 'ENTREGAS',
+                'TIPO', # <<< MOVIDO PARA CÁ
+                'PLACA_CAVALO', 'CAPAC_CAVALO', 'PLACA_CARRETA', 'CAP_CARRETA', 'Nº CTRB/OS', 'Custo (CTRB/OS)', 
+                'CTRB/Frete (%)', 'FRETE-R$', 'ICMS-R$', 'PESO REAL (KG)', 'M3', 'VOLUMES', 'Qtd. CTRCs', 'MERCADORIA-R$'
             ]
             colunas_para_exibir = [col for col in ordem_final if col in resumo_viagens.columns]
 
             df_para_exibir = resumo_viagens[colunas_para_exibir].copy()
+            
+            # Aplica o gradiente de cor (pode precisar ajustar o subset se o nome da coluna mudou no rename)
+            # A coluna para o gradiente ainda é 'CTRB/Frete (%)_valor', então não precisa mudar.
             styled_df = df_para_exibir.style.background_gradient(cmap='Reds', subset=['CTRB/Frete (%)'], gmap=resumo_viagens['CTRB/Frete (%)_valor'])
             
             # --- EXIBIÇÃO DA TABELA UNIFICADA ---
@@ -2203,77 +2449,513 @@ with tab1:
             st.divider() 
             st.subheader("📄 Detalhes dos Documentos da Viagem")
 
-            # 1. Define as colunas desejadas, incluindo a nova coluna 'SITUACAO'
-            colunas_detalhadas = [
+            # O df_filtrado já contém os dados corretos para a rota selecionada.
+            # Vamos criar uma cópia para trabalhar.
+            df_detalhado_base = df_filtrado.copy()
+
+            # 1. FUNÇÕES PARA UNIFICAR AS COLUNAS DE CUSTO
+            #    (Essas funções decidem qual valor/número usar baseado no proprietário)
+            def calcular_custo_unificado(row):
+                if row.get('PROPRIETARIO_CAVALO') == 'MARCELO H LEMOS BERALDO E CIA LTDA ME':
+                    return row.get('OS-R$', 0.0)
+                return row.get('CTRB-R$', 0.0)
+
+            def obter_numero_documento_unificado(row):
+                if row.get('PROPRIETARIO_CAVALO') == 'MARCELO H LEMOS BERALDO E CIA LTDA ME':
+                    return row.get('NUM_OS', '')
+                return row.get('NUM_CTRB', '')
+
+            # 2. APLICA AS FUNÇÕES PARA CRIAR AS NOVAS COLUNAS UNIFICADAS
+            df_detalhado_base['Custo (CTRB/OS)'] = df_detalhado_base.apply(calcular_custo_unificado, axis=1)
+            df_detalhado_base['Nº CTRB/OS'] = df_detalhado_base.apply(obter_numero_documento_unificado, axis=1)
+
+            # 3. DEFINE A LISTA FINAL DE COLUNAS PARA EXIBIR
+            #    (Note que as colunas antigas de custo foram removidas e as novas, adicionadas)
+            colunas_para_exibir = [
                 'EMIS_MANIF', 'NUM_MANIF', 'SITUACAO', 'MOTORISTA', 'DEST_MANIF', 'PLACA_CAVALO', 'TIPO_CAVALO',
-                'NUM_CTRB', 'CTRB-R$', 'NUM_OS', 'OS-R$', 'FRETE-R$', 'ICMS-R$', 'PESO REAL (KG)',
+                'Nº CTRB/OS',          # <-- COLUNA UNIFICADA
+                'Custo (CTRB/OS)',     # <-- COLUNA UNIFICADA
+                'FRETE-R$', 'ICMS-R$', 'PESO REAL (KG)',
                 'M3', 'VOLUMES', 'QTDE_CTRC', 'MERCADORIA-R$'
             ]
             
-            # 2. Filtra o df_filtrado para as colunas existentes
-            colunas_existentes_det = [col for col in colunas_detalhadas if col in df_filtrado.columns]
-            df_detalhado = df_filtrado[colunas_existentes_det].copy()
+            # 4. Garante que apenas colunas existentes sejam usadas para evitar erros
+            colunas_existentes = [col for col in colunas_para_exibir if col in df_detalhado_base.columns]
+            df_detalhado_final = df_detalhado_base[colunas_existentes].copy()
 
-            # 3. Renomeia as colunas para exibição
-            df_detalhado.rename(columns={
+            # 5. Renomeia as colunas para uma apresentação mais limpa
+            df_detalhado_final.rename(columns={
                 'EMIS_MANIF': 'EMISSÃO', 
                 'NUM_MANIF': 'Nº Manifesto',
-                'SITUACAO': 'SITUAÇÃO', # <<< COLUNA ADICIONADA AQUI
+                'SITUACAO': 'SITUAÇÃO',
                 'DEST_MANIF': 'Destino',
                 'PLACA_CAVALO': 'PLACA', 
                 'TIPO_CAVALO': 'TIPO', 
-                'NUM_CTRB': 'Nº CTRB',
-                'NUM_OS': 'Nº OS', 
-                'CTRB-R$': 'Custo CTRB', 
-                'OS-R$': 'Custo OS', 
                 'QTDE_CTRC': 'Qtd. CTRCs'
+                # Não precisa mais renomear as colunas de custo aqui
             }, inplace=True)
 
-            # 4. Formata as colunas para exibição (nenhuma mudança aqui)
-            df_detalhado['EMISSÃO'] = pd.to_datetime(df_detalhado['EMISSÃO']).dt.strftime('%d/%m/%Y')
+            # 6. Formata as colunas para exibição
+            df_detalhado_final['EMISSÃO'] = pd.to_datetime(df_detalhado_final['EMISSÃO']).dt.strftime('%d/%m/%Y')
             
-            colunas_moeda_det = ['Custo CTRB', 'Custo OS', 'FRETE-R$', 'ICMS-R$', 'MERCADORIA-R$']
+            # Formata as colunas de moeda, incluindo a nova coluna unificada
+            colunas_moeda_det = ['Custo (CTRB/OS)', 'FRETE-R$', 'ICMS-R$', 'MERCADORIA-R$']
             for col in colunas_moeda_det:
-                if col in df_detalhado.columns:
-                    df_detalhado[col] = df_detalhado[col].apply(formatar_moeda)
+                if col in df_detalhado_final.columns:
+                    df_detalhado_final[col] = df_detalhado_final[col].apply(formatar_moeda)
             
-            if 'PESO REAL (KG)' in df_detalhado.columns:
-                df_detalhado['PESO REAL (KG)'] = df_detalhado['PESO REAL (KG)'].apply(lambda x: formatar_numero(x, 2) + ' kg')
+            if 'PESO REAL (KG)' in df_detalhado_final.columns:
+                df_detalhado_final['PESO REAL (KG)'] = df_detalhado_final['PESO REAL (KG)'].apply(lambda x: formatar_numero(x, 2) + ' kg')
             
-            if 'M3' in df_detalhado.columns:
-                 df_detalhado['M3'] = (df_detalhado['M3'].astype(float) / 10000).apply(lambda x: formatar_numero(x, 3))
+            if 'M3' in df_detalhado_final.columns:
+                df_detalhado_final['M3'] = df_detalhado_final['M3'].astype(float).apply(lambda x: formatar_numero(x, 3))
 
-            # 5. Exibe a tabela detalhada
-            st.dataframe(df_detalhado, use_container_width=True, hide_index=True)
+            # 7. Exibe a tabela final, já corrigida
+            st.dataframe(df_detalhado_final, use_container_width=True, hide_index=True)
             
-            # 6. Botão de download para os dados detalhados
+            # 8. Botão de download para os dados detalhados (agora com as colunas corretas)
             try:
-                excel_bytes_detalhado = to_excel(df_detalhado)
+                excel_bytes_detalhado = to_excel(df_detalhado_final)
                 st.download_button(
                     label="📥 Download Detalhado (Excel)",
                     data=excel_bytes_detalhado,
                     file_name=f"detalhes_viagem_{rota_sel_visivel.split(' ')[1]}.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                    key="download_detalhado"
+                    key="download_detalhado_tab1_final" # Chave única para evitar conflitos
                 )
             except Exception as e:
                 st.error(f"❌ Erro ao gerar o arquivo Excel detalhado: {e}")
-        # --- ▲▲▲ FIM DO BLOCO ATUALIZADO ▲▲▲ ---
 
-# --- ABA 2: ANÁLISE FINANCEIRA ---
+                # ▼▼▼ INSIRA ESTE BLOCO DE CÓDIGO COMPLETO AQUI ▼▼▼
+
+# ==================================================================
+# ABA 2 (ANÁLISE FINANCEIRA)
+# ==================================================================
 with tab2:
-    st.header("📈 Análise Financeira")
-    st.info("Conteúdo da análise financeira será implementado aqui.")
+    # Título estilizado para a aba
+    st.markdown("""
+        <div class="title-block-financeira">
+            <i class="fa-solid fa-coins"></i>
+            <h2>Análise Financeira Avançada</h2>
+        </div>
+    """, unsafe_allow_html=True)
 
-# --- ABA 3: PERFORMANCE DA FROTA ---
+    if df_filtrado.empty:
+        st.warning("⚠️ Nenhum registro encontrado para os filtros selecionados.")
+    else:
+        # KPIs financeiros que foram movidos da primeira aba
+        kpi_f1, kpi_f2, kpi_f3, kpi_f4, kpi_f5, kpi_f6 = st.columns(6)
+
+        # Lógica para determinar o título do KPI de Custo
+        titulo_kpi_custo = "📄 Custo CTRB / OS" # Título padrão
+        if not df_filtrado.empty:
+            if df_filtrado['PROPRIETARIO_CAVALO'].nunique() > 1:
+                titulo_kpi_custo = "📄 Custo CTRB / OS"
+            elif df_filtrado['PROPRIETARIO_CAVALO'].iloc[0] == 'KM TRANSPORTES ROD. DE CARGAS LTDA':
+                titulo_kpi_custo = "📄 Custo CTRB"
+            elif df_filtrado['PROPRIETARIO_CAVALO'].iloc[0] == 'MARCELO H LEMOS BERALDO E CIA LTDA ME':
+                titulo_kpi_custo = "📋 Custo OS"
+
+        # Dicionário com os KPIs financeiros
+        kpis_financeiros = {
+            kpi_f1: {"titulo": "💵 Receita Total", "valor": formatar_moeda(receita_total), "classe": "receita"},
+            kpi_f2: {"titulo": titulo_kpi_custo, "valor": formatar_moeda(custo_ctrb_os), "classe": "custo"},
+            kpi_f3: {"titulo": "💸 ICMS", "valor": formatar_moeda(custo_icms), "classe": "custo"},
+            kpi_f4: {"titulo": "📊 Custo Total", "valor": formatar_moeda(custo_total), "classe": "custo"},
+            kpi_f5: {"titulo": "💰 Lucro Líquido", "valor": formatar_moeda(lucro_estimado), "classe": "lucro"},
+            kpi_f6: {"titulo": "📈 Margem de Lucro", "valor": formatar_percentual(margem_lucro), "classe": "lucro"}
+        }
+
+        # Itera e exibe cada KPI
+        for coluna, info in kpis_financeiros.items():
+            with coluna:
+                st.markdown(f"""
+                    <div class='kpi-container' style='text-align: center;'>
+                        <div class='kpi-title'>{info['titulo']}</div>
+                        <div class='kpi-value {info['classe']}'>{info['valor']}</div>
+                    </div>
+                """, unsafe_allow_html=True)
+        
+        st.divider()
+        
+        # Futuramente, você pode adicionar gráficos e outras análises aqui.
+        # st.info("Área reservada para gráficos de análise financeira.")
+
+# ▲▲▲ FIM DO BLOCO A SER INSERIDO ▲▲▲
+
+
+
+# ==================================================================
+# ABA 3 (PERFORMANCE DA FROTA) - COM ESTILO E COR ATUALIZADOS
+# ==================================================================
 with tab3:
-    st.header("⚡ Performance da Frota")
-    st.info("Conteúdo da análise de performance será implementado aqui.")
+    # --- CSS E HTML PARA O TÍTULO PERSONALIZADO ---
+    st.markdown("""
+    <style>
+        .title-block-performance {
+            /* ▼▼▼ COR DE FUNDO ATUALIZADA AQUI ▼▼▼ */
+            background: #1C1A29; /* Azul/Roxo bem escuro, como na imagem */
+            
+            /* Bordas laterais na cor laranja para combinar com o tema */
+            border-left: 5px solid #f97316;
+            border-right: 5px solid #f97316;
+            
+            padding: 5px 30px; /* Espaçamento interno */
+            margin: 10px 0 25px 0; /* Margem para separar do conteúdo */
+            border-radius: 12px; /* Bordas arredondadas */
+            width: 100%;
+            box-sizing: border-box;
+            
+            /* Centraliza o ícone e o texto */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px; /* Espaço entre o ícone e o texto */
+            
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra suave */
+        }
+
+        .title-block-performance h2 {
+            font-family: "Poppins", "Segoe UI", sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff; /* Cor do texto */
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .title-block-performance .fa-bolt-lightning {
+            font-size: 2.0rem; /* Tamanho do ícone */
+            color: #f97316; /* Cor do ícone (laranja) */
+        }
+    </style>
+    
+    <div class="title-block-performance">
+        <i class="fa-solid fa-bolt-lightning"></i>
+        <h2>Performance da Frota: Frota vs. Terceiros</h2>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    if df_filtrado.empty:
+        st.warning("⚠️ Nenhum registro encontrado para os filtros selecionados.")
+    else:
+        # --- PREPARAÇÃO DOS DADOS (sem alterações) ---
+        df_aux_frota = df_filtrado.copy()
+        df_aux_frota["DATA_EMISSAO"] = df_aux_frota["EMIS_MANIF"].dt.date
+        
+        # Garante que a coluna de ID da viagem exista para ambos os dataframes
+        df_aux_frota["VIAGEM_ID"] = df_aux_frota.groupby(["MOTORISTA", "PLACA_CAVALO", "DATA_EMISSAO"], sort=False).ngroup() + 1
+        
+        # ... (o resto da sua preparação de dados continua igual)
+        capacidades = {
+            'TOCO': {'peso_kg': 10000, 'volume_m3': 55}, 'TRUCK': {'peso_kg': 16000, 'volume_m3': 75},
+            'CAVALO': {'peso_kg': 25000, 'volume_m3': 110}, 'PADRAO': {'peso_kg': 25000, 'volume_m3': 80}
+        }
+        df_aux_frota['CAPACIDADE_PESO'] = df_aux_frota['TIPO_CAVALO'].map(lambda x: capacidades.get(str(x).upper(), capacidades['PADRAO'])['peso_kg'])
+        df_aux_frota["CUSTO_POR_LINHA"] = df_aux_frota.apply(lambda r: r["CTRB-R$"] if r.get("PROPRIETARIO_CAVALO") == "KM TRANSPORTES ROD. DE CARGAS LTDA" else r.get("OS-R$"), axis=1)
+
+        # --- SELETOR DE PROPRIETÁRIO (sem alterações) ---
+        selecao_proprietario = option_menu(
+            menu_title=None,
+            options=["TODOS", "FROTA KM", "TERCEIROS"],
+            icons=["collection-fill", "building", "person-badge"],
+            menu_icon="cast", default_index=0, orientation="horizontal",
+            styles={
+                "container": {"padding": "6px", "background-color": "rgba(30, 30, 40, 0.4)", "border-radius": "16px", "justify-content": "center"},
+                # ▼▼▼ ALTERAÇÃO APLICADA AQUI ▼▼▼
+                "icon": {"color": "#FFFFFF", "font-size": "18px"}, # Cor alterada para branco
+                "nav-link": {"font-size": "14px", "font-weight": "600", "color": "#E5E7EB", "padding": "10px 26px", "border-radius": "12px", "margin": "0px 6px", "background-color": "rgba(255, 255, 255, 0.05)"},
+                "nav-link:hover": {"background-color": "rgba(255,255,255,0.12)", "color": "#fff"},
+                "nav-link-selected": {"background": "linear-gradient(135deg, #f97316 0%, #ea580c 100%)", "color": "white"},
+            }
+        )
+
+        # --- FILTRAGEM DOS DADOS (sem alterações) ---
+        df_viagens = df_aux_frota.copy()
+        if selecao_proprietario == "FROTA KM":
+            df_viagens = df_viagens[df_viagens['PROPRIETARIO_CAVALO'] == 'KM TRANSPORTES ROD. DE CARGAS LTDA']
+        elif selecao_proprietario == "TERCEIROS":
+            df_viagens = df_viagens[df_viagens['PROPRIETARIO_CAVALO'] == 'MARCELO H LEMOS BERALDO E CIA LTDA ME']
+
+        # --- 4. CÁLCULO E EXIBIÇÃO DOS KPIs ---
+        # Este bloco agora vem logo após a filtragem dos dados.
+        if not df_viagens.empty:
+            # Agrega os dados por viagem para calcular as métricas (código existente, sem alterações)
+            resumo_por_viagem = df_viagens.groupby('VIAGEM_ID').agg(
+                FRETE_VIAGEM=('FRETE-R$', 'sum'),
+                CUSTO_UNICO_VIAGEM=('CUSTO_POR_LINHA', 'max'),
+                PESO_VIAGEM=('PESO REAL (KG)', 'sum'),
+                ENTREGAS_VIAGEM=('DEST_MANIF', 'nunique'),
+                DISTANCIA_ESTIMADA=('DISTANCIA_ESTIMADA_KM', 'first')
+            ).reset_index()
+
+            # --- CÁLCULO DOS KPIs TOTAIS E MÉDIOS (código existente, sem alterações) ---
+            total_viagens = resumo_por_viagem['VIAGEM_ID'].nunique()
+            distancia_total = resumo_por_viagem['DISTANCIA_ESTIMADA'].sum()
+            distancia_media = distancia_total / total_viagens if total_viagens > 0 else 0
+            total_entregas = resumo_por_viagem['ENTREGAS_VIAGEM'].sum()
+            peso_total = resumo_por_viagem['PESO_VIAGEM'].sum()
+            peso_medio_viagem = peso_total / total_viagens if total_viagens > 0 else 0
+            
+            capacidade_total = df_viagens.drop_duplicates(subset=['VIAGEM_ID'])['CAPACIDADE_PESO'].sum()
+            ocupacao_media = (peso_total / capacidade_total * 100) if capacidade_total > 0 else 0
+            
+            custo_total_kpi = resumo_por_viagem['CUSTO_UNICO_VIAGEM'].sum()
+            frete_total_kpi = resumo_por_viagem['FRETE_VIAGEM'].sum()
+            perc_custo_frete = (custo_total_kpi / frete_total_kpi * 100) if frete_total_kpi > 0 else 0
+
+            # Funções de formatação (código existente, sem alterações)
+            def fmt_num_kpi(v, suf=""): return f"{v:,.0f}{suf}".replace(",", ".")
+            def fmt_perc_kpi(v): return f"{v:.0f}%"
+
+            # --- Seletor de menu de opções (código existente, sem alterações) ---
+            kpi_view = option_menu(
+                menu_title=None,
+                options=["Médias e Índices", "Valores Totais"],
+                icons=["graph-up-arrow", "calculator"],
+                menu_icon="cast",
+                default_index=0,
+                orientation="horizontal",
+                styles={
+                    "container": {"padding": "0!important", "background-color": "#0e1117", "justify-content": "center", "margin-bottom": "25px"},
+                    "icon": {"color": "#E5E7EB", "font-size": "16px"},
+                    "nav-link": {"font-size": "14px", "font-weight": "600", "color": "#bdc3c7", "background-color": "#2c3e50", "border-radius": "10px", "padding": "10px 25px", "margin": "0px 8px", "text-align": "center"},
+                    "nav-link:hover": {"background-color": "#34495e", "color": "#ffffff"},
+                    "nav-link-selected": {"background": "linear-gradient(135deg, #f97316 0%, #ea580c 100%)", "color": "white", "box-shadow": "0 4px 15px rgba(249, 115, 22, 0.4)"},
+                }
+            )
+
+            # --- Lógica para exibir os KPIs corretos ---
+            kpi1, kpi2, kpi3, kpi4, kpi5, kpi6 = st.columns(6)
+
+            if kpi_view == 'Médias e Índices':
+                kpis_data = {
+                    kpi1: {"titulo": "🗺️ TOTAL DE VIAGENS", "valor": fmt_num_kpi(total_viagens)},
+                    kpi2: {"titulo": "🚛 DISTÂNCIA MÉDIA", "valor": fmt_num_kpi(distancia_media, " km")},
+                    kpi3: {"titulo": "📦 TOTAL DE ENTREGAS", "valor": fmt_num_kpi(total_entregas)},
+                    kpi4: {"titulo": "⚖️ PESO MÉDIO / VIAGEM", "valor": fmt_num_kpi(peso_medio_viagem, " kg")},
+                    kpi5: {"titulo": "📈 OCUPAÇÃO MÉDIA", "valor": fmt_perc_kpi(ocupacao_media)},
+                    kpi6: {"titulo": "📊 % CUSTO / FRETE", "valor": fmt_perc_kpi(perc_custo_frete)},
+                }
+            else: # kpi_view == 'Valores Totais'
+                # --- ▼▼▼ A MUDANÇA FOI FEITA AQUI ▼▼▼ ---
+                kpis_data = {
+                    kpi1: {"titulo": "🗺️ TOTAL DE VIAGENS", "valor": fmt_num_kpi(total_viagens)},
+                    kpi2: {"titulo": "🚛 DISTÂNCIA TOTAL", "valor": fmt_num_kpi(distancia_total, " km")},
+                    kpi3: {"titulo": "📦 TOTAL DE ENTREGAS", "valor": fmt_num_kpi(total_entregas)},
+                    kpi4: {"titulo": "⚖️ PESO TOTAL", "valor": fmt_num_kpi(peso_total, " kg")},
+                    # KPI de Custo Total foi substituído pelo de % Custo / Frete
+                    kpi5: {"titulo": "📊 % CUSTO / FRETE", "valor": fmt_perc_kpi(perc_custo_frete)},
+                    kpi6: {"titulo": "💵 FRETE TOTAL", "valor": f"R$ {fmt_num_kpi(frete_total_kpi)}"},
+                }
+                # --- ▲▲▲ FIM DA MUDANÇA ▲▲▲ ---
+            
+            # Renderiza os KPIs
+            for coluna, info in kpis_data.items():
+                with coluna:
+                    st.markdown(f"""
+                        <div class='kpi-container' style='text-align: center;'>
+                            <div class='kpi-title'>{info['titulo']}</div>
+                            <div class='kpi-value'>{info['valor']}</div>
+                        </div>
+                    """, unsafe_allow_html=True)
+
+        st.divider()
+
+        # ... (o resto do seu código da aba continua aqui)
 
 
-# Substitua a seção "with tab4:" inteira pelo código abaixo
+
+        # --- TABELA DE RESUMO DAS VIAGENS ---
+        titulo_tabela_resumo = f"### 📋 Resumo das Viagens ({selecao_proprietario})"
+        st.markdown(titulo_tabela_resumo)
+
+        if not df_viagens.empty:
+
+            def juntar_unicos(series): return ', '.join(series.dropna().astype(str).unique())
+            resumo_viagens = df_viagens.groupby('VIAGEM_ID').agg(
+                EMISSÃO=('EMIS_MANIF', 'first'),
+                NUM_MANIF_LISTA=('NUM_MANIF', lambda x: f"{x.dropna().astype(str).iloc[0]} (+{len(x.dropna().unique()) - 1})" if len(x.dropna().unique()) > 1 else (x.dropna().astype(str).iloc[0] if not x.dropna().empty else "")),
+                SITUACAO=('SITUACAO', 'first'), MOTORISTA=('MOTORISTA', 'first'),
+                PLACA_CAVALO=('PLACA_CAVALO', 'first'), PLACA_CARRETA=('PLACA_CARRETA', 'first'),
+                TIPO_VEICULO=('TIPO_CAVALO', 'first'), DESTINOS=('DEST_MANIF', lambda x: ' / '.join(x.unique())),
+                PROPRIETARIO_CAVALO=('PROPRIETARIO_CAVALO', 'first'), # <-- MUDANÇA: Nome da coluna original
+                CUSTO_OS_TOTAL=('OS-R$', 'max'),
+                CUSTO_CTRB_TOTAL=('CTRB-R$', 'max'), FRETE_TOTAL=('FRETE-R$', 'sum'),
+                ICMS=('ICMS-R$', 'sum'), PESO_KG=('PESO REAL (KG)', 'sum'), M3=('M3', 'sum'),
+                VOLUMES=('VOLUMES', 'sum'), VALOR_MERCADORIA=('MERCADORIA-R$', 'sum'),
+                ENTREGAS=('DEST_MANIF', 'nunique'), QTDE_CTRC=('QTDE_CTRC', 'sum')
+            ).reset_index()
+
+            # Renomeia colunas para processamento
+            resumo_viagens.rename(columns={
+                'VIAGEM_ID': 'VIAGEM', 'EMISSÃO': 'EMIS_MANIF', 'TIPO_VEICULO': 'TIPO_CAVALO', 
+                'DESTINOS': 'DEST_MANIF', 'CUSTO_OS_TOTAL': 'OS-R$', 'CUSTO_CTRB_TOTAL': 'CTRB-R$', 
+                'FRETE_TOTAL': 'FRETE-R$', 'ICMS': 'ICMS-R$', 'PESO_KG': 'PESO REAL (KG)', 
+                'VALOR_MERCADORIA': 'MERCADORIA-R$', 'NUM_MANIF_LISTA': 'NUM_MANIF'
+            }, inplace=True)
+
+            # Funções de cálculo
+            def calcular_custo_final(row):
+                custo_base = row['OS-R$'] if row['PROPRIETARIO_CAVALO'] == 'MARCELO H LEMOS BERALDO E CIA LTDA ME' else row['CTRB-R$']
+                destinos_str = str(row.get('DEST_MANIF', '')).upper()
+                if 'GYN' in destinos_str or 'SPO' in destinos_str: return custo_base / 2
+                return custo_base
+            resumo_viagens['Custo (CTRB/OS)'] = resumo_viagens.apply(calcular_custo_final, axis=1)
+
+            def calcular_ctrb_frete_numerico(row):
+                try:
+                    custo = float(row['Custo (CTRB/OS)'])
+                    frete = float(row['FRETE-R$'])
+                    return (custo / frete) * 100 if frete > 0 else 0.0
+                except (ValueError, TypeError): return 0.0
+            resumo_viagens['CTRB/Frete (%)_valor'] = resumo_viagens.apply(calcular_ctrb_frete_numerico, axis=1)
+            resumo_viagens['CTRB/Frete (%)'] = resumo_viagens['CTRB/Frete (%)_valor'].apply(lambda x: f"{x:.0f}%")
+
+            # Formatação para exibição
+            resumo_viagens['EMIS_MANIF'] = pd.to_datetime(resumo_viagens['EMIS_MANIF']).dt.strftime('%d/%m/%Y')
+            resumo_viagens['Custo (CTRB/OS)'] = resumo_viagens['Custo (CTRB/OS)'].astype(float).apply(formatar_moeda)
+            resumo_viagens['FRETE-R$'] = resumo_viagens['FRETE-R$'].astype(float).apply(formatar_moeda)
+            resumo_viagens['ICMS-R$'] = resumo_viagens['ICMS-R$'].astype(float).apply(formatar_moeda)
+            resumo_viagens['MERCADORIA-R$'] = resumo_viagens['MERCADORIA-R$'].astype(float).apply(formatar_moeda)
+            resumo_viagens['PESO REAL (KG)'] = resumo_viagens['PESO REAL (KG)'].astype(float).apply(lambda x: formatar_numero(x, 2) + ' kg')
+            resumo_viagens['M3'] = resumo_viagens['M3'].astype(float).apply(lambda x: formatar_numero(x, 3))
+            resumo_viagens['VOLUMES'] = resumo_viagens['VOLUMES'].astype(int)
+            resumo_viagens['ENTREGAS'] = resumo_viagens['ENTREGAS'].astype(int)
+            resumo_viagens['QTDE_CTRC'] = resumo_viagens['QTDE_CTRC'].astype(int)
+            
+            # Renomeia colunas para exibição final
+            resumo_viagens.rename(columns={
+                'EMIS_MANIF': 'EMISSÃO', 'NUM_MANIF': 'Nº Manifesto', 'TIPO_CAVALO': 'TIPO', 
+                'DEST_MANIF': 'DESTINOS', 'QTDE_CTRC': 'Qtd. CTRCs', 'SITUACAO': 'SITUAÇÃO',
+                'PROPRIETARIO_CAVALO': 'PROPRIETÁRIO' # <-- MUDANÇA 1: Renomeia a coluna para exibição
+            }, inplace=True)
+
+            # ▼▼▼ MUDANÇA 2: Adiciona 'PROPRIETÁRIO' na ordem de exibição ▼▼▼
+            ordem_final = [
+                'VIAGEM', 'EMISSÃO', 'Nº Manifesto', 'SITUACAO', 'MOTORISTA', 'DESTINOS', 
+                'ENTREGAS', 'TIPO', 
+                'PROPRIETÁRIO', # <-- COLUNA ADICIONADA AQUI
+                'PLACA_CAVALO', 'PLACA_CARRETA', 'Custo (CTRB/OS)', 'CTRB/Frete (%)', 
+                'FRETE-R$', 'ICMS-R$', 'PESO REAL (KG)', 'M3', 'VOLUMES', 'Qtd. CTRCs', 'MERCADORIA-R$'
+            ]
+            # ▲▲▲ FIM DA MUDANÇA 2 ▲▲▲
+
+            colunas_para_exibir = [col for col in ordem_final if col in resumo_viagens.columns]
+            df_para_exibir = resumo_viagens[colunas_para_exibir].copy()
+
+            # ▼▼▼ INÍCIO DA MUDANÇA: APLICA A FUNÇÃO PARA ENCURTAR O NOME ▼▼▼
+            def encurtar_proprietario(nome):
+                if 'MARCELO H LEMOS' in nome:
+                    return 'MARCELO LEMOS BERALDO'
+                if 'KM TRANSPORTES' in nome:
+                    return 'KM TRANSPORTES'
+                return nome # Retorna o nome original se não for nenhum dos dois
+
+            df_para_exibir['PROPRIETÁRIO'] = df_para_exibir['PROPRIETÁRIO'].apply(encurtar_proprietario)
+            # ▲▲▲ FIM DA MUDANÇA ▲▲▲
+
+            styled_df = df_para_exibir.style.background_gradient(cmap='Reds', subset=['CTRB/Frete (%)'], gmap=resumo_viagens['CTRB/Frete (%)_valor'])
+            
+            # Exibição da tabela de resumo
+            st.dataframe(styled_df, use_container_width=True, hide_index=True)
+            
+            # Botão de download do resumo
+            excel_bytes_resumo = to_excel(df_para_exibir)
+            st.download_button(
+                label=f"📤 Exportar Resumo ({selecao_proprietario})", data=excel_bytes_resumo,
+                file_name=f"resumo_performance_{selecao_proprietario}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                key=f"download_tab3_resumo_{selecao_proprietario}"
+            )
+
+            # --- ▼▼▼ BLOCO ATUALIZADO: TABELA DE DADOS DETALHADOS ▼▼▼ ---
+            st.divider()
+            titulo_tabela_detalhada = f"### 📄 Dados Detalhados das Viagens ({selecao_proprietario})"
+            st.markdown(titulo_tabela_detalhada)
+
+            # Usamos o DataFrame 'df_viagens', que já está filtrado por Frota ou Terceiros
+            df_detalhado_base = df_viagens.copy()
+
+            # 1. Funções para unificar as colunas de custo
+            def calcular_custo_unificado(row):
+                """Retorna o valor de OS-R$ para TERCEIROS e CTRB-R$ para os demais."""
+                if row['PROPRIETARIO_CAVALO'] == 'MARCELO H LEMOS BERALDO E CIA LTDA ME':
+                    return row.get('OS-R$', 0.0)
+                return row.get('CTRB-R$', 0.0)
+
+            def obter_numero_documento_unificado(row):
+                """Retorna o NUM_OS para TERCEIROS e NUM_CTRB para os demais."""
+                if row['PROPRIETARIO_CAVALO'] == 'MARCELO H LEMOS BERALDO E CIA LTDA ME':
+                    return row.get('NUM_OS', '')
+                return row.get('NUM_CTRB', '')
+
+            # 2. Aplica as funções para criar as novas colunas unificadas
+            df_detalhado_base['Custo CTRB/OS'] = df_detalhado_base.apply(calcular_custo_unificado, axis=1)
+            df_detalhado_base['Nº CTRB/OS'] = df_detalhado_base.apply(obter_numero_documento_unificado, axis=1)
+
+            # 3. Define a lista de colunas que você quer exibir, incluindo as novas
+            colunas_para_exibir = [
+                'EMIS_MANIF', 'NUM_MANIF', 'SITUACAO', 'MOTORISTA', 'DEST_MANIF', 'PLACA_CAVALO', 'TIPO_CAVALO',
+                'Nº CTRB/OS',          # <-- Coluna unificada
+                'Custo CTRB/OS',       # <-- Coluna unificada
+                'FRETE-R$', 'ICMS-R$', 'PESO REAL (KG)',
+                'M3', 'VOLUMES', 'QTDE_CTRC', 'MERCADORIA-R$'
+            ]
+
+            # 4. Garante que apenas colunas existentes sejam usadas para evitar erros
+            colunas_existentes = [col for col in colunas_para_exibir if col in df_detalhado_base.columns]
+            df_detalhado_final = df_detalhado_base[colunas_existentes].copy()
+
+            # 5. Renomeia as colunas para uma apresentação mais limpa
+            df_detalhado_final = df_detalhado_final.rename(columns={
+                'EMIS_MANIF': 'EMISSÃO',
+                'NUM_MANIF': 'Nº Manifesto',
+                'SITUACAO': 'SITUAÇÃO',
+                'DEST_MANIF': 'Destino',
+                'PLACA_CAVALO': 'PLACA',
+                'TIPO_CAVALO': 'TIPO',
+                'QTDE_CTRC': 'Qtd. CTRCs'
+            })
+
+            # 6. Formata os valores (data, moeda, peso, etc.)
+            df_detalhado_final['EMISSÃO'] = pd.to_datetime(df_detalhado_final['EMISSÃO']).dt.strftime('%d/%m/%Y')
+
+            # Formata todas as colunas de moeda, incluindo a nova coluna de custo
+            colunas_moeda = ['Custo CTRB/OS', 'FRETE-R$', 'ICMS-R$', 'MERCADORIA-R$']
+            for col in colunas_moeda:
+                if col in df_detalhado_final.columns:
+                    df_detalhado_final[col] = df_detalhado_final[col].apply(formatar_moeda)
+
+            # Formata peso e M3
+            if 'PESO REAL (KG)' in df_detalhado_final.columns:
+                df_detalhado_final['PESO REAL (KG)'] = df_detalhado_final['PESO REAL (KG)'].apply(lambda x: formatar_numero(x, 2) + ' kg')
+            if 'M3' in df_detalhado_final.columns:
+                df_detalhado_final['M3'] = df_detalhado_final['M3'].astype(float).apply(lambda x: formatar_numero(x, 3))
+
+            # 7. Exibe a tabela detalhada final com as colunas corretas
+            st.dataframe(df_detalhado_final, use_container_width=True, hide_index=True)
+
+            # 8. Botão de download para os dados detalhados (agora com as colunas unificadas)
+            excel_bytes_detalhado = to_excel(df_detalhado_final)
+            st.download_button(
+                label=f"📤 Exportar Detalhes ({selecao_proprietario})",
+                data=excel_bytes_detalhado,
+                file_name=f"detalhes_viagens_{selecao_proprietario}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                key=f"download_tab3_detalhes_{selecao_proprietario}"
+            )
+            # --- ▲▲▲ FIM DO BLOCO ATUALIZADO ▲▲▲ ---
+
+
+
+        else:
+            st.info(f"Nenhuma viagem encontrada para o grupo '{selecao_proprietario}' no período selecionado.")
+
 
 with tab4:
+    # Adicione a importação do Altair no início do seu script
+    import altair as alt
 
     if df_filtrado.empty:
         st.warning("⚠️ Nenhum registro encontrado para os filtros selecionados.")
@@ -2340,7 +3022,7 @@ with tab4:
                 destino_frequente = df_motorista['CIDADE_UF_DEST'].mode()[0]
                 ultima_viagem_data = df_motorista['EMIS_MANIF'].max().strftime('%d/%m/%Y')
                 
-                # ▼▼▼ BUSCA A CAPACIDADE CORRESPONDENTE AO TIPO DE VEÍCULO ▼▼▼
+                # Busca a capacidade correspondente ao tipo de veículo
                 capacidade_info = capacidades.get(str(tipo_veiculo_frequente).upper(), capacidades['PADRAO'])
                 capacidade_kg_frequente = capacidade_info['peso_kg']
 
@@ -2355,21 +3037,19 @@ with tab4:
             with id2:
                 st.markdown(f"<div class='kpi-container' style='text-align: center;'><div class='kpi-title'><i class='fa-solid fa-truck'></i> Veículo Frequente</div><div class='kpi-value'>{placa_frequente}</div></div>", unsafe_allow_html=True)
             
-                        # ▼▼▼ KPI CORRIGIDO PARA FICAR NA MESMA LINHA ▼▼▼
+            # ▼▼▼ KPI CORRIGIDO PARA FICAR EM UMA ÚNICA LINHA ▼▼▼
             with id3:
-                # Formata a capacidade para exibição (ex: "Cap. 16.000 kg")
+                # Formata a capacidade para exibição
                 capacidade_formatada = f"Cap. {formatar_numero(capacidade_kg_frequente)} kg"
                 
                 st.markdown(f"""
                     <div class='kpi-container' style='text-align: center;'>
                         <div class='kpi-title'><i class='fa-solid fa-gear'></i> Tipo / Capacidade</div>
                         <div class='kpi-value'>
-                            {tipo_veiculo_frequente}<br>
-                            <span style='font-size: 16px; color: #d1d5db; font-weight: 500;'>{capacidade_formatada}</span>
+                            {tipo_veiculo_frequente} - <span style='font-size: 1rem; color: #d1d5db; font-weight: 500;'>{capacidade_formatada}</span>
                         </div>
                     </div>
                 """, unsafe_allow_html=True)
-
 
             with id4:
                 st.markdown(f"<div class='kpi-container' style='text-align: center;'><div class='kpi-title'><i class='fa-solid fa-map-location-dot'></i> Destino Frequente</div><div class='kpi-value'>{destino_frequente}</div></div>", unsafe_allow_html=True)
@@ -2379,10 +3059,16 @@ with tab4:
             
             st.divider()
 
-        # ... (Restante do código da tab4 permanece o mesmo) ...
-        st.markdown("### 🎯 Indicadores de Desempenho Operacional")
+        # Título e KPIs (sem alterações)
+        st.markdown("""
+            <div class="title-block-motoristas">
+                <i class="fa-solid fa-bullseye"></i>
+                <h2>Painel de Eficiência Operacional</h2>
+            </div>
+        """, unsafe_allow_html=True)
+
         def fmt_num(v, suf=""): return f"{v:,.0f}{suf}".replace(",", ".")
-        def fmt_perc(v): return f"{v:.1f}%".replace(".", ",")
+        def fmt_perc(v): return f"{v:.0f}%".replace(".", ",")
         kpi1, kpi2, kpi3, kpi4, kpi5, kpi6 = st.columns(6)
         kpis_operacionais = {
             kpi1: {"titulo": "🚛 Total de Viagens", "valor": fmt_num(dados_m["TOTAL_VIAGENS"])},
@@ -2394,14 +3080,219 @@ with tab4:
         }
         for coluna, info in kpis_operacionais.items():
             with coluna: st.markdown(f"<div class='kpi-container' style='text-align: center;'><div class='kpi-title'>{info['titulo']}</div><div class='kpi-value'>{info['valor']}</div></div>", unsafe_allow_html=True)
+        
         st.divider()
 
+        # --- ▼▼▼ NOVO BLOCO: RANKING DE MOTORISTAS (COM FILTRO INDIVIDUAL) ▼▼▼
+
+        # Só exibe o ranking se houver dados para comparar
+        if not resumo_motorista.empty:
+            st.markdown("### 🏆 Ranking de Motoristas no Período")
+
+            # --- 1. PREPARAÇÃO DOS DADOS E NOMES ---
+            def formatar_nome_curto(nome_completo):
+                partes = str(nome_completo).strip().split()
+                if not partes: return ""
+                preposicoes = ['DA', 'DE', 'DO', 'DOS']
+                if len(partes) >= 3 and partes[1].upper() in preposicoes:
+                    return f"{partes[0]} {partes[1]} {partes[2]}"
+                elif len(partes) >= 2:
+                    return f"{partes[0]} {partes[1]}"
+                else:
+                    return partes[0]
+
+            resumo_motorista['NOME_CURTO'] = resumo_motorista['MOTORISTA'].apply(formatar_nome_curto)
+
+            # --- 2. CRIAÇÃO DO NOVO SELETOR DE MOTORISTA ---
+            # Gera a lista de motoristas para o seletor, já com o nome curto
+            lista_motoristas_ranking = ["(Todos)"] + sorted(resumo_motorista['NOME_CURTO'].unique())
+            
+            motorista_ranking_sel = st.selectbox(
+                'Selecione um motorista para análise individual:',
+                options=lista_motoristas_ranking,
+                key="filtro_motorista_ranking" # Chave única para este seletor
+            )
+
+            # --- 3. FILTRAGEM DOS DADOS PARA OS GRÁFICOS ---
+            # Filtra o dataframe do ranking com base na seleção. Se "(Todos)" for escolhido, usa o df completo.
+            if motorista_ranking_sel != "(Todos)":
+                df_para_graficos = resumo_motorista[resumo_motorista['NOME_CURTO'] == motorista_ranking_sel]
+            else:
+                df_para_graficos = resumo_motorista
+
+            # --- 4. CRIAÇÃO DAS COLUNAS E GRÁFICOS (LÓGICA EXISTENTE ADAPTADA) ---
+            col_rank1, col_rank2 = st.columns(2)
+
+            with col_rank1:
+                # O dicionário de opções permanece o mesmo
+                opcoes_ranking = {
+                    'Performance das Viagens - CTRB/Frete (%)': {
+                        'coluna_valor': 'PERC_CUSTO_FRETE', 'coluna_ordem': 'PERC_CUSTO_FRETE',
+                        'titulo_eixo': '% Custo / Frete', 'ordem': 'ascending',
+                        'formato_label': "format(datum.PERC_CUSTO_FRETE, '.0f') + '%'"
+                    },
+                    'Produtividade - Nº de Viagens': {
+                        'coluna_valor': 'TOTAL_VIAGENS', 'coluna_ordem': 'TOTAL_VIAGENS',
+                        'titulo_eixo': 'Nº de Viagens', 'ordem': 'descending',
+                        'formato_label': "format(datum.TOTAL_VIAGENS, '.0f')"
+                    },
+                    'Performance Operacional - Peso Médio KG': {
+                        'coluna_valor': 'PESO_MEDIO_VIAGEM', 'coluna_ordem': 'PESO_MEDIO_VIAGEM',
+                        'titulo_eixo': 'Peso Médio por Viagem (kg)', 'ordem': 'descending',
+                        'formato_label': "format(datum.PESO_MEDIO_VIAGEM, ',.0f') + ' kg'"
+                    },
+                    'Ordem Alfabética - Motorista': {
+                        'coluna_valor': 'PERC_CUSTO_FRETE', 'coluna_ordem': 'NOME_CURTO',
+                        'titulo_eixo': '% Custo / Frete', 'ordem': 'ascending',
+                        'formato_label': "format(datum.PERC_CUSTO_FRETE, '.0f') + '%'"
+                    }
+                }
+                selecao_ranking = st.selectbox(
+                    'Selecione a métrica para o ranking:',
+                    options=list(opcoes_ranking.keys())
+                )
+                
+                # Prepara as variáveis dinâmicas
+                config_selecionada = opcoes_ranking[selecao_ranking]
+                coluna_valor_selecionada = config_selecionada['coluna_valor']
+                coluna_ordem_selecionada = config_selecionada['coluna_ordem']
+                titulo_eixo_selecionado = config_selecionada['titulo_eixo']
+                ordem_selecionada = config_selecionada['ordem']
+                formato_label_selecionado = config_selecionada['formato_label']
+
+                # Ordena o DataFrame (df_para_graficos já está filtrado)
+                ranking_dinamico_df = df_para_graficos.sort_values(
+                    by=coluna_ordem_selecionada, 
+                    ascending=(ordem_selecionada == 'ascending')
+                )
+
+                # Criação do gráfico (aqui usamos o 'ranking_dinamico_df' que já pode estar filtrado)
+                barras_dinamicas = alt.Chart(ranking_dinamico_df).mark_bar(
+                    cornerRadius=5,
+                    height=25
+                ).encode(
+                    x=alt.X(f'{coluna_valor_selecionada}:Q', title=titulo_eixo_selecionado, axis=alt.Axis(format='.0f')),
+                    y=alt.Y('NOME_CURTO:N', 
+                            title=None, 
+                            sort=alt.EncodingSortField(field=coluna_ordem_selecionada, op="min", order=ordem_selecionada),
+                            axis=alt.Axis(labelFontSize=14, labelLimit=0)
+                        ),
+                    color=alt.Color(f'{coluna_valor_selecionada}:Q',
+                                    scale=alt.Scale(scheme='reds', reverse=(ordem_selecionada == 'ascending')),
+                                    legend=None),
+                    tooltip=[
+                        alt.Tooltip('NOME_CURTO', title='Motorista'),
+                        alt.Tooltip('PERC_CUSTO_FRETE', title='% Custo/Frete', format='.1f'),
+                        alt.Tooltip('TOTAL_VIAGENS', title='Nº de Viagens'),
+                        alt.Tooltip('PESO_MEDIO_VIAGEM', title='Peso Médio', format=',.0f')
+                    ]
+                )
+                
+                # O resto da lógica do gráfico continua igual...
+                texto_dinamico = barras_dinamicas.transform_calculate(
+                    text_label=formato_label_selecionado.replace('datum.PESO_MEDIO_VIAGEM', f'datum.{coluna_valor_selecionada}').replace('datum.PERC_CUSTO_FRETE', f'datum.{coluna_valor_selecionada}').replace('datum.TOTAL_VIAGENS', f'datum.{coluna_valor_selecionada}')
+                ).mark_text(
+                    align='left', baseline='middle', dx=5, fontSize=14
+                ).encode(
+                    text=alt.Text('text_label:N'), color=alt.value('white')
+                )
+
+                chart_dinamico = (barras_dinamicas + texto_dinamico).properties(
+                    title={"text": selecao_ranking, "anchor": "start", "fontSize": 16, "fontWeight": "bold"},
+                    height=alt.Step(35)
+                ).configure_view(stroke=None).configure_axis(grid=False).configure_title(color='white')
+                
+                st.altair_chart(chart_dinamico, use_container_width=True)
+
+            with col_rank2:
+                # A lógica para o segundo gráfico é a mesma, apenas adaptada
+                opcoes_ranking_op = {
+                    'Eficiência Operacional (Ocupação Média)': {
+                        'coluna_valor': 'OCUPACAO_MEDIA_CARGA', 'coluna_ordem': 'OCUPACAO_MEDIA_CARGA',
+                        'titulo_eixo': 'Ocupação Média (%)', 'ordem': 'descending', 'cor_esquema': 'greens',
+                        'formato_label': "format(datum.OCUPACAO_MEDIA_CARGA, '.0f') + '%'"
+                    },
+                    'Performance de Entrega (Média de Entregas)': {
+                        'coluna_valor': 'MEDIA_ENTREGAS_VIAGEM', 'coluna_ordem': 'MEDIA_ENTREGAS_VIAGEM',
+                        'titulo_eixo': 'Média de Entregas por Viagem', 'ordem': 'descending', 'cor_esquema': 'bluepurple',
+                        'formato_label': "format(datum.MEDIA_ENTREGAS_VIAGEM, '.1f')"
+                    },
+                    'Performance de Distância (Distância Média)': {
+                        'coluna_valor': 'DISTANCIA_MEDIA_VIAGEM', 'coluna_ordem': 'DISTANCIA_MEDIA_VIAGEM',
+                        'titulo_eixo': 'Distância Média por Viagem (km)', 'ordem': 'descending', 'cor_esquema': 'teals',
+                        'formato_label': "format(datum.DISTANCIA_MEDIA_VIAGEM, ',.0f') + ' km'"
+                    },
+                    'Ordem Alfabética (Motorista)': {
+                        'coluna_valor': 'OCUPACAO_MEDIA_CARGA', 'coluna_ordem': 'NOME_CURTO',
+                        'titulo_eixo': 'Ocupação Média (%)', 'ordem': 'ascending', 'cor_esquema': 'greens',
+                        'formato_label': "format(datum.OCUPACAO_MEDIA_CARGA, '.0f') + '%'"
+                    }
+                }
+                selecao_ranking_op = st.selectbox(
+                    'Selecione a métrica para o ranking operacional:',
+                    options=list(opcoes_ranking_op.keys())
+                )
+
+                config_selecionada_op = opcoes_ranking_op[selecao_ranking_op]
+                coluna_valor_op = config_selecionada_op['coluna_valor']
+                coluna_ordem_op = config_selecionada_op['coluna_ordem']
+                titulo_eixo_op = config_selecionada_op['titulo_eixo']
+                ordem_op = config_selecionada_op['ordem']
+                cor_esquema_op = config_selecionada_op['cor_esquema']
+                formato_label_op = config_selecionada_op['formato_label']
+
+                # Usa o mesmo dataframe filtrado 'df_para_graficos'
+                ranking_dinamico_op_df = df_para_graficos.sort_values(
+                    by=coluna_ordem_op, ascending=(ordem_op == 'ascending')
+                )
+
+                barras_dinamicas_op = alt.Chart(ranking_dinamico_op_df).mark_bar(
+                    cornerRadius=5, height=25
+                ).encode(
+                    x=alt.X(f'{coluna_valor_op}:Q', title=titulo_eixo_op, axis=alt.Axis(format='.0f')),
+                    y=alt.Y('NOME_CURTO:N', title=None, 
+                            sort=alt.EncodingSortField(field=coluna_ordem_op, op="min", order=ordem_op),
+                            axis=alt.Axis(labelFontSize=14, labelLimit=0)),
+                    color=alt.Color(f'{coluna_valor_op}:Q', scale=alt.Scale(scheme=cor_esquema_op, reverse=(ordem_op == 'ascending')), legend=None),
+                    tooltip=[
+                        alt.Tooltip('NOME_CURTO', title='Motorista'),
+                        alt.Tooltip('OCUPACAO_MEDIA_CARGA', title='Ocupação Média', format='.1f'),
+                        alt.Tooltip('MEDIA_ENTREGAS_VIAGEM', title='Média de Entregas', format='.1f'),
+                        alt.Tooltip('DISTANCIA_MEDIA_VIAGEM', title='Distância Média', format=',.0f')
+                    ]
+                )
+                
+                # O resto da lógica do gráfico continua igual...
+                texto_dinamico_op = barras_dinamicas_op.transform_calculate(
+                    text_label=formato_label_op.replace(f'datum.{coluna_valor_op}', f'datum.{coluna_valor_op}')
+                ).mark_text(
+                    align='left', baseline='middle', dx=5, fontSize=14
+                ).encode(
+                    text=alt.Text('text_label:N'), color=alt.value('white')
+                )
+
+                chart_dinamico_op = (barras_dinamicas_op + texto_dinamico_op).properties(
+                    title={"text": selecao_ranking_op, "anchor": "start", "fontSize": 16, "fontWeight": "bold"},
+                    height=alt.Step(35)
+                ).configure_view(stroke=None).configure_axis(grid=False).configure_title(color='white')
+                
+                st.altair_chart(chart_dinamico_op, use_container_width=True)
+            
+            st.divider()
+
+        # --- ▲▲▲ FIM DO BLOCO ATUALIZADO ▲▲▲
+
+
+
+                # Tabela de Resumo das Viagens
         if motorista_sel != "(Todos)":
             st.markdown(f"### 📋 Resumo das Viagens 👨‍✈️{motorista_sel}")
         else:
             st.markdown("### 📋 Resumo de Todas as Viagens no Período")
 
         df_agrupado = df_motorista.copy()
+        
+        # Agrupa os dados por viagem para criar o resumo
         resumo_viagens = df_agrupado.groupby('VIAGEM_ID').agg(
             EMISSÃO=('EMIS_MANIF', 'first'), PLACA=('PLACA_CAVALO', 'first'), TIPO=('TIPO_CAVALO', 'first'),
             MOTORISTA=('MOTORISTA', 'first'), DESTINOS=('DEST_MANIF', lambda x: ' / '.join(x.unique())),
@@ -2411,6 +3302,7 @@ with tab4:
             ENTREGAS=('DEST_MANIF', 'nunique'), QTDE_CTRC=('QTDE_CTRC', 'sum')
         ).reset_index()
 
+        # Calcula colunas adicionais
         def calcular_custo_viagem(row):
             return row['CUSTO_OS'] if row['PROPRIETARIO'] == 'MARCELO H LEMOS BERALDO E CIA LTDA ME' else row['CUSTO_CTRB']
 
@@ -2424,6 +3316,7 @@ with tab4:
             return (custo_da_viagem / valor_por_km) if valor_por_km > 0 and custo_da_viagem > 0 else 0
 
         resumo_viagens['Distância (KM)'] = resumo_viagens.apply(calcular_distancia_por_viagem, axis=1)
+        
         def corrigir_volume_numerico(valor):
             try:
                 valor_float = float(valor)
@@ -2431,66 +3324,146 @@ with tab4:
             except (ValueError, TypeError): return 0.0
         resumo_viagens['M3_corrigido'] = resumo_viagens['M3'].apply(corrigir_volume_numerico)
 
+        # Renomeia as colunas para exibição
         resumo_viagens.rename(columns={
-            'VIAGEM_ID': '🧭 Viagem', 'TIPO': 'Tipo Veículo', 'DESTINOS': 'Destinos da Rota', 'PESO_KG': 'Peso Total',
-            'M3_corrigido': 'Volume Total (M³)', 'VOLUMES': 'Volumes Totais', 'VALOR_MERC': 'Valor Mercadoria', 'QTDE_CTRC': 'Qtd. CTRCs'
+            'VIAGEM_ID': '🧭 Viagem', 'TIPO': 'Tipo Veículo', 'DESTINOS': 'Destinos da Rota', 
+            'PESO_KG': 'Peso Total', 'M3_corrigido': 'Volume Total (M³)', 'VOLUMES': 'Volumes Totais', 
+            'VALOR_MERC': 'Valor Mercadoria', 'QTDE_CTRC': 'Qtd. CTRCs',
         }, inplace=True)
 
+        # --- INÍCIO DO CÓDIGO ATUALIZADO ---
+
+        # 1. Define a ordem das colunas e cria a lista ANTES de usá-la
         ordem_final_renomeada = [
             '🧭 Viagem', 'EMISSÃO', 'PLACA', 'Tipo Veículo', 'Destinos da Rota', 'MOTORISTA', 'Distância (KM)',
             'ENTREGAS', 'Custo (CTRB/OS)', 'CTRB/Frete (%)', 'FRETE', 'ICMS', 'Peso Total',
             'Volume Total (M³)', 'Qtd. CTRCs', 'Volumes Totais', 'Valor Mercadoria'
         ]
         colunas_para_exibir_e_exportar = [col for col in ordem_final_renomeada if col in resumo_viagens.columns]
+
+        # 2. Cria o DataFrame para exportação com os dados brutos (antes da formatação)
         df_para_exportar = resumo_viagens[colunas_para_exibir_e_exportar].copy()
 
-        if 'EMISSÃO' in resumo_viagens.columns: resumo_viagens['EMISSÃO'] = resumo_viagens['EMISSÃO'].dt.strftime('%d/%m/%Y')
-        resumo_viagens['Distância (KM)'] = resumo_viagens['Distância (KM)'].apply(lambda x: f"{int(x)} km")
-        if 'Volume Total (M³)' in resumo_viagens.columns:
-            resumo_viagens['Volume Total (M³)'] = resumo_viagens['Volume Total (M³)'].apply(lambda x: f"{x:,.3f}".replace(",", "X").replace(".", ",").replace("X", "."))
+        # 3. Funções de formatação reutilizáveis
+        def formatar_moeda_br(valor):
+            try: return f"R$ {valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+            except (ValueError, TypeError): return "R$ 0,00"
 
-        st.dataframe(resumo_viagens[colunas_para_exibir_e_exportar], use_container_width=True, hide_index=True)
+        def formatar_peso_br(valor):
+            try: return f"{valor:,.2f} kg".replace(",", "X").replace(".", ",").replace("X", ".")
+            except (ValueError, TypeError): return "0,00 kg"
+
+        # 4. Aplica a formatação em cada coluna do DataFrame que será exibido
+        if 'EMISSÃO' in resumo_viagens.columns:
+            resumo_viagens['EMISSÃO'] = pd.to_datetime(resumo_viagens['EMISSÃO']).dt.strftime('%d/%m/%Y')
         
+        colunas_moeda = ['Custo (CTRB/OS)', 'FRETE', 'Valor Mercadoria', 'ICMS']
+        for col in colunas_moeda:
+            if col in resumo_viagens.columns:
+                resumo_viagens[col] = resumo_viagens[col].apply(formatar_moeda_br)
+
+        if 'Peso Total' in resumo_viagens.columns:
+            resumo_viagens['Peso Total'] = resumo_viagens['Peso Total'].apply(formatar_peso_br)
+        
+        if 'Distância (KM)' in resumo_viagens.columns:
+            resumo_viagens['Distância (KM)'] = resumo_viagens['Distância (KM)'].apply(lambda x: f"{int(x)} km")
+        
+        if 'Volume Total (M³)' in resumo_viagens.columns:
+            resumo_viagens['Volume Total (M³)'] = resumo_viagens['Volume Total (M³)' ].apply(lambda x: f"{x:,.3f}".replace(",", "X").replace(".", ",").replace("X", "."))
+
+        # 5. Lógica de estilização para a coluna de percentual
+        resumo_viagens['CTRB/Frete (%)_valor_numerico'] = resumo_viagens['CTRB/Frete (%)']
+
+        if 'CTRB/Frete (%)' in resumo_viagens.columns:
+            resumo_viagens['CTRB/Frete (%)'] = resumo_viagens['CTRB/Frete (%)'].apply(lambda x: f"{x:,.0f}%".replace(",", "."))
+
+        # 6. Seleciona as colunas para exibição ANTES de aplicar o estilo
+        df_para_exibir_formatado = resumo_viagens[colunas_para_exibir_e_exportar]
+
+        # 7. Aplica o estilo ao DataFrame já fatiado
+        styled_df = df_para_exibir_formatado.style.background_gradient(
+            cmap='Reds', 
+            subset=['CTRB/Frete (%)'], 
+            gmap=resumo_viagens['CTRB/Frete (%)_valor_numerico'] # gmap ainda usa o df original com dados numéricos
+        )
+
+        # 8. Exibe o DataFrame ESTILIZADO
+        st.dataframe(styled_df, use_container_width=True, hide_index=True)
+        
+        # --- FIM DO CÓDIGO ATUALIZADO ---
+
+        # O botão de download continua usando o df_para_exportar (não formatado)
         excel_bytes = to_excel(df_para_exportar)
         st.download_button(
             label="📤 Exportar Resumo para Excel", data=excel_bytes,
             file_name=f"resumo_viagens_{motorista_sel.replace(' ', '_')}.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
+
         
+        # ▼▼▼ SUBSTITUA O BLOCO DA TABELA "DETALHES" POR ESTE ▼▼▼
+
+        # A tabela detalhada só aparece se um motorista específico for selecionado.
         if motorista_sel != "(Todos)":
             st.divider() 
             st.subheader("📄 Detalhes dos Documentos da Viagem")
 
-            df_detalhado = df_motorista.copy()
-            colunas_detalhadas = [
+            df_detalhado_base = df_motorista.copy()
+
+            # 1. Funções para unificar as colunas de custo
+            def calcular_custo_unificado(row):
+                if row.get('PROPRIETARIO_CAVALO') == 'MARCELO H LEMOS BERALDO E CIA LTDA ME':
+                    return row.get('OS-R$', 0.0)
+                return row.get('CTRB-R$', 0.0)
+
+            def obter_numero_documento_unificado(row):
+                if row.get('PROPRIETARIO_CAVALO') == 'MARCELO H LEMOS BERALDO E CIA LTDA ME':
+                    return row.get('NUM_OS', '')
+                return row.get('NUM_CTRB', '')
+
+            # 2. Aplica as funções para criar as novas colunas
+            df_detalhado_base['Custo (CTRB/OS)'] = df_detalhado_base.apply(calcular_custo_unificado, axis=1)
+            df_detalhado_base['Nº CTRB/OS'] = df_detalhado_base.apply(obter_numero_documento_unificado, axis=1)
+
+            # 3. Define a lista de colunas a serem exibidas
+            colunas_para_exibir = [
                 'EMIS_MANIF', 'NUM_MANIF', 'SITUACAO', 'MOTORISTA', 'DEST_MANIF', 'PLACA_CAVALO', 'TIPO_CAVALO',
-                'NUM_CTRB', 'CTRB-R$', 'NUM_OS', 'OS-R$', 'FRETE-R$', 'ICMS-R$', 'PESO REAL (KG)',
+                'Nº CTRB/OS',          # <-- Coluna unificada
+                'Custo (CTRB/OS)',     # <-- Coluna unificada
+                'FRETE-R$', 'ICMS-R$', 'PESO REAL (KG)',
                 'M3', 'VOLUMES', 'QTDE_CTRC', 'MERCADORIA-R$'
             ]
-            colunas_existentes_det = [col for col in colunas_detalhadas if col in df_detalhado.columns]
-            df_detalhado = df_detalhado[colunas_existentes_det]
+            
+            colunas_existentes = [col for col in colunas_para_exibir if col in df_detalhado_base.columns]
+            df_detalhado_final = df_detalhado_base[colunas_existentes].copy()
 
-            df_detalhado.rename(columns={
+            # 4. Renomeia as colunas para a exibição
+            df_detalhado_final.rename(columns={
                 'EMIS_MANIF': 'EMISSÃO', 'NUM_MANIF': 'Nº Manifesto', 'SITUACAO': 'SITUAÇÃO',
                 'DEST_MANIF': 'Destino', 'PLACA_CAVALO': 'PLACA', 'TIPO_CAVALO': 'TIPO',
-                'NUM_CTRB': 'Nº CTRB', 'NUM_OS': 'Nº OS', 'CTRB-R$': 'Custo CTRB',
-                'OS-R$': 'Custo OS', 'QTDE_CTRC': 'Qtd. CTRCs'
+                'QTDE_CTRC': 'Qtd. CTRCs'
             }, inplace=True)
 
-            df_detalhado['EMISSÃO'] = pd.to_datetime(df_detalhado['EMISSÃO']).dt.strftime('%d/%m/%Y')
-            colunas_moeda_det = ['Custo CTRB', 'Custo OS', 'FRETE-R$', 'ICMS-R$', 'MERCADORIA-R$']
-            for col in colunas_moeda_det:
-                if col in df_detalhado.columns: df_detalhado[col] = df_detalhado[col].apply(formatar_moeda)
-            if 'PESO REAL (KG)' in df_detalhado.columns:
-                df_detalhado['PESO REAL (KG)'] = df_detalhado['PESO REAL (KG)'].apply(lambda x: formatar_numero(x, 2) + ' kg')
-            if 'M3' in df_detalhado.columns:
-                df_detalhado['M3'] = (df_detalhado['M3'].astype(float) / 10000).apply(lambda x: formatar_numero(x, 3))
-
-            st.dataframe(df_detalhado, use_container_width=True, hide_index=True)
+            # 5. Formata os valores
+            df_detalhado_final['EMISSÃO'] = pd.to_datetime(df_detalhado_final['EMISSÃO']).dt.strftime('%d/%m/%Y')
             
+            colunas_moeda_det = ['Custo (CTRB/OS)', 'FRETE-R$', 'ICMS-R$', 'MERCADORIA-R$']
+            for col in colunas_moeda_det:
+                if col in df_detalhado_final.columns:
+                    df_detalhado_final[col] = df_detalhado_final[col].apply(formatar_moeda)
+                    
+            if 'PESO REAL (KG)' in df_detalhado_final.columns:
+                df_detalhado_final['PESO REAL (KG)'] = df_detalhado_final['PESO REAL (KG)'].apply(lambda x: formatar_numero(x, 2) + ' kg')
+                
+            if 'M3' in df_detalhado_final.columns:
+                df_detalhado_final['M3'] = df_detalhado_final['M3'].apply(corrigir_volume_numerico).apply(lambda x: formatar_numero(x, 3))
+
+            # 6. Exibe a tabela final
+            st.dataframe(df_detalhado_final, use_container_width=True, hide_index=True)
+            
+            # 7. Botão de download
             try:
-                excel_bytes_detalhado = to_excel(df_detalhado)
+                excel_bytes_detalhado = to_excel(df_detalhado_final)
                 st.download_button(
                     label="📥 Download Detalhado (Excel)",
                     data=excel_bytes_detalhado,
@@ -2501,16 +3474,28 @@ with tab4:
             except Exception as e:
                 st.error(f"❌ Erro ao gerar o arquivo Excel detalhado: {e}")
 
+        # ▲▲▲ FIM DO BLOCO SUBSTITUÍDO ▲▲▲
 
 
-
-    # --- ABA 5: ANÁLISE DE ROTAS ---
 with tab5:
-    st.header("📋 Análise de Rotas")
+    # ▼▼▼ AQUI ESTÁ A MUDANÇA ▼▼▼
+    # Substitua a linha st.header("📋 Análise de Rotas") por este bloco:
+    st.markdown("""
+        <div class="title-block-rotas">
+            <i class="fa-solid fa-route"></i>
+            <h2>Desempenho de Análise de Rotas</h2>
+        </div>
+    """, unsafe_allow_html=True)
+    # ▲▲▲ FIM DA MUDANÇA ▲▲▲
 
     if df_filtrado.empty:
         st.warning("⚠️ Nenhum registro encontrado para os filtros selecionados.")
     else:
+        # ✅ Proteção para evitar travamento quando há múltiplas rotas do mesmo motorista
+        if df_filtrado['MOTORISTA'].nunique() == 1 and df_filtrado['PLACA_CAVALO'].nunique() > 1:
+            st.info("🔎 Foram encontradas várias viagens para o mesmo motorista. "
+                    "Selecione também uma rota específica no filtro 🗺️ para visualizar o mapa e os detalhes da rota.")
+            st.stop()
         # ------------------------------------
         # 1. ANÁLISE DAS PARADAS POR CIDADE (FORMATO KPI)
         # ------------------------------------
@@ -2845,132 +3830,591 @@ with tab5:
 
             st.divider()
     
-        if df_filtrado.empty:
-            st.warning("⚠️ Nenhum registro encontrado para os filtros selecionados.")
+        # --- Inicializa estado de sessão com segurança ---
+    st.session_state.setdefault('rota_clicada_id', None)
+
+    # --- Variáveis possivelmente definidas fora deste escopo ---
+    rota_sel_visivel = globals().get('rota_sel_visivel', "(Todos)")
+    rotas_df = globals().get('rotas_df', pd.DataFrame())
+    df_filtrado = globals().get('df_filtrado', pd.DataFrame())
+    df_original = globals().get('df_original', df_filtrado.copy())
+
+    # Se um filtro de rota for selecionado na sidebar, ele tem prioridade
+    if rota_sel_visivel != "(Todos)":
+        try:
+            viagem_selecionada = rotas_df[rotas_df['NOME_ROTA'] == rota_sel_visivel]
+            if not viagem_selecionada.empty:
+                placa = viagem_selecionada['PLACA_CAVALO'].iloc[0]
+                data = viagem_selecionada['DIA_EMISSAO_STR'].iloc[0]
+                st.session_state['rota_clicada_id'] = (placa, data)
+        except Exception:
+            st.session_state['rota_clicada_id'] = None  # limpa se algo falhar
+
+    # --- Funções ---
+    def obter_geometria_rota(pontos_da_rota):
+        if not pontos_da_rota or len(pontos_da_rota) < 2:
+            return None, 0
+        coordenadas_str = ";".join([f"{lon},{lat}" for lat, lon in pontos_da_rota])
+        url = f"http://router.project-osrm.org/route/v1/driving/{coordenadas_str}?overview=full&geometries=polyline"
+        try:
+            resposta = requests.get(url, timeout=15)
+            resposta.raise_for_status()
+            dados_rota = resposta.json()
+            geometria_codificada = dados_rota['routes'][0]['geometry']
+            distancia_metros = dados_rota['routes'][0].get('distance', 0)
+            tracado_rota = polyline.decode(geometria_codificada)
+            distancia_km = round(distancia_metros / 1000)
+            return tracado_rota, distancia_km
+        except Exception:
+            return None, 0
+
+    locais = {
+        "KM Transportes - Campo Grande": [-20.50461, -54.56829], "CAMPO GRANDE/MS": [-20.50461, -54.56829],
+        "AGUA CLARA/MS": [-20.4486, -52.8783], "ANASTACIO/MS": [-20.4953, -55.8089], "COXIM/MS": [-18.5134, -54.7406],
+        "APARECIDA DO TABOADO/MS": [-20.0867, -51.0933], "BATAGUASSU/MS": [-21.715, -52.4225],
+        "BODOQUENA/MS": [-20.5507, -56.67928], "BONITO/MS": [-21.1236, -56.4934], "CAMAPUA/MS": [-19.5349, -54.0432],
+        "CASSILANDIA/MS": [-19.1133, -51.7339], "CHAPADAO DO SUL/MS": [-18.7955, -52.6012],
+        "CORUMBA/MS": [-19.0205, -57.6578], "COSTA RICA/MS": [-18.5432, -53.1292], "DOURADOS/MS": [-22.2204, -54.7360],
+        "GOIANIA/GO": [-16.6869, -49.2648], "IVINHEMA/MS": [-22.3067, -53.8153], "JARDIM/MS": [-21.4803, -56.1381],
+        "MARACAJU/MS": [-21.6147, -55.1683], "MIRANDA/MS": [-20.2363, -56.3812], "NIOAQUE/MS": [-21.1576, -55.8446],
+        "NOVA ALVORADA DO SUL/MS": [-21.4631, -54.3844], "NOVA ANDRADINA/MS": [-22.235, -53.3433],
+        "PARANAIBA/MS": [-19.6834, -51.1968], "PARAISO DAS AGUAS/MS": [-19.0202, -53.0094],
+        "PEDRO GOMES/MS": [-18.1011, -54.5525], "PONTA PORA/MS": [-22.5609, -55.6945],
+        "RIBAS DO RIO PARDO/MS": [-20.4433, -53.7592], "RIO BRILHANTE/MS": [-21.8036, -54.5456],
+        "RIO VERDE DE MATO GROSSO/MS": [-18.9181, -54.8453], "SAO GABRIEL DO OESTE/MS": [-19.395, -54.56],
+        "SAO PAULO/SP": [-23.5183, -46.5729], "SIDROLANDIA/MS": [-20.9319, -54.9603], "SONORA/MS": [-17.5736, -54.7558],
+        "TERENOS/MS": [-20.4428, -55.7597], "TRES LAGOAS/MS": [-20.7519, -51.6783],
+    }
+
+    # --- Lógica de exibição: visão geral vs detalhe ---
+    if st.session_state.get('rota_clicada_id') is None:
+        # ----------------------------------------
+        # MODO 1: VISÃO GERAL (NENHUMA ROTA CLICADA)
+        # ----------------------------------------
+        # Visão geral com todos os marcadores
+        st.markdown("### 🗺️ Trajeto da Viagem")
+        st.info("Clique em um marcador de destino 🚚 no mapa para ver os detalhes da rota específica.")
+
+        m = folium.Map(
+            location=[-19.5, -54.5],
+            zoom_start=7,
+            tiles='https://mt1.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
+            attr='Google',
+            name='Google Maps - Satélite'
+        )
+        folium.TileLayer(
+            'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+            attr='Google',
+            name='Google Maps - Ruas'
+        ).add_to(m)
+        folium.LayerControl().add_to(m)
+
+        # Previna erro se df_filtrado vazio ou sem colunas esperadas
+        if df_filtrado is None or df_filtrado.empty or 'PLACA_CAVALO' not in df_filtrado.columns:
+            st.warning("Nenhuma viagem disponível para plotar.")
+            # ▼▼▼ ADICIONE ESTA LINHA ▼▼▼
+            
+            st.dataframe(df_filtrado, use_container_width=True)
         else:
-            # ==============================
-            # MAPA DA ROTA (COM TRAÇADO CONDICIONAL E MARCADORES OTIMIZADOS)
-            # ==============================
-            st.subheader("🗺️ Trajeto da Viagem")
-
-            # Função para obter a geometria da rota (o traçado) do serviço OSRM
-            def obter_geometria_rota(pontos_da_rota):
-                """
-                Busca o traçado da rota entre uma lista de coordenadas usando o serviço OSRM.
-                Retorna uma lista de coordenadas [lat, lon] para a PolyLine e a distância em km.
-                """
-                if len(pontos_da_rota) < 2:
-                    return None, 0
-                
-                coordenadas_str = ";".join([f"{lon},{lat}" for lat, lon in pontos_da_rota])
-                url = f"http://router.project-osrm.org/route/v1/driving/{coordenadas_str}?overview=full&geometries=polyline"
-                
-                try:
-                    resposta = requests.get(url, timeout=15 )
-                    resposta.raise_for_status()
-                    dados_rota = resposta.json()
-                    geometria_codificada = dados_rota['routes'][0]['geometry']
-                    distancia_metros = dados_rota['routes'][0]['distance']
-                    tracado_rota = polyline.decode(geometria_codificada)
-                    distancia_km = round(distancia_metros / 1000)
-                    return tracado_rota, distancia_km
-                except (requests.exceptions.RequestException, KeyError, IndexError) as e:
-                    st.warning(f"Não foi possível obter o traçado da rota. Erro: {e}")
-                    return None, 0
-
-            # Dicionário de locais com coordenadas
-            locais = {
-                "KM Transportes - Campo Grande": [-20.50461, -54.56829], "CAMPO GRANDE/MS": [-20.50461, -54.56829],
-                "AGUA CLARA/MS": [-20.4486, -52.8783], "ANASTACIO/MS": [-20.4953, -55.8089], "COXIM/MS": [-18.5134, -54.7406],
-                "APARECIDA DO TABOADO/MS": [-20.0867, -51.0933], "BATAGUASSU/MS": [-21.715, -52.4225],
-                "BODOQUENA/MS": [-20.5507, -56.67928], "BONITO/MS": [-21.1236, -56.4934], "CAMAPUA/MS": [-19.5349, -54.0432],
-                "CASSILANDIA/MS": [-19.1133, -51.7339], "CHAPADAO DO SUL/MS": [-18.7955, -52.6012],
-                "CORUMBA/MS": [-19.0205, -57.6578], "COSTA RICA/MS": [-18.5432, -53.1292], "DOURADOS/MS": [-22.2204, -54.7360],
-                "GOIANIA/GO": [-16.6869, -49.2648], "IVINHEMA/MS": [-22.3067, -53.8153], "JARDIM/MS": [-21.4803, -56.1381],
-                "MARACAJU/MS": [-21.6147, -55.1683], "MIRANDA/MS": [-20.2363, -56.3812], "NIOAQUE/MS": [-21.1576, -55.8446],
-                "NOVA ALVORADA DO SUL/MS": [-21.4631, -54.3844], "NOVA ANDRADINA/MS": [-22.235, -53.3433],
-                "PARANAIBA/MS": [-19.6834, -51.1968], "PARAISO DAS AGUAS/MS": [-19.0202, -53.0094],
-                "PEDRO GOMES/MS": [-18.1011, -54.5525], "PONTA PORA/MS": [-22.5609, -55.6945],
-                "RIBAS DO RIO PARDO/MS": [-20.4433, -53.7592], "RIO BRILHANTE/MS": [-21.8036, -54.5456],
-                "RIO VERDE DE MATO GROSSO/MS": [-18.9181, -54.8453], "SAO GABRIEL DO OESTE/MS": [-19.395, -54.56],
-                "SAO PAULO/SP": [-23.5183, -46.5729], "SIDROLANDIA/MS": [-20.9319, -54.9603], "SONORA/MS": [-17.5736, -54.7558],
-                "TERENOS/MS": [-20.4428, -55.7597], "TRES LAGOAS/MS": [-20.7519, -51.6783],
-            }
-            
-            # Pega a origem e os destinos únicos do DataFrame já filtrado
-            origem_nome = df_filtrado['CIDADE_UF_ORIGEM'].iloc[0] if not df_filtrado.empty else None
-            destinos_unicos = df_filtrado['CIDADE_UF_DEST'].dropna().unique()
-
-            # Monta a lista de coordenadas para os marcadores
-            pontos_marcadores = []
-            if origem_nome and origem_nome in locais:
-                pontos_marcadores.append(locais[origem_nome])
-            
-            # Usa a ordem geográfica definida anteriormente
-            ordem_geografica_cidades = {
-                'PARAISO DAS AGUAS/MS': 1, 'CHAPADAO DO SUL/MS': 2, 'GOIANIA/GO': 3,
-            }
-            destinos_ordenados = sorted(destinos_unicos, key=lambda d: ordem_geografica_cidades.get(d, 99))
-
-            for dest in destinos_ordenados:
-                if dest in locais and locais[dest] not in pontos_marcadores:
-                    pontos_marcadores.append(locais[dest])
-
-            # Define um ponto inicial para o mapa (será sobreposto pelo fit_bounds)
-            ponto_inicial_mapa = [-15.78, -47.88] # Brasília
-
-            # Cria o mapa base
-            m = folium.Map(location=ponto_inicial_mapa, zoom_start=4, tiles='https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', attr='Google', name='Google Maps - Ruas'  )
-            
-            # --- MELHORIA ADICIONADA AQUI ---
-            # Garante que o mapa sempre comece focado no Brasil
-            m.fit_bounds([[-33.75, -73.99], [5.27, -32.39]])
-
-            folium.TileLayer('https://mt1.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', attr='Google', name='Google Maps - Satélite'  ).add_to(m)
-            folium.TileLayer('openstreetmap', name="OpenStreetMap").add_to(m)
-
-            # Verifica se os dados filtrados se referem a uma única viagem
-            e_viagem_unica = df_filtrado['PLACA_CAVALO'].nunique() == 1 and df_filtrado['DIA_EMISSAO_STR'].nunique() == 1
-
-            if e_viagem_unica:
-                tracado_da_rota, distancia_total_km = obter_geometria_rota(pontos_marcadores)
-                if tracado_da_rota:
-                    folium.PolyLine(
-                        locations=tracado_da_rota,
-                        color='#3b82f6', weight=5, opacity=0.8,
-                        tooltip=f"Distância da Rota: {distancia_total_km} km"
-                    ).add_to(m)
-                    # Ajusta o zoom para a rota específica, sobrepondo o zoom geral do Brasil
-                    m.fit_bounds(folium.PolyLine(locations=tracado_da_rota).get_bounds())
-            elif pontos_marcadores:
-                # Se houver múltiplos pontos (mas não uma rota única), ajusta o zoom para eles
-                if len(pontos_marcadores) > 1:
-                    m.fit_bounds(pontos_marcadores)
-
-            # Adiciona marcador para a ORIGEM
-            if origem_nome and origem_nome in locais:
-                folium.Marker(
-                    location=locais[origem_nome],
-                    popup=f"<strong>Origem: {origem_nome}</strong>",
-                    tooltip="Ponto de Partida",
-                    icon=folium.Icon(color='blue', icon='home', prefix='fa')
-                ).add_to(m)
-
-            # Adiciona marcadores para cada DESTINO
-            for dest in destinos_unicos:
-                if dest in locais and dest != origem_nome:
+            for (placa, dia_emissao), df_viagem in df_filtrado.groupby(['PLACA_CAVALO', 'DIA_EMISSAO_STR']):
+                origem_viagem = df_viagem['CIDADE_UF_ORIGEM'].iloc[0]
+                if origem_viagem in locais:
                     folium.Marker(
-                        location=locais[dest],
-                        popup=f"<strong>Destino: {dest}</strong>",
-                        tooltip=dest,
-                        icon=folium.Icon(color='red', icon='truck', prefix='fa')
+                        locais[origem_viagem],
+                        popup=f"Origem: {origem_viagem}",
+                        # Adicionando tooltip para a origem também
+                        tooltip=f"Partida: {origem_viagem}",
+                        icon=folium.Icon(color='blue', icon='home', prefix='fa')
                     ).add_to(m)
 
-            folium.LayerControl().add_to(m)
-            st_folium(m, use_container_width=True, height=700)
+                for _, row in df_viagem.iterrows():
+                    dest = row.get('CIDADE_UF_DEST')
+                    if dest in locais:
+                        popup_html = f"<strong>Destino: {dest}</strong><br>Veículo: {placa}<br>Data: {dia_emissao}"
+                        folium.Marker(
+                            locais[dest],
+                            popup=popup_html,
+                            tooltip=f"Destino: {dest}", 
+                            icon=folium.Icon(color='red', icon='truck', prefix='fa')
+                        ).add_to(m)
+
+            map_data = st_folium(m, use_container_width=True, height=800)
+
+            # st_folium pode retornar chaves diferentes dependendo da versão; checamos várias
+            popup_text = None
+            if map_data:
+                popup_text = map_data.get("last_object_clicked_popup") or map_data.get("last_object_clicked") or map_data.get("last_clicked")
+            if popup_text:
+                try:
+                    # tolera <br> ou quebras de linha simples
+                    if "<br>" in popup_text:
+                        placa_clicada = popup_text.split("Veículo: ")[1].split("<br>")[0].strip()
+                        data_clicada = popup_text.split("Data: ")[1].strip()
+                    else:
+                        placa_clicada = popup_text.split("Veículo: ")[1].splitlines()[0].strip()
+                        data_clicada = popup_text.split("Data: ")[1].splitlines()[0].strip()
+
+                    st.session_state['rota_clicada_id'] = (placa_clicada, data_clicada)
+                    st.rerun()
+
+                except Exception:
+                    # se não for possível extrair, ignora (provavelmente clicou na origem)
+                    pass
+
+            st.divider()
+            st.markdown("### 📊 Dados das Viagens (Visão Geral)")
+            st.dataframe(df_filtrado, use_container_width=True)
+
+    else:
+        # -------------------------------------------------
+        # MODO 2: DETALHE DA ROTA (APÓS CLICAR NO MAPA)
+        # -------------------------------------------------
+        # Visão de detalhe para a rota selecionada
+        placa_selecionada, data_selecionada = st.session_state['rota_clicada_id']
+        df_detalhe = df_original[
+            (df_original['PLACA_CAVALO'] == placa_selecionada) &
+            (df_original['DIA_EMISSAO_STR'] == data_selecionada)
+        ].copy()
+
+        # --- CABEÇALHO ---
+        st.markdown(f"### 🏙️ Detalhes da Rota: {placa_selecionada} em {data_selecionada}")
+
+        # --- CSS dos cards ---
+        st.markdown("""
+        <style>
+        .detail-section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .detail-card {
+            background-color: #1F2937;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #374151;
+            height: 100%;
+            margin-bottom: 1rem;
+        }
+        .detail-card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #E5E7EB;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .detail-card-title .fa-map-pin { color: #EF4444; }
+        .detail-grid {  
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .metric-item {
+            background-color: #111827;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .metric-label {
+            font-size: 0.8rem;
+            color: #9CA3AF;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .metric-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #FFFFFF;
+        }
+        .metric-label .fa-weight-hanging { color: #F59E0B; }
+        .metric-label .fa-cube { color: #3B82F6; }
+        .metric-label .fa-hand-holding-dollar { color: #22C55E; }
+        .metric-label .fa-truck-ramp-box { color: #22C55E; }
+        .metric-label .fa-file-invoice { color: #8B5CF6; }
+        .metric-label .fa-boxes-stacked { color: #F97316; }
+        </style>
+        """, unsafe_allow_html=True)
+
+        # --- AGREGA OS DADOS ---
+        carga_por_cidade = df_detalhe.groupby('CIDADE_UF_DEST').agg(
+            PESO_TOTAL=('PESO REAL (KG)', 'sum'),
+            VOLUME_TOTAL=('M3', 'sum'),
+            FRETE_TOTAL=('FRETE-R$', 'sum'),
+            VALOR_MERCADORIA=('MERCADORIA-R$', 'sum'),
+            QTDE_CTRC=('QTDE_CTRC', 'sum'),
+            QTDE_VOLUME=('VOLUMES', 'sum')
+        ).reset_index()
+
+        # --- FUNÇÕES DE FORMATAÇÃO ---
+        def fmt_moeda(v): return f"R$ {v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+        def fmt_num(v): return f"{v:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")
+        def fmt_m3(v): return f"{v:,.1f}".replace(".", ",")
+
+        # --- BLOCO DE KPIs POR CIDADE (AGORA DIVIDIDO EM SEÇÕES) ---
+        num_cidades = len(carga_por_cidade)
+        cols = st.columns(num_cidades if num_cidades > 0 else 1)
+
+        for i, row in carga_por_cidade.iterrows():
+            with cols[i]:
+                html = f"""
+        <div class="detail-card">
+        <div class="detail-card-title">
+            <i class="fa-solid fa-map-pin"></i> {row['CIDADE_UF_DEST']}
+        </div>
+
+        <div class="detail-section-title"><i class="fa-solid fa-chart-line"></i> Indicadores de Performance</div>
+        <div class="detail-grid">
+            <div class="metric-item">
+            <div class="metric-label"><i class="fa-solid fa-hand-holding-dollar"></i> Frete Total</div>
+            <div class="metric-value">{fmt_moeda(row['FRETE_TOTAL'])}</div>
+            </div>
+            <div class="metric-item">
+            <div class="metric-label"><i class="fa-solid fa-truck-ramp-box"></i> Mercadoria</div>
+            <div class="metric-value">{fmt_moeda(row['VALOR_MERCADORIA'])}</div>
+            </div>
+            <div class="metric-item">
+            <div class="metric-label"><i class="fa-solid fa-weight-hanging"></i> Peso</div>
+            <div class="metric-value">{fmt_num(row['PESO_TOTAL'])} kg</div>
+            </div>
+            <div class="metric-item">
+            <div class="metric-label"><i class="fa-solid fa-cube"></i> Cubagem</div>
+            <div class="metric-value">{fmt_m3(row['VOLUME_TOTAL'])} m³</div>
+            </div>
+        </div>
+
+        <div class="detail-section-title"><i class="fa-solid fa-gears"></i> Indicadores Operacionais</div>
+        <div class="detail-grid">
+            <div class="metric-item">
+            <div class="metric-label"><i class="fa-solid fa-file-invoice"></i> CTRCs</div>
+            <div class="metric-value">{fmt_num(row['QTDE_CTRC'])}</div>
+            </div>
+            <div class="metric-item">
+            <div class="metric-label"><i class="fa-solid fa-boxes-stacked"></i> Qtd. Volumes</div>
+            <div class="metric-value">{fmt_num(row['QTDE_VOLUME'])}</div>
+            </div>
+        </div>
+        </div>
+        """
+                st.markdown(html, unsafe_allow_html=True)
+
+        # Dentro de "with tab5:", na seção "else" onde st.session_state['rota_clicada_id'] não é None
+
+        # --- 📊 NOVO BLOCO: INDICADORES CONSOLIDADOS DA ROTA (DINÂMICO) ---
+        st.markdown("""
+        <hr style="border: 1px solid #333; margin: 30px 0;">
+        <h3 style="color:#fff; margin-bottom:10px;">
+            📈 Indicadores Consolidados da Rota
+        </h3>
+        """, unsafe_allow_html=True)
+
+        # --- 1. PREPARAÇÃO DOS PONTOS PARA O CÁLCULO DA DISTÂNCIA ---
+        pontos_para_distancia = []
+        if not df_detalhe.empty:
+            origem_nome = df_detalhe['CIDADE_UF_ORIGEM'].iloc[0]
+            if origem_nome in locais:
+                pontos_para_distancia.append(locais[origem_nome])
+
+            destinos_ordenados_dist = df_detalhe.sort_values(by='EMIS_MANIF')['CIDADE_UF_DEST'].unique()
+            for dest in destinos_ordenados_dist:
+                if dest in locais and locais[dest] not in pontos_para_distancia:
+                    pontos_para_distancia.append(locais[dest])
+
+        # --- 2. CÁLCULO DE TODOS OS KPIs DINÂMICOS ---
+        distancia_total_rota, _ = obter_geometria_rota(pontos_para_distancia)
+        distancia_total_rota = _ # A função retorna a distância como segundo argumento
+
+        # Garante que a coluna de custo unificada exista
+        if 'Custo (CTRB/OS)' not in df_detalhe.columns:
+            def calcular_custo_unificado(row):
+                if row.get('PROPRIETARIO_CAVALO') == 'MARCELO H LEMOS BERALDO E CIA LTDA ME':
+                    return row.get('OS-R$', 0.0)
+                return row.get('CTRB-R$', 0.0)
+            df_detalhe['Custo (CTRB/OS)'] = df_detalhe.apply(calcular_custo_unificado, axis=1)
+
+        # Cálculos principais
+        peso_total_rota = df_detalhe['PESO REAL (KG)'].sum()
+        entregas_rota = df_detalhe['DEST_MANIF'].nunique()
+        custo_total_rota = df_detalhe['Custo (CTRB/OS)'].sum()
+        frete_total_rota = df_detalhe['FRETE-R$'].sum()
+
+        # Cálculos derivados (com proteção contra divisão por zero)
+        perc_custo_frete = (custo_total_rota / frete_total_rota * 100) if frete_total_rota > 0 else 0
+        custo_por_km = (custo_total_rota / distancia_total_rota) if distancia_total_rota > 0 else 0
+        frete_por_km = (frete_total_rota / distancia_total_rota) if distancia_total_rota > 0 else 0
+
+        # --- 3. FORMATAÇÃO DOS VALORES PARA EXIBIÇÃO ---
+        distancia_formatada = f"{distancia_total_rota:,.0f} km".replace(",", ".")
+        peso_formatado = f"{peso_total_rota:,.0f} kg".replace(",", ".")
+        entregas_formatadas = str(entregas_rota)
+        perc_custo_frete_formatado = f"{perc_custo_frete:.1f}%".replace(".", ",")
+        custo_por_km_formatado = formatar_moeda(custo_por_km) # Reutiliza sua função de formatação
+        frete_por_km_formatado = formatar_moeda(frete_por_km) # Reutiliza sua função de formatação
+
+        # --- 4. EXIBIÇÃO DOS KPIs EM COLUNAS ---
+        col1, col2, col3, col4, col5, col6, col7 = st.columns(7)
+        kpi_cards = {
+            col1: {"icon": "fa-route", "title": "Viagens", "value": "1"},
+            col2: {"icon": "fa-road", "title": "Distância Total", "value": distancia_formatada},
+            col3: {"icon": "fa-weight-hanging", "title": "Peso Total", "value": peso_formatado},
+            col4: {"icon": "fa-boxes-stacked", "title": "Entregas", "value": entregas_formatadas},
+            col5: {"icon": "fa-gas-pump", "title": "Custo / Frete", "value": perc_custo_frete_formatado},
+            col6: {"icon": "fa-leaf", "title": "Custo / Km", "value": custo_por_km_formatado},
+            col7: {"icon": "fa-truck", "title": "Frete / Km", "value": frete_por_km_formatado}
+        }
+
+        for col, data in kpi_cards.items():
+            with col:
+                st.markdown(f"""
+                <div class="detail-card">
+                    <div class="detail-card-title"><i class="fa-solid {data['icon']}"></i> {data['title']}</div>
+                    <div class="metric-value" style="font-size: 1.2rem;">{data['value']}</div>
+                </div>
+                """, unsafe_allow_html=True)
+
+                # COLE TODO ESTE BLOCO AQUI
+
+        st.markdown("""
+        <hr style="border: 1px solid #333; margin: 20px 0;">
+        <h3 style="color:#fff; margin-bottom:10px;">
+            ⚖️ Análise de Ocupação de Carga na Rota
+        </h3>
+        """, unsafe_allow_html=True)
+
+        # --- 1. CÁLCULO DOS DADOS DE OCUPAÇÃO E CAPACIDADE ---
+        if not df_detalhe.empty:
+            # Pega o peso e volume totais da viagem selecionada
+            peso_total_viagem = df_detalhe['PESO REAL (KG)'].sum()
+            volume_total_viagem = df_detalhe['M3'].sum()
+
+            # Corrige o volume se necessário
+            if volume_total_viagem > 1000:
+                volume_total_viagem /= 10000
+
+            # Determina o tipo do veículo da viagem
+            tipo_veiculo_viagem = df_detalhe['TIPO_CAVALO'].iloc[0]
+
+            # --- LÓGICA DE CAPACIDADE DINÂMICA ---
+            if tipo_veiculo_viagem == 'CAVALO':
+                capacidade_peso_kg = df_detalhe['CAPACIDADE_KG'].iloc[0]
+            else:
+                capacidade_peso_kg = df_detalhe['CAPAC_CAVALO'].iloc[0]
+
+            capacidades_volume_por_tipo = {'TOCO': 55, 'TRUCK': 75, 'CAVALO': 110, 'PADRAO': 80}
+            capacidade_volume_m3 = capacidades_volume_por_tipo.get(str(tipo_veiculo_viagem).upper(), 80)
+
+            # --- 2. CÁLCULO DE OCUPAÇÃO E OCIOSIDADE ---
+            ocupacao_peso_perc = (peso_total_viagem / capacidade_peso_kg * 100) if capacidade_peso_kg > 0 else 0
+            ociosidade_peso_perc = 100 - ocupacao_peso_perc
+            potencial_nao_utilizado_kg = max(0, capacidade_peso_kg - peso_total_viagem)
+
+            ocupacao_volume_perc = (volume_total_viagem / capacidade_volume_m3 * 100) if capacidade_volume_m3 > 0 else 0
+            ociosidade_volume_perc = 100 - ocupacao_volume_perc
+            potencial_nao_utilizado_m3 = max(0, capacidade_volume_m3 - volume_total_viagem)
+
+            # --- 3. LÓGICA DE CORES PARA AS BARRAS ---
+            def obter_cor_ocupacao(percentual):
+                if percentual < 50: return "linear-gradient(90deg, #dc2626 0%, #ef4444 100%)"
+                elif percentual < 80: return "linear-gradient(90deg, #f59e0b 0%, #facc15 100%)"
+                else: return "linear-gradient(90deg, #16a34a 0%, #22c55e 100%)"
+
+            def obter_cor_ociosidade(percentual):
+                if percentual > 50: return "linear-gradient(90deg, #dc2626 0%, #ef4444 100%)"
+                elif percentual > 20: return "linear-gradient(90deg, #f59e0b 0%, #facc15 100%)"
+                else: return "linear-gradient(90deg, #16a34a 0%, #22c55e 100%)"
+
+            # --- 4. RENDERIZAÇÃO DOS CARDS VISUAIS ---
+            col_ocup_1, col_ocup_2 = st.columns(2, gap="large")
+
+            with col_ocup_1:
+                # Card de Ocupação de Peso
+                st.markdown(f"""
+                <div class="ocupacao-card-custom">
+                    <div class="progress-card-header">
+                        <div class="progress-card-title">⚖️ Ocupação de Peso (KG)</div>
+                        <div class="progress-card-value">{ocupacao_peso_perc:.0f}%</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: {min(ocupacao_peso_perc, 100)}%; background: {obter_cor_ocupacao(ocupacao_peso_perc)};"></div>
+                    </div>
+                    <div class="progress-card-footer">
+                        <span>Total: {formatar_numero(peso_total_viagem)} KG</span>
+                        <span>Capacidade: {formatar_numero(capacidade_peso_kg)} KG</span>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                # Card de Ociosidade de Peso
+                cor_ocios_peso = obter_cor_ociosidade(ociosidade_peso_perc)
+                borda_ocios_peso = cor_ocios_peso.split(',')[1].strip()
+                st.markdown(f"""
+                <div style="display: flex; align-items: center; justify-content: space-between; background-color: #1E1E2E; border-left: 5px solid {borda_ocios_peso}; padding: 10px 16px; border-radius: 8px; margin-top: 10px; color: #e4e4e7; font-size: 0.95rem;">
+                    <span><i class="fa-solid fa-scale-unbalanced-flip"></i> <b>Ociosidade de Peso:</b> {ociosidade_peso_perc:.0f}%</span>
+                    <div style="flex: 1; height: 10px; margin: 0 15px; background-color: #2a2a3a; border-radius: 5px; overflow: hidden;">
+                        <div style="width: {min(ociosidade_peso_perc, 100)}%; height: 100%; background: {cor_ocios_peso};"></div>
+                    </div>
+                    <span style="font-weight: bold; white-space: nowrap;">{formatar_numero(potencial_nao_utilizado_kg)} KG</span>
+                </div>
+                """, unsafe_allow_html=True)
+
+            with col_ocup_2:
+                # Card de Ocupação de Cubagem
+                st.markdown(f"""
+                <div class="ocupacao-card-custom">
+                    <div class="progress-card-header">
+                        <div class="progress-card-title">📦 Ocupação de Cubagem (M³)</div>
+                        <div class="progress-card-value">{ocupacao_volume_perc:.0f}%</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: {min(ocupacao_volume_perc, 100)}%; background: {obter_cor_ocupacao(ocupacao_volume_perc)};"></div>
+                    </div>
+                    <div class="progress-card-footer">
+                        <span>Total: {formatar_numero(volume_total_viagem, 3)} M³</span>
+                        <span>Capacidade: {formatar_numero(capacidade_volume_m3)} M³</span>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                # Card de Ociosidade de Cubagem
+                cor_ocios_vol = obter_cor_ociosidade(ociosidade_volume_perc)
+                borda_ocios_vol = cor_ocios_vol.split(',')[1].strip()
+                st.markdown(f"""
+                <div style="display: flex; align-items: center; justify-content: space-between; background-color: #1E1E2E; border-left: 5px solid {borda_ocios_vol}; padding: 10px 16px; border-radius: 8px; margin-top: 10px; color: #e4e4e7; font-size: 0.95rem;">
+                    <span><i class="fa-solid fa-box-open"></i> <b>Ociosidade de Cubagem (M³):</b> {ociosidade_volume_perc:.0f}%</span>
+                    <div style="flex: 1; height: 10px; margin: 0 15px; background-color: #2a2a3a; border-radius: 5px; overflow: hidden;">
+                        <div style="width: {min(ociosidade_volume_perc, 100)}%; height: 100%; background: {cor_ocios_vol};"></div>
+                    </div>
+                    <span style="font-weight: bold; white-space: nowrap;">{formatar_numero(potencial_nao_utilizado_m3, 2)} M³</span>
+                </div>
+                """, unsafe_allow_html=True)
+
+        # FIM DO BLOCO PARA COLAR
 
 
+        # --- MAPA ABAIXO DOS INDICADORES ---
+        st.markdown("### 🗺️ Trajeto da Viagem")
+
+        mapa_detalhe = folium.Map(
+            location=[-19.5, -54.5],
+            zoom_start=5,
+            tiles='https://mt1.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
+            attr='Google',
+            name='Google Maps - Satélite'
+        )
+        folium.TileLayer(
+            'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
+            attr='Google',
+            name='Google Maps - Ruas'
+        ).add_to(mapa_detalhe)
+
+        pontos_marcadores = []
+        if not df_detalhe.empty:
+            origem_nome = df_detalhe['CIDADE_UF_ORIGEM'].iloc[0]
+            if origem_nome in locais:
+                pontos_marcadores.append(locais[origem_nome])
+                folium.Marker(locais[origem_nome], popup=f"Origem: {origem_nome}",
+                            icon=folium.Icon(color='blue', icon='home', prefix='fa')).add_to(mapa_detalhe)
+
+            destinos_ordenados = df_detalhe.sort_values(by='EMIS_MANIF')['CIDADE_UF_DEST'].unique()
+            for dest in destinos_ordenados:
+                if dest in locais:
+                    if locais[dest] not in pontos_marcadores:
+                        pontos_marcadores.append(locais[dest])
+                    popup_html = f"<strong>Destino: {dest}</strong><br>Veículo: {placa_selecionada}<br>Data: {data_selecionada}"
+                    folium.Marker(locais[dest], popup=popup_html,
+                                icon=folium.Icon(color='red', icon='truck', prefix='fa')).add_to(mapa_detalhe)
+
+        tracado, dist = obter_geometria_rota(pontos_marcadores)
+        if tracado:
+            folium.PolyLine(tracado, weight=5, opacity=0.8, tooltip=f"Distância: {dist} km").add_to(mapa_detalhe)
+            lats = [p[0] for p in tracado]
+            lons = [p[1] for p in tracado]
+            mapa_detalhe.fit_bounds([[min(lats), min(lons)], [max(lats), max(lons)]])
+
+        folium.LayerControl().add_to(mapa_detalhe)
+        st_folium(mapa_detalhe, use_container_width=True, height=700)
+
+                # --- INÍCIO DO BLOCO DA TABELA DE DADOS (ATUALIZADO) ---
         st.divider()
+        st.markdown("### 📊 Dados das Viagens")
+
+        # 1. Cria uma cópia do DataFrame de detalhes para trabalhar
+        df_tabela_detalhada = df_detalhe.copy()
+
+        # 2. Lógica de Custo Unificado (essencial para as colunas de custo)
+        def calcular_custo_final(row):
+            if 'PROPRIETARIO_CAVALO' in row and row['PROPRIETARIO_CAVALO'] == 'MARCELO H LEMOS BERALDO E CIA LTDA ME':
+                return row.get('OS-R$', 0)
+            return row.get('CTRB-R$', 0)
+
+        def obter_numero_documento(row):
+            if 'PROPRIETARIO_CAVALO' in row and row['PROPRIETARIO_CAVALO'] == 'MARCELO H LEMOS BERALDO E CIA LTDA ME':
+                return row.get('NUM_OS', '')
+            return row.get('NUM_CTRB', '')
+
+        df_tabela_detalhada['Custo (CTRB/OS)'] = df_tabela_detalhada.apply(calcular_custo_final, axis=1)
+        df_tabela_detalhada['Nº CTRB/OS'] = df_tabela_detalhada.apply(obter_numero_documento, axis=1)
+
+        # 3. Define a lista de colunas que você quer exibir, na ordem correta
+        colunas_para_mostrar = [
+            'NUM_MANIF', 'DEST_MANIF', 'PLACA_CAVALO', 'MOTORISTA', 'FRETE-R$',
+            'Nº CTRB/OS', 'Custo (CTRB/OS)', 'M3', 'PESO REAL (KG)', 'MERCADORIA-R$',
+            'VOLUMES', 'QTDE_CTRC'
+        ]
+        
+        # Garante que só colunas existentes sejam selecionadas
+        colunas_existentes = [col for col in colunas_para_mostrar if col in df_tabela_detalhada.columns]
+        df_tabela_final = df_tabela_detalhada[colunas_existentes]
+
+        # 4. Cria uma cópia para exportação ANTES de formatar os valores
+        df_para_exportar = df_tabela_final.copy()
+
+        # 5. Formata as colunas para exibição
+        # Funções de formatação
+        def formatar_moeda_br(valor):
+            try: return f"R$ {valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+            except (ValueError, TypeError): return "R$ 0,00"
+
+        def formatar_peso_br(valor):
+            try: return f"{valor:,.2f} kg".replace(",", "X").replace(".", ",").replace("X", ".")
+            except (ValueError, TypeError): return "0,00 kg"
+
+        # Aplica a formatação
+        colunas_moeda = ['FRETE-R$', 'Custo (CTRB/OS)', 'MERCADORIA-R$']
+        for col in colunas_moeda:
+            if col in df_tabela_final.columns:
+                df_tabela_final[col] = df_tabela_final[col].apply(formatar_moeda_br)
+
+        if 'PESO REAL (KG)' in df_tabela_final.columns:
+            df_tabela_final['PESO REAL (KG)'] = df_tabela_final['PESO REAL (KG)'].apply(formatar_peso_br)
+
+        # 6. Exibe a tabela final, já formatada
+        st.dataframe(df_tabela_final, use_container_width=True, hide_index=True)
+
+        # 7. Botão de Download (usando o df_para_exportar com dados não formatados)
+        try:
+            excel_bytes_rota = to_excel(df_para_exportar)
+            st.download_button(
+                label="📥 Download Dados da Rota (Excel)",
+                data=excel_bytes_rota,
+                file_name=f"dados_detalhados_{placa_selecionada}_{data_selecionada}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                key="download_detalhes_rota"
+            )
+        except Exception as e:
+            st.error(f"❌ Erro ao gerar o arquivo Excel: {e}")
+
+        # 8. Botão para voltar à visão geral
+        if st.button("⬅️ Voltar para a Visão Geral"):
+            st.session_state['rota_clicada_id'] = None
+            st.rerun()
+
+        # --- FIM DO BLOCO ATUALIZADO ---
+
 
         # ==============================
         # TABELA DE DADOS FILTRADOS (COM LÓGICA DE CUSTO DINÂMICO)

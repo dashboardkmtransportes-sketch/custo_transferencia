@@ -14,6 +14,12 @@ import matplotlib.colors as mcolors
 from matplotlib.colors import ListedColormap, BoundaryNorm
 import altair as alt
 import numpy as np # Adicione esta linha no topo do seu arquivo se ainda não tiver
+import folium
+from streamlit_folium import st_folium
+import requests
+import polyline # Biblioteca para decodificar a geometria da rota
+from folium import plugins # <<< ADICIONE ESTA LINHA
+from folium.plugins import Fullscreen
 
 
 # --- 1. CONFIGURAÇÕES DA PÁGINA E ESTILO ---
@@ -626,27 +632,24 @@ except locale.Error:
 # 🔹 CONFIGURAÇÕES GLOBAIS E REGRAS DE NEGÓCIO
 # =================================================
 
-# --- NOVO DICIONÁRIO DE ROTAS COMPLETAS ---
-# A ordem das chaves é importante! As rotas mais abrangentes (com mais destinos)
-# devem vir PRIMEIRO para que a lógica de classificação funcione corretamente.
+# --- DICIONÁRIO DE ROTAS COMPOSTAS ---
+# A ordem é importante: rotas mais abrangentes (com mais siglas) devem vir primeiro.
 ROTAS_COMPOSTAS = {
-    # Rotas com múltiplos destinos (mais específicas primeiro)
-    "ROTA COXIM": {"COX", "PGO", "SNR"},
+    # Rotas com múltiplos destinos
     "ROTA SÃO PAULO": {"CSL", "PBA", "ATB", "SPO"},
     "ROTA GOIÂNIA": {"PDA", "CDS", "GYN"},
-    "ROTA BATAGUASSU": {"BAT", "BLD", "SRP"},
-    "ROTA RIO BRILHANTE/DOURADOS": {"RBT", "DOU"}, # Combinação especial
-    "ROTA SÃO GABRIEL": {"SGO", "RVM"},
-    "ROTA MARACAJU": {"MJU", "SDL"},
-    "ROTA JARDIM": {"JDM", "NQU"},
-    "ROTA BODOQUENA": {"BDQ", "MDA"},
-    "ROTA COSTA RICA": {"CRC", "CMP"},
-    "ROTA IVINHEMA": {"IVM", "NSU"},
+    "ROTA COXIM": {"SNR", "PGO", "COX"},
+    "ROTA BATAGUASSU": {"SRP", "BLD", "BAT"},
+    "ROTA RIO BRILHANTE": {"RBT", "DOU"}, # Nome padronizado
+    "ROTA SÃO GABRIEL": {"RVM", "SGO"},
+    "ROTA MARACAJU": {"SDL", "MJU"},
+    "ROTA JARDIM": {"NQU", "JDM"},
+    "ROTA BODOQUENA": {"MDA", "BDQ"},
+    "ROTA COSTA RICA": {"CMP", "CRC"},
+    "ROTA IVINHEMA": {"NSU", "IVM"},
     "ROTA RIBAS": {"ACL", "RRP"},
 
-    # Rotas com um único destino principal (ou sub-rotas)
-    "ROTA SONORA": {"SNR"},
-    "ROTA PEDRO GOMES": {"PGO"},
+    # Rotas com um único destino principal
     "ROTA DOURADOS": {"DOU"},
     "ROTA NOVA ANDRADINA": {"NAD"},
     "ROTA BONITO": {"BTO"},
@@ -655,6 +658,127 @@ ROTAS_COMPOSTAS = {
     "ROTA TRÊS LAGOAS": {"TLG"},
     "ROTA CORUMBÁ": {"COR"},
 }
+
+# --- DICIONÁRIO PARA ORDENAÇÃO GEOGRÁFICA ---
+# Define a sequência exata em que os destinos devem aparecer.
+ORDEM_DAS_ROTAS = {
+    # Rotas Compostas (na ordem de entrega desejada)
+    "ROTA GOIÂNIA": ["PDA", "CDS", "GYN"],
+    "ROTA COXIM": ["SNR", "PGO", "COX"],
+    "ROTA SÃO PAULO": ["CSL", "PBA", "ATB", "SPO"],
+    "ROTA BATAGUASSU": ["SRP", "BLD", "BAT"],
+    "ROTA RIO BRILHANTE": ["RBT", "DOU"], # Nome padronizado
+    "ROTA SÃO GABRIEL": ["RVM", "SGO"],
+    "ROTA MARACAJU": ["SDL", "MJU"],
+    "ROTA JARDIM": ["NQU", "JDM"],
+    "ROTA BODOQUENA": ["MDA", "BDQ"],
+    "ROTA COSTA RICA": ["CMP", "CRC"],
+    "ROTA IVINHEMA": ["NSU", "IVM"],
+    "ROTA RIBAS": ["ACL", "RRP"],
+
+    # Rotas de destino único
+    "ROTA DOURADOS": ["DOU"],
+    "ROTA NOVA ANDRADINA": ["NAD"],
+    "ROTA BONITO": ["BTO"],
+    "ROTA AQUIDAUANA": ["AQU"],
+    "ROTA PONTA PORÃ": ["PPR"],
+    "ROTA TRÊS LAGOAS": ["TLG"],
+    "ROTA CORUMBÁ": ["COR"],
+}
+
+# --- DICIONÁRIO PARA MAPEAMENTO DE SIGLA PARA NOME COMPLETO ---
+# "Traduz" as siglas para os nomes completos que serão exibidos nos cards.
+MAPA_SIGLA_NOME_COMPLETO = {
+    # Rota Goiânia
+    "PDA": "PARAISO DAS AGUAS/MS",
+    "CDS": "CHAPADAO DO SUL/MS",
+    "GYN": "GOIANIA/GO",
+
+    # Rota Coxim
+    "SNR": "SONORA/MS",
+    "PGO": "PEDRO GOMES/MS",
+    "COX": "COXIM/MS",
+
+    # Rota São Paulo
+    "CSL": "CASSILANDIA/MS",
+    "PBA": "PARANAIBA/MS",
+    "ATB": "APARECIDA DO TABOADO/MS",
+    "SPO": "SAO PAULO/SP",
+
+    # Rota Bataguassu
+    "SRP": "SANTA RITA DO PARDO/MS",
+    "BLD": "BRASILANDIA/MS",
+    "BAT": "BATAGUASSU/MS",
+
+    # Rota Rio Brilhante
+    "RBT": "RIO BRILHANTE/MS",
+    "DOU": "DOURADOS/MS",
+
+    # Rota São Gabriel
+    "RVM": "RIO VERDE DE MATO GROSSO/MS",
+    "SGO": "SAO GABRIEL DO OESTE/MS",
+
+    # Rota Maracaju
+    "SDL": "SIDROLANDIA/MS",
+    "MJU": "MARACAJU/MS",
+
+    # Rota Jardim
+    "NQU": "NIOAQUE/MS",
+    "JDM": "JARDIM/MS",
+
+    # Rota Bodoquena
+    "MDA": "MIRANDA/MS",
+    "BDQ": "BODOQUENA/MS",
+
+    # Rota Costa Rica
+    "CMP": "CAMAPUA/MS",
+    "CRC": "COSTA RICA/MS",
+
+    # Rota Ivinhema
+    "NSU": "NOVA ALVORADA DO SUL/MS",
+    "IVM": "IVINHEMA/MS",
+
+    # Rota Ribas
+    "ACL": "AGUA CLARA/MS",
+    "RRP": "RIBAS DO RIO PARDO/MS",
+
+    # Rotas de Destino Único
+    "NAD": "NOVA ANDRADINA/MS",
+    "BTO": "BONITO/MS",
+    "AQU": "AQUIDAUANA/MS",
+    "PPR": "PONTA PORA/MS",
+    "TLG": "TRES LAGOAS/MS",
+    "COR": "CORUMBA/MS"
+}
+
+# =================================================
+# 🔹 MAPA PARA COORDENADAS DO MAPA
+# =================================================
+MAPA_ROTA_CIDADE = {
+    # Rotas Compostas (Múltiplos Destinos)
+    "ROTA COXIM": "Coxim, MS",
+    "ROTA SÃO PAULO": "São Paulo, SP",
+    "ROTA GOIÂNIA": "Goiânia, GO",
+    "ROTA BATAGUASSU": "Bataguassu, MS",
+    "ROTA RIO BRILHANTE": "Rio Brilhante, MS", # Nome padronizado
+    "ROTA SÃO GABRIEL": "São Gabriel do Oeste, MS",
+    "ROTA MARACAJU": "Maracaju, MS",
+    "ROTA JARDIM": "Jardim, MS",
+    "ROTA BODOQUENA": "Bodoquena, MS",
+    "ROTA COSTA RICA": "Costa Rica, MS",
+    "ROTA IVINHEMA": "Ivinhema, MS",
+    "ROTA RIBAS": "Ribas do Rio Pardo, MS",
+
+    # Rotas de Destino Único
+    "ROTA DOURADOS": "Dourados, MS",
+    "ROTA NOVA ANDRADINA": "Nova Andradina, MS",
+    "ROTA BONITO": "Bonito, MS",
+    "ROTA AQUIDAUANA": "Aquidauana, MS",
+    "ROTA PONTA PORÃ": "Ponta Porã, MS",
+    "ROTA TRÊS LAGOAS": "Três Lagoas, MS",
+    "ROTA CORUMBÁ": "Corumbá, MS",
+}
+
 
 def classificar_viagens_do_dia(df):
     """
@@ -683,7 +807,6 @@ def classificar_viagens_do_dia(df):
     )
 
     return df
-
 
 # --- 2. FUNÇÕES DE APOIO ---
 @st.cache_data
@@ -760,7 +883,6 @@ def carregar_capacidades(caminho_capacidades):
         st.error(f"❌ Erro inesperado ao ler o arquivo de capacidades: {e}")
         return pd.DataFrame()
 
-
 def to_excel(df):
     """
     Converte um DataFrame do Pandas para um arquivo Excel em memória,
@@ -828,6 +950,165 @@ def formatar_numero(valor, casas_decimais=0):
         return f"{valor:,.{casas_decimais}f}".replace(",", "X").replace(".", ",").replace("X", ".")
     except (ValueError, TypeError):
         return "0"
+    
+    # ▼▼▼ COLE AS NOVAS FUNÇÕES DO MAPA AQUI ▼▼▼
+
+@st.cache_data
+def get_coords(cidade_nome):
+    """Busca as coordenadas (latitude, longitude) de uma cidade usando a API Nominatim."""
+    try:
+        # Usamos um user_agent para identificar nossa aplicação, uma boa prática para APIs públicas
+        headers = {'User-Agent': 'MeuDashboardStreamlit/1.0'}
+        url = f"https://nominatim.openstreetmap.org/search?q={cidade_nome}&format=json&limit=1"
+        response = requests.get(url, headers=headers, timeout=10 ) # Adicionado timeout
+        response.raise_for_status() # Lança um erro para respostas ruins (4xx ou 5xx)
+        data = response.json()
+        if data:
+            # Retorna as coordenadas como uma tupla de floats
+            return (float(data[0]['lat']), float(data[0]['lon']))
+    except requests.exceptions.RequestException as e:
+        st.error(f"Erro de conexão ao buscar coordenadas para {cidade_nome}: {e}")
+    except (KeyError, IndexError):
+        st.warning(f"Não foi possível encontrar coordenadas para '{cidade_nome}'.")
+    return None
+
+@st.cache_data
+def get_route(coord_origem, coord_destino):
+    """Obtém a rota (geometria polyline) entre duas coordenadas usando a API do OSRM."""
+    if not coord_origem or not coord_destino:
+        return None
+    
+    # Formata as coordenadas para a URL da API
+    lon_orig, lat_orig = coord_origem[1], coord_origem[0]
+    lon_dest, lat_dest = coord_destino[1], coord_destino[0]
+    
+    url = f"http://router.project-osrm.org/route/v1/driving/{lon_orig},{lat_orig};{lon_dest},{lat_dest}?overview=full&geometries=polyline"
+    
+    try:
+        response = requests.get(url, timeout=10 ) # Adicionado timeout
+        response.raise_for_status()
+        data = response.json()
+        if data['routes']:
+            # Decodifica a geometria polyline para uma lista de coordenadas (lat, lon)
+            route_polyline = data['routes'][0]['geometry']
+            return polyline.decode(route_polyline)
+    except requests.exceptions.RequestException as e:
+        st.error(f"Erro de conexão ao buscar a rota: {e}")
+    except (KeyError, IndexError):
+        st.warning("Não foi possível obter a geometria da rota.")
+    return None
+
+def criar_mapa_folium(coord_origem, coord_destino, nome_cidade_destino, rota_coords):
+    """
+    Cria e configura o mapa Folium com múltiplas camadas, marcadores,
+    a linha da rota e um controle para alternar as camadas.
+    """
+    if not coord_origem or not coord_destino:
+        return None
+
+    # Calcula o ponto central do mapa
+    map_center = [
+        (coord_origem[0] + coord_destino[0]) / 2,
+        (coord_origem[1] + coord_destino[1]) / 2
+    ]
+
+    # Cria o mapa base (a primeira camada será a padrão)
+    m = folium.Map(location=map_center, zoom_start=7, tiles=None)
+
+    # --- CAMADAS DE FUNDO ---
+
+    folium.TileLayer(
+        tiles="https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}",
+        attr='Google',
+        name='🌄 Terreno (Google Maps)'
+    ).add_to(m)
+
+    folium.TileLayer(
+        tiles='CartoDB dark_matter',
+        name='🌃 Modo Escuro (CartoDB)'
+    ).add_to(m)
+
+    folium.TileLayer(
+        'OpenStreetMap',
+        name='🗺️ Ruas (OpenStreetMap)'
+    ).add_to(m)
+
+    folium.TileLayer(
+        tiles="https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
+        attr='Google',
+        name='🛰️ Satélite (Google Maps)'
+    ).add_to(m)
+
+    # --- GRUPO DE ELEMENTOS (rota + marcadores) ---
+    feature_group = folium.FeatureGroup(name="🚚 Trajeto da Viagem").add_to(m)
+
+    # Marcador de Origem
+    folium.Marker(
+        location=coord_origem,
+        popup="<b>Origem:</b><br>Campo Grande, MS",
+        tooltip="Origem",
+        icon=folium.Icon(color='blue', icon='home', prefix='fa')
+    ).add_to(feature_group)
+
+    # Marcador de Destino
+    folium.Marker(
+        location=coord_destino,
+        popup=f"<b>Destino:</b><br>{nome_cidade_destino}",
+        tooltip="Destino",
+        icon=folium.Icon(color='red', icon='truck', prefix='fa')
+    ).add_to(feature_group)
+
+    # Linha da rota (se existir)
+    if rota_coords:
+        folium.PolyLine(
+            locations=rota_coords,
+            color='#1E90FF',
+            weight=5,
+            opacity=0.9
+        ).add_to(feature_group)
+
+    # --- CONTROLE DE CAMADAS ---
+    folium.LayerControl(collapsed=False).add_to(m)
+    
+    Fullscreen(position='topright', title='Tela cheia', title_cancel='Sair').add_to(m)
+
+    return m
+
+# ▼▼▼ COLE A NOVA FUNÇÃO AQUI ▼▼▼
+def ordenar_destinos_geograficamente(destinos_da_viagem, rotas_completas, ordem_das_rotas):
+    """
+    Ordena uma lista de siglas de destino com base na ordem geográfica pré-definida
+    para a rota correspondente. Funciona para todas as rotas.
+    """
+    # 1. Converte as siglas da viagem para um conjunto (set) para facilitar a comparação
+    destinos_set = set(destinos_da_viagem)
+    
+    # 2. Identifica a qual rota principal esta viagem pertence
+    nome_rota_identificada = None
+    # Itera sobre o dicionário de rotas compostas para encontrar a correspondência
+    for nome_rota, siglas_rota in rotas_completas.items():
+        if siglas_rota.issubset(destinos_set):
+            nome_rota_identificada = nome_rota
+            break # Para na primeira correspondência encontrada (importante pela ordem do dicionário)
+
+    # 3. Se uma rota foi identificada, busca sua ordem específica
+    if nome_rota_identificada:
+        # Pega a lista de ordem para a rota encontrada (ex: ["SRP", "BLD", "BAT"])
+        ordem_especifica = ordem_das_rotas.get(nome_rota_identificada, [])
+        
+        # Cria um mapa de posição para a ordenação (ex: {'SRP': 0, 'BLD': 1, 'BAT': 2})
+        mapa_de_ordem = {sigla: pos for pos, sigla in enumerate(ordem_especifica)}
+        
+        # Ordena os destinos da viagem usando o mapa
+        destinos_ordenados = sorted(destinos_da_viagem, key=lambda d: mapa_de_ordem.get(d, 99))
+        
+        return ' / '.join(destinos_ordenados)
+    
+    # 4. Fallback: Se nenhuma rota composta for encontrada, ordena alfabeticamente
+    # Isso lida com rotas de destino único ou combinações não previstas.
+    return ' / '.join(sorted(destinos_da_viagem))
+# ▲▲▲ FIM DA NOVA FUNÇÃO ▲▲▲
+
 
 # --- 3. CARREGAMENTO DOS DADOS ---
 caminho_do_arquivo = os.path.join("data", "viagens_outubro.xlsx")
@@ -2700,7 +2981,7 @@ with tab1:
                 CAPAC_CAVALO=('CAPAC_CAVALO', 'first'),
                 CAP_CARRETA=('CAPACIDADE_KG', 'first'), 
                 TIPO_VEICULO=('TIPO_CAVALO', 'first'),
-                DESTINOS=('DEST_MANIF', lambda x: ' / '.join(x.unique())),
+                DESTINOS=('DEST_MANIF', lambda x: ordenar_destinos_geograficamente(x.unique(), ROTAS_COMPOSTAS, ORDEM_DAS_ROTAS)),
                 PROPRIETARIO=('PROPRIETARIO_CAVALO', 'first'),
                 CUSTO_OS_TOTAL=('OS-R$', 'max'),
                 CUSTO_CTRB_TOTAL=('CTRB-R$', 'max'),
@@ -2746,10 +3027,10 @@ with tab1:
             resumo_viagens['Capacidade (KG)'] = resumo_viagens.apply(obter_capacidade_real_viagem, axis=1)
             resumo_viagens['Veículo (Placa)'] = resumo_viagens.apply(obter_placa_veiculo_formatada, axis=1)
 
-            
-            # --- FIM DAS NOVAS LÓGICAS UNIFICADAS ---
+            # ✅ Ajusta VIAGEM para começar em 1 (como COLUNA, não índice)
+            resumo_viagens = resumo_viagens.reset_index(drop=True)
+            resumo_viagens['VIAGEM'] = range(1, len(resumo_viagens) + 1)
 
-            # (O restante das funções de cálculo de custo, distância, etc., permanece o mesmo)
             def calcular_custo_final(row):
                 custo_base = row['OS-R$'] if row['PROPRIETARIO_CAVALO'] == 'MARCELO H LEMOS BERALDO E CIA LTDA ME' else row['CTRB-R$']
                 destinos_str = str(row.get('DEST_MANIF', '')).upper()
@@ -4038,8 +4319,9 @@ with tab4:
             except Exception as e:
                 st.error(f"❌ Erro ao gerar o arquivo Excel detalhado: {e}")
 
-        # ▲▲▲ FIM DO BLOCO SUBSTITUÍDO ▲▲▲
-
+# ==================================================================
+# ABA 5: GESTÃO DE ROTAS (VERSÃO SIMPLIFICADA)
+# ==================================================================
 with tab5:
 
     if df_filtrado.empty:
@@ -4054,21 +4336,22 @@ with tab5:
             </div>
         """, unsafe_allow_html=True)
 
-        # --- FILTROS DE TIPO DE VIAGEM E ROTA (ícones compatíveis e estilo moderno) ---
+        # --- FILTROS DE TIPO DE VIAGEM E ROTA (COM A OPÇÃO "TODAS") ---
         tipo_viagem_ocupacao_sel = option_menu(
             menu_title=None,
-            options=["ROTA COMPLETA", "VIAGEM EXTRA"],
-            icons=["arrow-repeat", "exclamation-octagon-fill"],
+            # 1. Adiciona a nova opção "TODAS AS ROTAS" no início
+            options=["TODAS AS ROTAS", "ROTA COMPLETA", "VIAGEM EXTRA"],
+            # 2. Adiciona o ícone correspondente para a nova opção
+            icons=["collection-fill", "arrow-repeat", "exclamation-octagon-fill"],
             menu_icon="filter-circle",
-            default_index=0,
+            default_index=0, # Começa com "TODAS AS ROTAS" selecionado
             orientation="horizontal",
             key="option_menu_tipo_viagem_tab5",
-            # ▼▼▼ SUBSTITUA O BLOCO 'styles' POR ESTE (SE PREFERIR ESTA OPÇÃO) ▼▼▼
             styles={
                 "container": {
                     "padding": "5px",
-                    "background-color": "#1F2937", # Fundo sólido escuro
-                    "border-radius": "999px", # Bordas totalmente arredondadas (formato de pílula)
+                    "background-color": "#1F2937",
+                    "border-radius": "999px",
                     "margin-bottom": "25px",
                     "display": "flex",
                     "justify-content": "center"
@@ -4083,7 +4366,7 @@ with tab5:
                     "color": "#D1D5DB",
                     "text-transform": "uppercase",
                     "padding": "10px 25px",
-                    "border-radius": "999px", # Botões também em formato de pílula
+                    "border-radius": "999px",
                     "margin": "0px",
                     "transition": "all 0.3s ease"
                 },
@@ -4094,17 +4377,18 @@ with tab5:
                 "nav-link-selected": {
                     "background-color": "#ef4444",
                     "color": "#FFFFFF",
-                    "box-shadow": "0 2px 10px rgba(0, 0, 0, 0.3)" # Sombra sutil para elevação
+                    "box-shadow": "0 2px 10px rgba(0, 0, 0, 0.3)"
                 },
             }
-            # ▲▲▲ FIM DA SUBSTITUIÇÃO ▲▲▲
         )
         
         # --- SINCRONIZAÇÃO DO FILTRO DE VIAGEM COM A SELEÇÃO DO MENU ---
         df_filtrado_por_tipo = df_filtrado.copy()
         if not df_filtrado_por_tipo.empty:
+            # A função de classificação é chamada para garantir que a coluna exista
             df_classificado_completo = classificar_viagens_do_dia(df_filtrado)
 
+            # Filtra APENAS se a opção não for "TODAS AS ROTAS"
             if tipo_viagem_ocupacao_sel == "ROTA COMPLETA":
                 df_filtrado_por_tipo = df_classificado_completo[
                     df_classificado_completo['TIPO_VIAGEM_CALCULADO'] == "Rota Completa"
@@ -4113,8 +4397,13 @@ with tab5:
                 df_filtrado_por_tipo = df_classificado_completo[
                     df_classificado_completo['TIPO_VIAGEM_CALCULADO'] == "Viagem Extra"
                 ].copy()
-            else:
+            # Se for "TODAS AS ROTAS", df_filtrado_por_tipo já é a cópia completa e não fazemos nada
+            
+            # Garante que, em qualquer caso, o dataframe final seja o classificado
+            # para que a lógica subsequente funcione.
+            else: # tipo_viagem_ocupacao_sel == "TODAS AS ROTAS"
                 df_filtrado_por_tipo = df_classificado_completo.copy()
+
 
         # --- SE EXISTIR DADOS APÓS O FILTRO ---
         if not df_filtrado_por_tipo.empty:
@@ -4165,24 +4454,46 @@ with tab5:
             def calcular_dados_ocupacao(df_dados):
                 if df_dados.empty:
                     return None
+
                 dados = {}
-                viagens_unicas = df_dados.drop_duplicates(subset=['PLACA_CAVALO', 'DIA_EMISSAO_STR', 'MOTORISTA'])
-                cap_peso_carreta = viagens_unicas[viagens_unicas['TIPO_CAVALO'] == 'CAVALO']['CAPACIDADE_KG'].sum()
-                cap_peso_truck = viagens_unicas[viagens_unicas['TIPO_CAVALO'] == 'TRUCK']['CAPAC_CAVALO'].sum()
-                dados['cap_total_peso'] = cap_peso_carreta + cap_peso_truck
+
+                # 1. Identifica cada viagem única para evitar contagem duplicada de capacidade
+                viagens_unicas = df_dados.drop_duplicates(subset=['PLACA_CAVALO', 'DIA_EMISSAO_STR', 'MOTORISTA']).copy()
+
+                # 2. Lógica de capacidade de PESO robusta
+                def get_capacidade_viagem_peso(row):
+                    # Se for um CAVALO, a capacidade vem da coluna da carreta ('CAPACIDADE_KG')
+                    if row.get('TIPO_CAVALO') == 'CAVALO':
+                        return row.get('CAPACIDADE_KG', 0)
+                    # Para outros tipos (TRUCK, TOCO), a capacidade vem da coluna do cavalo ('CAPAC_CAVALO')
+                    return row.get('CAPAC_CAVALO', 0)
+
+                # Aplica a função para obter a capacidade correta para CADA viagem
+                viagens_unicas['CAPACIDADE_PESO_VIAGEM'] = viagens_unicas.apply(get_capacidade_viagem_peso, axis=1)
+
+                # A capacidade total é a soma das capacidades individuais de cada viagem
+                dados['cap_total_peso'] = viagens_unicas['CAPACIDADE_PESO_VIAGEM'].sum()
                 dados['total_peso'] = df_dados['PESO REAL (KG)'].sum()
-                capacidades_volume_por_tipo = {'TRUCK': 75, 'CAVALO': 110}
-                viagens_unicas['CAP_VOL_VIAGEM'] = viagens_unicas['TIPO_CAVALO'].map(capacidades_volume_por_tipo).fillna(0)
+
+                # 3. Lógica de capacidade de VOLUME (M³)
+                capacidades_volume_por_tipo = {'TRUCK': 75, 'CAVALO': 110, 'TOCO': 55, 'PADRAO': 80}
+                viagens_unicas['CAP_VOL_VIAGEM'] = viagens_unicas['TIPO_CAVALO'].map(capacidades_volume_por_tipo).fillna(capacidades_volume_por_tipo['PADRAO'])
+
                 dados['cap_total_volume'] = viagens_unicas['CAP_VOL_VIAGEM'].sum()
-                dados['total_volume'] = df_dados['M3'].sum()
-                if dados['total_volume'] > 1000:
-                    dados['total_volume'] /= 10000
+
+                # Corrige a unidade do volume total se necessário
+                total_volume_bruto = df_dados['M3'].sum()
+                dados['total_volume'] = total_volume_bruto / 10000 if total_volume_bruto > 1000 else total_volume_bruto
+
+                # 4. Calcula os percentuais de ocupação e ociosidade
                 dados['ocup_peso_perc'] = (dados['total_peso'] / dados['cap_total_peso'] * 100) if dados['cap_total_peso'] > 0 else 0
                 dados['ociosidade_peso_perc'] = 100 - dados['ocup_peso_perc']
-                dados['potencial_nao_utilizado_kg'] = dados['cap_total_peso'] - dados['total_peso']
+                dados['potencial_nao_utilizado_kg'] = max(0, dados['cap_total_peso'] - dados['total_peso'])
+
                 dados['ocup_volume_perc'] = (dados['total_volume'] / dados['cap_total_volume'] * 100) if dados['cap_total_volume'] > 0 else 0
                 dados['ociosidade_volume_perc'] = 100 - dados['ocup_volume_perc']
-                dados['potencial_nao_utilizado_m3'] = dados['cap_total_volume'] - dados['total_volume']
+                dados['potencial_nao_utilizado_m3'] = max(0, dados['cap_total_volume'] - dados['total_volume'])
+
                 return dados
 
             dados_agregados = calcular_dados_ocupacao(df_para_ocupacao)
@@ -4250,9 +4561,6 @@ with tab5:
             # 🔹 DETALHES POR DESTINO DENTRO DA ROTA (VERSÃO FINAL CORRIGIDA)
             # =================================================================
 
-            # --- FUNÇÕES DE FORMATAÇÃO ---
-            import pandas as pd
-
             def fmt_moeda(valor):
                 """Formata número como moeda brasileira: R$ 1.234,56"""
                 if pd.isna(valor):
@@ -4264,8 +4572,6 @@ with tab5:
                 if pd.isna(valor):
                     return "0"
                 return f"{int(valor):,}".replace(",", ".")
-
-            # ... (código anterior da aba 5) ...
 
             # =================================================================
             # 🔹 DETALHES POR DESTINO DENTRO DA ROTA (VERSÃO FINAL CORRIGIDA)
@@ -4386,6 +4692,32 @@ with tab5:
                     QTDE_VOLUME=('VOLUMES', 'sum')
                 ).reset_index()
 
+                # ▼▼▼ INÍCIO DA CORREÇÃO FINAL E MAIS ROBUSTA ▼▼▼
+
+                # 1. Cria um dicionário reverso para "traduzir" NOME COMPLETO -> SIGLA
+                mapa_nome_para_sigla = {nome.upper(): sigla for sigla, nome in MAPA_SIGLA_NOME_COMPLETO.items()}
+
+                # 2. Adiciona uma coluna temporária 'SIGLA' ao DataFrame 'carga_por_cidade'
+                carga_por_cidade['SIGLA'] = carga_por_cidade['CIDADE_UF_DEST'].str.upper().map(mapa_nome_para_sigla)
+
+                # 3. Busca a ordem correta das SIGLAS para a rota selecionada
+                rota_selecionada = rota_selecionada_ocupacao
+                ordem_siglas_correta = ORDEM_DAS_ROTAS.get(rota_selecionada, [])
+
+                # 4. Se uma ordem foi encontrada, usa-a para ordenar o DataFrame pelas SIGLAS
+                if ordem_siglas_correta:
+                    # Converte a coluna 'SIGLA' para uma categoria ordenada
+                    carga_por_cidade['SIGLA'] = pd.Categorical(
+                        carga_por_cidade['SIGLA'],
+                        categories=ordem_siglas_correta,
+                        ordered=True
+                    )
+                    # Ordena o DataFrame com base na ordem das siglas e remove a coluna temporária
+                    carga_por_cidade = carga_por_cidade.sort_values('SIGLA').drop(columns=['SIGLA'])
+
+                # ▲▲▲ FIM DA CORREÇÃO FINAL ▲▲▲
+
+
                 # --- BLOCO DE KPIs POR CIDADE ---
                 num_cidades = len(carga_por_cidade)
                 cols = st.columns(num_cidades if num_cidades > 0 else 1)
@@ -4439,11 +4771,7 @@ with tab5:
                 </div>
                 """
                         st.markdown(html, unsafe_allow_html=True)
-            # --- FIM DA CORREÇÃO (o if fecha aqui) ---
-
-# ... (resto do código da aba 5) ...
-
-
+       
             st.markdown('<hr style="border: 1px solid #333; margin: 30px 0;">', unsafe_allow_html=True)
 
             # --- SEÇÃO DE INDICADORES DE PERFORMANCE ---
@@ -4732,6 +5060,44 @@ with tab5:
                     nome_rota_titulo = rota_selecionada_ocupacao.replace("ROTA ", "")
                     st.subheader(f"📋 Resumo das Viagens: {nome_rota_titulo}")
 
+                # ▼▼▼ INÍCIO DO BLOCO DO MAPA DINÂMICO ▼▼▼
+                # Condição 1: O filtro de período na sidebar deve ser "Dia Específico"
+                # Condição 2: Uma rota específica (qualquer uma, exceto "Todas") deve ser selecionada nesta aba
+                if periodo_tipo == "Dia Específico" and rota_selecionada_ocupacao != "(Todas as Rotas)":
+                    
+                    # Busca o nome da cidade correspondente à rota selecionada no dicionário que você adicionou
+                    nome_cidade_destino = MAPA_ROTA_CIDADE.get(rota_selecionada_ocupacao)
+                    
+                    # Se encontrou uma cidade correspondente no dicionário...
+                    if nome_cidade_destino:
+                        st.markdown("#### 🗺️ Trajeto da Viagem")
+
+                        # Busca as coordenadas da origem (fixa) e do destino (dinâmico)
+                        coord_origem = get_coords("Campo Grande, MS")
+                        coord_destino = get_coords(nome_cidade_destino)
+
+                        # Se ambas as coordenadas foram encontradas com sucesso...
+                        if coord_origem and coord_destino:
+                            # Busca a rota entre os dois pontos
+                            rota_desenhada = get_route(coord_origem, coord_destino)
+                            
+                            # Cria o mapa passando o nome da cidade de destino para o popup
+                            mapa_viagem = criar_mapa_folium(coord_origem, coord_destino, nome_cidade_destino, rota_desenhada)
+                            
+                            # Exibe o mapa no Streamlit
+                            if mapa_viagem:
+                                st_folium(mapa_viagem, width=None, height=450, use_container_width=True)
+                            else:
+                                st.error("Não foi possível gerar o mapa da viagem.")
+                        else:
+                            st.warning(f"Coordenadas para '{nome_cidade_destino}' não encontradas. O mapa não pode ser exibido.")
+                    else:
+                        # Opcional: Informa ao usuário que a rota selecionada não tem um mapa configurado
+                        st.info(f"A rota '{rota_selecionada_ocupacao}' não possui um trajeto de mapa pré-configurado.")
+                # ▲▲▲ FIM DO BLOCO DO MAPA DINÂMICO ▲▲▲
+
+                st.markdown('<hr style="border: 1px solid #333; margin: 30px 0;">', unsafe_allow_html=True)
+
                 # O DataFrame 'df_para_ocupacao' já contém os dados filtrados pela rota selecionada
                 df_viagens_tabela = df_para_ocupacao.copy()
 
@@ -4756,7 +5122,7 @@ with tab5:
                         CAPAC_CAVALO=('CAPAC_CAVALO', 'first'),
                         CAP_CARRETA=('CAPACIDADE_KG', 'first'), 
                         TIPO_VEICULO=('TIPO_CAVALO', 'first'),
-                        DESTINOS=('DEST_MANIF', lambda x: ' / '.join(x.unique())),
+                        DESTINOS=('DEST_MANIF', lambda x: ordenar_destinos_geograficamente(x.unique(), ROTAS_COMPOSTAS, ORDEM_DAS_ROTAS)),
                         PROPRIETARIO=('PROPRIETARIO_CAVALO', 'first'),
                         CUSTO_OS_TOTAL=('OS-R$', 'max'),
                         CUSTO_CTRB_TOTAL=('CTRB-R$', 'max'),
@@ -4776,6 +5142,10 @@ with tab5:
                         'FRETE_TOTAL': 'FRETE-R$', 'ICMS': 'ICMS-R$', 'PESO_KG': 'PESO REAL (KG)',
                         'VALOR_MERCADORIA': 'MERCADORIA-R$', 'NUM_MANIF_LISTA': 'NUM_MANIF'
                     }, inplace=True)
+
+                    # ✅ Ajusta VIAGEM para começar em 1 (como coluna, não índice)
+                    resumo_viagens_tabela['VIAGEM'] = range(1, len(resumo_viagens_tabela) + 1)
+
 
                     # 2. Funções de cálculo e formatação
                     def obter_capacidade_real_viagem(row):
@@ -4812,6 +5182,8 @@ with tab5:
                     resumo_viagens_tabela['M3'] = resumo_viagens_tabela['M3'].astype(float).apply(lambda x: formatar_numero(x, 3))
                     resumo_viagens_tabela['Capacidade (KG)'] = resumo_viagens_tabela['Capacidade (KG)'].astype(float).apply(lambda x: formatar_numero(x, 0) + ' kg')
                     resumo_viagens_tabela['DISTANCIA'] = resumo_viagens_tabela['DISTANCIA'].astype(float).apply(lambda x: f"{int(x):,} km".replace(",", "."))
+                    resumo_viagens_tabela['VOLUMES'] = resumo_viagens_tabela['VOLUMES'].astype(int)
+
 
                     resumo_viagens_tabela.rename(columns={
                         'EMIS_MANIF': 'EMISSÃO', 'NUM_MANIF': 'Nº Manifesto', 'TIPO_CAVALO': 'TIPO', 'DEST_MANIF': 'DESTINOS',
@@ -4867,8 +5239,6 @@ with tab5:
 
         else:
             st.info(f"Não há viagens do tipo '{tipo_viagem_ocupacao_sel}' para analisar no período selecionado.")
-
-        st.markdown('<hr style="border: 1px solid #333; margin: 30px 0;">', unsafe_allow_html=True)
 
 # ==================================================================
 # ABA 6: ANÁLISE TEMPORAL DE ROTAS
@@ -5122,35 +5492,37 @@ with aba_ranking:
             col1, col2, col3, col4 = st.columns(4)
             with col1:
                 st.markdown(f"""
-                    <div class='kpi-container' style='text-align: left; border-left: 5px solid #22c55e; border-radius: 15px;'>
-                        <div class='kpi-title'>🥇  Rota Destaque (Melhor Custo/CTRB)</div>
+                    <div class='kpi-container' style='text-align: left; border-left: 5px solid #22c55e;'>
+                        <div class='kpi-title'>🥇 Rota Destaque (Custo/Frete %)</div>
                         <div class='kpi-value' style='color: #22c55e;'>{rota_destaque['NOME_ROTA']}</div>
-                        <p style='color: #d1d5db; font-size: 1rem; margin-top: 5px;'>{rota_destaque['CUSTO_FRETE_MEDIO']:.0f}%</p>
+                        <p style='color: #d1d5db; font-size: 1rem;'>{rota_destaque['CUSTO_FRETE_MEDIO']:.0f}%</p>
                     </div>
                 """, unsafe_allow_html=True)
             with col2:
                 st.markdown(f"""
-                    <div class='kpi-container' style='text-align: left; border-left: 5px solid #f59e0b; border-radius: 15px;'>
+                    <div class='kpi-container' style='text-align: left; border-left: 5px solid #f59e0b;'>
                         <div class='kpi-title'>🐢 Rota com Menor Eficiência</div>
                         <div class='kpi-value' style='color: #f59e0b;'>{rota_baixa_eficiencia['NOME_ROTA']}</div>
-                        <p style='color: #d1d5db; font-size: 1rem; margin-top: 5px;'>{rota_baixa_eficiencia['OCUPACAO_MEDIA']:.0f}% Ocupação</p>
+                        <p style='color: #d1d5db; font-size: 1rem;'>{rota_baixa_eficiencia['OCUPACAO_MEDIA']:.0f}% Ocupação</p>
                     </div>
                 """, unsafe_allow_html=True)
+
             with col3:
                 st.markdown(f"""
-                    <div class='kpi-container' style='text-align: left; border-left: 5px solid #3b82f6; border-radius: 15px;'>
+                    <div class='kpi-container' style='text-align: left; border-left: 5px solid #3b82f6;'>
                         <div class='kpi-title'>💰 Rota Mais Rentável</div>
                         <div class='kpi-value' style='color: #3b82f6;'>{rota_mais_rentavel['NOME_ROTA']}</div>
-                        <p style='color: #d1d5db; font-size: 1rem; margin-top: 5px;'>R$ {rota_mais_rentavel['LUCRO_MEDIO']:,.2f} / viagem</p>
+                        <p style='color: #d1d5db; font-size: 1rem;'>R$ {rota_mais_rentavel['LUCRO_MEDIO']:,.2f} / viagem</p>
                     </div>
                 """, unsafe_allow_html=True)
+
             with col4:
                 nome_atencao = ponto_atencao['NOME_ROTA'].iloc[0] if not ponto_atencao.empty else "N/A"
                 st.markdown(f"""
-                    <div class='kpi-container' style='text-align: left; border-left: 5px solid #ef4444; border-radius: 15px;'>
+                    <div class='kpi-container' style='text-align: left; border-left: 5px solid #ef4444;'>
                         <div class='kpi-title'>⚙️ Ponto de Atenção</div>
                         <div class='kpi-value' style='color: #ef4444;'>{nome_atencao}</div>
-                        <p style='color: #d1d5db; font-size: 1rem; margin-top: 5px;'>Alto Custo & Baixa Ocupação</p>
+                        <p style='color: #d1d5db; font-size: 1rem;'>Alto Custo & Baixa Ocupação</p>
                     </div>
                 """, unsafe_allow_html=True)
 

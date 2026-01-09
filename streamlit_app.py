@@ -1142,9 +1142,9 @@ def ordenar_destinos_geograficamente(destinos_da_viagem, rotas_completas, ordem_
     return ' / '.join(sorted(destinos_da_viagem))
 # ▲▲▲ FIM DA NOVA FUNÇÃO ▲▲▲
 
-
 # --- 3. CARREGAMENTO DOS DADOS ---
-caminho_do_arquivo = os.path.join("arquivos", "Relatorio_de_Viagens.xlsx")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+caminho_do_arquivo = os.path.join(BASE_DIR, "Arquivos", "Relatorio_de_Viagens.xlsx")
 try:
     df_bruto = carregar_dados(caminho_do_arquivo)
 except FileNotFoundError:

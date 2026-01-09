@@ -813,17 +813,50 @@ def classificar_viagens_do_dia(df):
 def carregar_dados(caminho):
     """Carrega e pré-processa os dados do arquivo Excel."""
     df = pd.read_excel(caminho, sheet_name=0)
+
+    # Converte colunas de data
     for col in ['EMIS_MANIF', 'DIA_SAIDA_MANIF', 'DIA_CHEGADA_MANIF', 'DATA PREV CHEGADA']:
         if col in df.columns:
             df[col] = pd.to_datetime(df[col], errors='coerce')
-            
-    # Garante que as colunas de texto, incluindo OBSERVAÇÕES, sejam do tipo string
-    # ▼▼▼ LINHA MODIFICADA AQUI ▼▼▼
+
+    # =========================================================
+    # 🕔 CRIA DATA OPERACIONAL (VIRADA DE DIA)
+    # =========================================================
+
+    # Cria datetime real de saída (data + hora)
+    df['DT_SAIDA_MANIF'] = pd.to_datetime(
+        df['DIA_SAIDA_MANIF'].astype(str) + ' ' +
+        df['HORA_SAIDA_MANIF'].astype(str),
+        errors='coerce'
+    )
+
+    # Regra de virada de dia (05:00)
+    HORA_CORTE_OPERACIONAL = 5
+
+    df['DATA_OPERACIONAL'] = (
+        df['DT_SAIDA_MANIF'] - pd.Timedelta(hours=HORA_CORTE_OPERACIONAL)
+    ).dt.date
+
+    # ▼▼▼ LINHA ADICIONADA PARA GARANTIR COMPATIBILIDADE ▼▼▼
+    # Converte a coluna para o tipo datetime completo, necessário para os filtros.
+    df['DATA_OPERACIONAL'] = pd.to_datetime(df['DATA_OPERACIONAL'])
+    # ▲▲▲ FIM DA ADIÇÃO ▲▲▲
+
+    # Garante que as colunas de texto sejam string
     for col_texto in ['LACRES', 'SITUACAO', 'OBSERVAÇÕES']:
-    # ▲▲▲ FIM DA MODIFICAÇÃO ▲▲▲
         if col_texto in df.columns:
             df[col_texto] = df[col_texto].astype(str)
-            
+
+    return df
+
+
+    # =========================================================
+
+    # Garante que as colunas de texto sejam string
+    for col_texto in ['LACRES', 'SITUACAO', 'OBSERVAÇÕES']:
+        if col_texto in df.columns:
+            df[col_texto] = df[col_texto].astype(str)
+
     return df
 
 @st.cache_data
@@ -1111,7 +1144,7 @@ def ordenar_destinos_geograficamente(destinos_da_viagem, rotas_completas, ordem_
 
 
 # --- 3. CARREGAMENTO DOS DADOS ---
-caminho_do_arquivo = os.path.join("data", "viagens_outubro.xlsx")
+caminho_do_arquivo = os.path.join("arquivos", "Relatorio_de_Viagens.xlsx")
 try:
     df_bruto = carregar_dados(caminho_do_arquivo)
 except FileNotFoundError:
@@ -1126,78 +1159,117 @@ proprietarios_desejados = [
 ]
 
 # 2. Filtra o DataFrame para conter apenas os proprietários da lista
-#    O .copy() é importante para evitar avisos de "SettingWithCopyWarning" mais tarde
 df_original = df_bruto[df_bruto['PROPRIETARIO_CAVALO'].isin(proprietarios_desejados)].copy()
 
-### NOVO FILTRO: REMOVER MANIFESTOS CANCELADOS ###
+### FILTRO 1: REMOVER MANIFESTOS CANCELADOS ###
 if 'SITUACAO' in df_original.columns:
-    # Garante que a coluna 'SITUACAO' seja do tipo string para a comparação
     df_original['SITUACAO'] = df_original['SITUACAO'].astype(str)
-    
-    # Conta quantos registros serão removidos (opcional, mas bom para depuração)
-    cancelados_antes = df_original['SITUACAO'].str.upper().str.strip() == 'CANCELADO'
-    num_cancelados = cancelados_antes.sum()
-
-    if num_cancelados > 0:
-        print(f"INFO: Removendo {num_cancelados} manifestos com status 'CANCELADO'.")
-
-    # Filtra o DataFrame, mantendo apenas as linhas que NÃO são 'CANCELADO'
-    # O uso de .str.upper().str.strip() torna a comparação mais robusta
     df_original = df_original[df_original['SITUACAO'].str.upper().str.strip() != 'CANCELADO']
 else:
     st.warning("⚠️ A coluna 'SITUACAO' não foi encontrada. Não foi possível filtrar manifestos cancelados.")
-### FIM DO NOVO FILTRO ###
+### FIM DO FILTRO 1 ###
+
+### FILTRO 2: REMOVER RETIRADAS DE TERENOS (CONFERENTE 224) ###
+if 'CONFERENTE CARGA' in df_original.columns:
+    df_original['CONFERENTE CARGA'] = df_original['CONFERENTE CARGA'].astype(str)
+    padrao_terenos_conf = "224 - ERISSCGR"
+    df_original = df_original[~df_original['CONFERENTE CARGA'].str.contains(padrao_terenos_conf, case=False, na=False)]
+else:
+    st.warning("⚠️ A coluna 'CONFERENTE CARGA' não foi encontrada. Não foi possível filtrar as retiradas de Terenos.")
+### FIM DO FILTRO 2 ###
 
 
-# 3. (Opcional, mas recomendado) Adiciona um aviso se nenhum dado for encontrado após o filtro
+# ▼▼▼ NOVO FILTRO ADICIONADO AQUI ▼▼▼
+### FILTRO 3: REMOVER VIAGENS COM DESTINO TERENOS (TRN) ###
+if 'DEST_MANIF' in df_original.columns:
+    # Garante que a coluna seja do tipo string para a comparação
+    df_original['DEST_MANIF'] = df_original['DEST_MANIF'].astype(str)
+    
+    # Remove todas as linhas onde a sigla do destino é exatamente 'TRN'
+    # .str.strip() remove espaços em branco antes e depois da sigla
+    df_original = df_original[df_original['DEST_MANIF'].str.strip().str.upper() != 'TRN']
+else:
+    st.warning("⚠️ A coluna 'DEST_MANIF' não foi encontrada. Não foi possível filtrar viagens para Terenos.")
+### ▲▲▲ FIM DO NOVO FILTRO ▲▲▲
+
+
+# 3. (Opcional) Adiciona um aviso se nenhum dado for encontrado após os filtros
 if df_original.empty:
-    st.warning("⚠️ Nenhum dado encontrado para os proprietários 'KM TRANSPORTES' ou 'MARCELO H LEMOS'. Verifique o arquivo de origem.")
+    st.warning("⚠️ Nenhum dado encontrado para os proprietários e filtros aplicados. Verifique o arquivo de origem.")
     st.stop()
 # --- FIM DA MUDANÇA ---
 
-# ▼▼▼ INÍCIO DA NOVA LÓGICA DE CAPACIDADE ▼▼▼
+# ▼▼▼ NOVA LÓGICA FIXA DE CAPACIDADE BASEADA EM PLACA + TIPO ▼▼▼
 
-# 1. Carrega o arquivo com as capacidades dos veículos
-caminho_capacidades = os.path.join("data", "cadastro_veiculos.xlsx") 
-df_capacidades = carregar_capacidades(caminho_capacidades)
+# Dicionário fixo de capacidades por tipo
+CAPACIDADES_FIXAS = {
+    "TRUCK": 15000,
+    "BI-TRUCK": 19000,
+    "CARRETA": 25000,
+    "TOCO": 10000
+}
 
-# 2. Junta (merge) o DataFrame de viagens com o de capacidades da CARRETA
-if not df_capacidades.empty:
-    df_original = pd.merge(
-        df_original,
-        df_capacidades[['PLACA_CARRETA', 'CAPACIDADE_KG']],
-        on='PLACA_CARRETA',
-        how='left'
-    )
-    df_original['CAPACIDADE_KG'].fillna(25000, inplace=True)
-else:
-    df_original['CAPACIDADE_KG'] = 25000
-    st.warning("⚠️ Arquivo de cadastro de veículos não encontrado para CARRETA. Usando capacidade padrão de 25.000 kg.")
+# Lista de placas BI-TRUCK informadas
+PLACAS_BITRUCK = [
+    "REW6J23",
+    "GBQ0I23",
+    "RWG9G33",
+    "SFH1C15"
+]
 
-# ▲▲▲ FIM DA NOVA LÓGICA DE CAPACIDADE ▲▲▲
+def identificar_tipo(row):
+
+    # tenta detectar automaticamente o nome da coluna de placa
+    possiveis_colunas_placa = ['PLACA', 'PLACA_CAVALO', 'PLACA_CARRETA',
+                               'Veículo (Placa)', 'VEÍCULO (PLACA)', 'VEICULO', 'VEÍCULO']
+
+    placa = None
+    for col in possiveis_colunas_placa:
+        if col in row.index:
+            placa = str(row[col]).strip().upper()
+            break
+
+    # se não encontrou placa
+    if placa is None:
+        tipo_bruto = str(row.get("TIPO_CAVALO", "")).upper().strip()
+    else:
+        tipo_bruto = str(row.get("TIPO_CAVALO", "")).upper().strip()
+
+    # Normalizações
+    if placa in PLACAS_BITRUCK:
+        return "BI-TRUCK"
+
+    # Aqui está a correção principal:
+    if tipo_bruto in ["CAVALO", "CAV", "CAVALINHO"]:
+        return "CARRETA"
+
+    if tipo_bruto in ["CARRETA"]:
+        return "CARRETA"
+
+    if tipo_bruto in ["TRUCK"]:
+        return "TRUCK"
+
+    if tipo_bruto in ["TOCO"]:
+        return "TOCO"
+
+    return "TRUCK"  # fallback seguro
 
 
-# --- ### INÍCIO DA CORREÇÃO DEFINITIVA ### ---
-# 3. CRIA A COLUNA 'CAPAC_CAVALO' NO ESCOPO GLOBAL
+# Gera a nova coluna TIPO_CORRIGIDO
+df_original['TIPO_CORRIGIDO'] = df_original.apply(identificar_tipo, axis=1)
 
-if not df_capacidades.empty:
-    # Prepara o DataFrame de capacidades para a junção com a placa do cavalo
-    df_capacidades_cavalo = df_capacidades.rename(columns={'PLACA_CARRETA': 'PLACA_CAVALO', 'CAPACIDADE_KG': 'CAPAC_CAVALO'})
-    
-    # Junta o df_original com as capacidades do cavalo
-    df_original = pd.merge(
-        df_original,
-        df_capacidades_cavalo[['PLACA_CAVALO', 'CAPAC_CAVALO']],
-        on='PLACA_CAVALO',
-        how='left'
-    )
-    # Preenche com 0 ou um valor padrão se o cavalo/truck não for encontrado no cadastro
-    df_original['CAPAC_CAVALO'].fillna(0, inplace=True)
-else:
-    # Se o arquivo de cadastro não existir, cria a coluna com valor 0
-    df_original['CAPAC_CAVALO'] = 0
-    st.warning("⚠️ Arquivo de cadastro de veículos não encontrado para CAVALO/TRUCK. Capacidade definida como 0.")
-# --- ### FIM DA CORREÇÃO DEFINITIVA ### ---
+# Função de capacidade
+def obter_capacidade(tipo):
+    return CAPACIDADES_FIXAS.get(tipo.upper(), 0)
+
+# Capacidade final usada nos cálculos
+df_original['CAPACIDADE_KG'] = df_original['TIPO_CORRIGIDO'].apply(obter_capacidade)
+
+# (Opcional) capacidade do cavalo (se quiser manter)
+df_original['CAPAC_CAVALO'] = df_original['CAPACIDADE_KG']
+
+# ▲▲▲ FIM DA NOVA LÓGICA FIXA DE CAPACIDADE ▲▲▲
+
 
 # ▼▼▼ ADICIONE O NOVO CÓDIGO AQUI ▼▼▼
 
@@ -1278,52 +1350,55 @@ for col in colunas_numericas:
 # 🔹 SIDEBAR DE FILTROS
 # ========================================
 
-# --- FILTRO DE PERÍODO MELHORADO ---
-st.sidebar.subheader("📅 Período de Emissão") # ALTERAÇÃO: Texto do título
+st.sidebar.subheader("📅 Período de Emissão")
 
-# Calcula informações sobre os dados disponíveis
-# ALTERAÇÃO: Usar 'EMIS_MANIF' para calcular min/max
-df_sem_na_emissao = df_original.dropna(subset=['EMIS_MANIF'])
-min_data_emissao = df_sem_na_emissao['EMIS_MANIF'].min().date()
-max_data_emissao = df_sem_na_emissao['EMIS_MANIF'].max().date()
+# 🔴 TROCA 1 — BASE DE DATA (AGORA USANDO DATA_OPERACIONAL)
+df_sem_na_emissao = df_original.dropna(subset=['DATA_OPERACIONAL'])
+min_data_emissao = df_sem_na_emissao['DATA_OPERACIONAL'].min().date()
+max_data_emissao = df_sem_na_emissao['DATA_OPERACIONAL'].max().date()
 total_registros = len(df_sem_na_emissao)
 
+# 🛡️ flag global de controle
+dados_periodo_validos = True
+
+# Define o valor padrão somente na primeira carga da sessão
+if "periodo_tipo" not in st.session_state:
+    st.session_state["periodo_tipo"] = "Mês Completo"
+
 periodo_tipo = st.sidebar.radio(
-    "Filtrar por data de EMISSÃO:", # ALTERAÇÃO: Texto do radio button
+    "Filtrar por data OPERACIONAL:", # <-- Texto atualizado para clareza
     ["Dia Específico", "Mês Completo", "Período Personalizado"],
-    key="periodo_tipo",
-    horizontal=True
+    key="periodo_tipo"
 )
 
-# Data padrão inteligente: usa a data mais recente disponível
 data_padrao_inteligente = max_data_emissao
-
 df_periodo_filtrado = df_original.copy()
 
+# =========================================================
+# 📅 DIA ESPECÍFICO
+# =========================================================
 if periodo_tipo == "Dia Específico":
-    # CSS para estilizar a caixa do dia da semana
+
     st.sidebar.markdown("""
         <style>
         .dia-semana-box {
-            background-color: #2C2F38; /* Cor de fundo similar ao input */
-            color: #E0E0E0;             /* Cor do texto */
-            padding: 8px 12px;          /* Espaçamento interno */
-            border-radius: 6px;         /* Bordas arredondadas */
-            text-align: center;         /* Centraliza o texto */
-            font-weight: bold;          /* Texto em negrito */
-            border: 1px solid #444;     /* Borda sutil */
-            margin-top: 28px;           /* Alinha verticalmente com o date_input */
+            background-color: #2C2F38;
+            color: #E0E0E0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #444;
+            margin-top: 28px;
         }
         </style>
     """, unsafe_allow_html=True)
 
-    # Cria as colunas para o layout lado a lado
     col_data, col_dia = st.sidebar.columns([3, 1])
 
     with col_data:
-        # ALTERAÇÃO: Usar as novas variáveis de min/max data
         data_emissao_especifica = st.date_input(
-            "📜 Selecione o Dia:", # ALTERAÇÃO: Texto do input
+            "📜 Selecione o Dia:",
             value=data_padrao_inteligente,
             min_value=min_data_emissao,
             max_value=max_data_emissao,
@@ -1331,58 +1406,111 @@ if periodo_tipo == "Dia Específico":
         )
 
     with col_dia:
-        # Obtém o nome do dia da semana, pega as 3 primeiras letras e capitaliza
         dia_semana_abbr = data_emissao_especifica.strftime('%A')[:3].capitalize()
-        # Usa o CSS customizado para criar a caixa
-        st.markdown(f'<div class="dia-semana-box">{dia_semana_abbr}</div>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div class="dia-semana-box">{dia_semana_abbr}</div>',
+            unsafe_allow_html=True
+        )
 
-    # ALTERAÇÃO: Lógica de filtro agora usa 'EMIS_MANIF'
-    df_periodo_filtrado = df_original[df_original['EMIS_MANIF'].dt.date == data_emissao_especifica]
+    # 🔴 TROCA 2 — FILTRO DIA ESPECÍFICO PELA DATA OPERACIONAL
+    df_periodo_filtrado = df_original[
+        df_original['DATA_OPERACIONAL'].dt.date == data_emissao_especifica
+    ]
 
-    # ALTERAÇÃO: Feedback usa a nova data e textos
-    num_reg, num_veic, num_mot = obter_info_periodo(df_original, data_emissao_especifica)
-    if num_reg > 0:
-        st.sidebar.info(f"📜 {num_reg} Manifestos • 🚚 {num_veic} Veículos")
+    # A função obter_info_periodo ainda usa EMIS_MANIF, vamos mantê-la por enquanto
+    # para não quebrar outras partes, mas o filtro principal está correto.
+    num_reg, num_veic, num_mot = obter_info_periodo(
+        df_original, data_emissao_especifica
+    )
+
+    if len(df_periodo_filtrado) > 0:
+        st.sidebar.info(f"📜 {len(df_periodo_filtrado)} Manifestos • 🚚 {df_periodo_filtrado['PLACA_CAVALO'].nunique()} Veículos")
     else:
-        st.sidebar.warning(f"⚠️ Nenhum registro encontrado para {data_emissao_especifica.strftime('%d/%m/%Y')}")
+        st.sidebar.warning(
+            f"⚠️ Nenhum registro encontrado para "
+            f"{data_emissao_especifica.strftime('%d/%m/%Y')}"
+        )
 
+    if df_periodo_filtrado.empty:
+        st.warning("📭 Não há manifestos para a data operacional selecionada.")
+        dados_periodo_validos = False
+
+
+# =========================================================
+# 🗓️ MÊS COMPLETO
+# =========================================================
 elif periodo_tipo == "Mês Completo":
-    # ALTERAÇÃO: Usar 'EMIS_MANIF' para agrupar por mês
-    meses = df_sem_na_emissao['EMIS_MANIF'].dt.to_period("M").unique().astype(str)
-    meses_formatados = {m: pd.Period(m).strftime("%B/%Y").capitalize() for m in sorted(meses, reverse=True)}
-    mes_formatado_sel = st.sidebar.selectbox("🗓️ Selecione o Mês:", list(meses_formatados.values()))
-    mes_emissao_completo = [k for k, v in meses_formatados.items() if v == mes_formatado_sel][0]
-    
-    # ALTERAÇÃO: Filtrar por mês de emissão
-    df_periodo_filtrado = df_original[df_original['EMIS_MANIF'].dt.to_period("M").astype(str) == mes_emissao_completo]
-    
-    num_reg = len(df_periodo_filtrado)
-    if num_reg > 0:
-        st.sidebar.success(f"✅ {num_reg} registros encontrados para {mes_formatado_sel}")
-        datas_mes = sorted(df_periodo_filtrado['EMIS_MANIF'].dt.date.unique())
-        st.sidebar.info(f"📅 {len(datas_mes)} dias com emissões no mês")
 
+    # 🔴 TROCA 3 — MÊS BASEADO NA DATA OPERACIONAL
+    meses = df_sem_na_emissao['DATA_OPERACIONAL'].dt.to_period("M").unique().astype(str)
+    meses_ordenados = sorted(meses, reverse=True)
+
+    meses_formatados = {
+        m: pd.Period(m).strftime("%B/%Y").capitalize()
+        for m in meses_ordenados
+    }
+
+    lista_meses = list(meses_formatados.values())
+
+    mes_formatado_sel = st.sidebar.selectbox(
+        "🗓️ Selecione o Mês:",
+        lista_meses,
+        index=0,
+        key="mes_completo_padrao"
+    )
+
+    mes_emissao_completo = [
+        k for k, v in meses_formatados.items()
+        if v == mes_formatado_sel
+    ][0]
+
+    # 🔴 TROCA 4 — FILTRO MÊS PELA DATA OPERACIONAL
+    df_periodo_filtrado = df_original[
+        df_original['DATA_OPERACIONAL']
+        .dt.to_period("M")
+        .astype(str) == mes_emissao_completo
+    ]
+
+    if df_periodo_filtrado.empty:
+        st.warning("📭 Não há manifestos no mês selecionado.")
+        dados_periodo_validos = False
+    else:
+        st.sidebar.success(
+            f"✅ {len(df_periodo_filtrado)} registros para {mes_formatado_sel}"
+        )
+
+
+# =========================================================
+# 📆 PERÍODO PERSONALIZADO
+# =========================================================
 elif periodo_tipo == "Período Personalizado":
-    # ALTERAÇÃO: Usar as novas variáveis de min/max data
+
     periodo_emissao_sel = st.sidebar.date_input(
-        "🗓️ Selecione o intervalo:", 
-        [min_data_emissao, max_data_emissao], 
+        "🗓️ Selecione o intervalo:",
+        [min_data_emissao, max_data_emissao],
         format="DD/MM/YYYY"
     )
+
     if len(periodo_emissao_sel) == 2:
-        # ALTERAÇÃO: Filtrar pelo intervalo de emissão
+        # 🔴 TROCA 5 — INTERVALO PELA DATA OPERACIONAL
         df_periodo_filtrado = df_original[
-            (df_original['EMIS_MANIF'].dt.date >= periodo_emissao_sel[0]) & \
-            (df_original['EMIS_MANIF'].dt.date <= periodo_emissao_sel[1])
+            (df_original['DATA_OPERACIONAL'].dt.date >= periodo_emissao_sel[0]) &
+            (df_original['DATA_OPERACIONAL'].dt.date <= periodo_emissao_sel[1])
         ]
-        
-        num_reg, num_veic, num_mot = obter_info_periodo(df_original, periodo_emissao_sel[0], periodo_emissao_sel[1])
+
+        num_reg = len(df_periodo_filtrado)
+        num_veic = df_periodo_filtrado['PLACA_CAVALO'].nunique()
+        num_mot = df_periodo_filtrado['MOTORISTA'].nunique()
+
         if num_reg > 0:
             dias_periodo = (periodo_emissao_sel[1] - periodo_emissao_sel[0]).days + 1
             st.sidebar.success(f"✅ {num_reg} registros encontrados")
-            st.sidebar.info(f"📅 {dias_periodo} dias • 🚚 {num_veic} veículos • 👨‍✈️ {num_mot} motoristas")
+            st.sidebar.info(
+                f"📅 {dias_periodo} dias • 🚚 {num_veic} veículos • 👨‍✈️ {num_mot} motoristas"
+            )
         else:
             st.sidebar.warning("⚠️ Nenhum registro encontrado no período selecionado")
+
 
 # --- FILTROS DE VIAGEM (COM AMBOS OS SELETORES) ---
 with st.sidebar.expander("👨‍✈️ Filtros de Viagem", expanded=True):
@@ -2472,7 +2600,7 @@ with tab1:
                 st.markdown(f"""
                     <div class="kpi-container" style="text-align:center;">
                         <div class="kpi-title"><i class="fa-solid fa-dolly"></i> Entregas / Viagem</div>
-                        <div class="kpi-value">{entregas_media:.1f}</div>
+                        <div class="kpi-value">{entregas_media:.0f}</div>
                     </div>
                 """.replace(".", ","), unsafe_allow_html=True)
 
@@ -2572,8 +2700,8 @@ with tab1:
                 margin-bottom: 10px;
             }
             .progress-card-title {
-                font-size: 1rem;
-                font-weight: 600;
+                font-size: 1.2rem;
+                font-weight: 700;
                 display: flex;
                 align-items: center;
                 gap: 8px;
@@ -2613,8 +2741,10 @@ with tab1:
             .progress-card-footer {
                 display: flex;
                 justify-content: space-between;
-                font-size: 0.9rem;
-                color: #d1d1d1;
+                font-size: 1.1rem;  /* <<< TAMANHO AUMENTADO (era 1rem) */
+                font-weight: 500;   /* <<< ADICIONADO: Deixa a fonte um pouco mais encorpada */
+                color: #e0e0e0;     /* <<< ADICIONADO: Cor um pouco mais clara para melhor leitura */
+                margin-top: 5px;    /* <<< ADICIONADO: Pequeno espaço acima do rodapé */
             }
 
             /* --- NOVO ESTILO PARA O AVISO DE OCIOSIDADE --- */
@@ -2628,6 +2758,26 @@ with tab1:
                 color:#e4e4e7;
                 font-size: 0.95rem;
             }
+                    
+            /* ▼▼▼ ADICIONE ESTA NOVA CLASSE CSS AQUI ▼▼▼ */
+            .aviso-ociosidade-texto {
+                font-size: 1.1rem;    /* <<< TAMANHO AUMENTADO */
+                font-weight: 600;     /* <<< PESO DA FONTE (SEMI-NEGRITO) */
+                display: flex;
+                align-items: center;
+                gap: 8px;             /* Espaço entre o ícone e o texto */
+            }
+            /* ▲▲▲ FIM DA NOVA CLASSE ▲▲▲ */
+                    
+            /* ▼▼▼ ADICIONE ESTA NOVA CLASSE CSS AQUI ▼▼▼ */
+            .ociosidade-valor-final {
+                font-size: 1.1rem;    /* Tamanho da fonte aumentado (mesmo do título) */
+                font-weight: 700;     /* Peso da fonte (negrito) */
+                white-space: nowrap;  /* Evita que o número quebre a linha */
+                color: #E0E0E0;       /* Cor do texto (um branco suave) */
+            }
+            /* ▲▲▲ FIM DA NOVA CLASSE ▲▲▲ */
+                    
         </style>
         """, unsafe_allow_html=True)
 
@@ -2640,23 +2790,38 @@ with tab1:
         """, unsafe_allow_html=True)
 
         # ===============================================
-        # 🧭 OPTION MENU DINÂMICO E ANÁLISE DE OCUPAÇÃO (VERSÃO FINAL COM NOMENCLATURA CORRIGIDA)
+        # 🧭 OPTION MENU DINÂMICO E ANÁLISE DE OCUPAÇÃO (VERSÃO FINAL COM IDENTIFICAÇÃO POR PLACA)
         # ===============================================
 
         # --- INÍCIO DA LÓGICA DA CATEGORIA DE VIAGEM ---
 
         df_com_categoria = df_filtrado.copy()
 
+        # ▼▼▼ INÍCIO DA CORREÇÃO ▼▼▼
         def definir_categoria_viagem(row):
-            placa_carreta = row.get('PLACA_CARRETA')
-            placa_cavalo = row.get('PLACA_CAVALO')
+            """
+            Define a categoria da viagem com uma lógica aprimorada:
+            1. Verifica se a placa do cavalo pertence à lista de BI-TRUCKs.
+            2. Se não, verifica se é uma CARRETA.
+            3. Se não, usa o TIPO_CAVALO como fallback.
+            """
+            # 1. Lista de placas que são BI-TRUCKs
+            placas_bitruck = {"REW6J23", "RWG9G33", "GBQ0I23", "SFH1C15"}
             
-            # Se houver uma carreta válida, a categoria da viagem é 'CARRETA'
-            if pd.notna(placa_carreta) and placa_carreta != 'nan' and placa_carreta != placa_cavalo:
+            placa_cavalo_atual = row.get('PLACA_CAVALO')
+
+            # 2. Lógica de identificação prioritária
+            if placa_cavalo_atual in placas_bitruck:
+                return 'BI-TRUCK'
+
+            # 3. Lógica para CARRETA (permanece a mesma)
+            placa_carreta = row.get('PLACA_CARRETA')
+            if pd.notna(placa_carreta) and placa_carreta != 'nan' and placa_carreta != placa_cavalo_atual:
                 return 'CARRETA' 
-            else:
-                # Senão, a categoria é o tipo do veículo que viaja sozinho
-                return row.get('TIPO_CAVALO', 'INDEFINIDO')
+            
+            # 4. Fallback: Se não for BI-TRUCK nem CARRETA, usa o tipo da coluna
+            return str(row.get('TIPO_CAVALO', 'INDEFINIDO')).upper()
+        # ▲▲▲ FIM DA CORREÇÃO ▲▲▲
 
         if not df_com_categoria.empty:
             df_com_categoria['CATEGORIA_VIAGEM'] = df_com_categoria.apply(definir_categoria_viagem, axis=1)
@@ -2664,50 +2829,45 @@ with tab1:
             df_com_categoria['CATEGORIA_VIAGEM'] = pd.Series(dtype='str')
 
 
-        # --- LÓGICA DO SELETOR DINÂMICO (AGORA COM O NOME 'CARRETA') ---
+        # --- LÓGICA DO SELETOR DINÂMICO (COM ORDEM FIXA) ---
 
-        # 1. Define a ordem personalizada para os botões do seletor
-        #    'CARRETA' agora substitui 'CAVALO' na ordem visual.
-        ordem_personalizada = ["TRUCK", "CARRETA", "TOCO", "3/4 - CAMINHAO PEQUE"]
+        # 1. Define a ordem EXATA que você quer para os botões
+        ordem_personalizada = ["TRUCK", "BI-TRUCK", "CARRETA", "TOCO"]
 
-        # 2. Pega as categorias únicas que existem nos dados
+        # 2. Pega as categorias que REALMENTE existem nos seus dados filtrados
         categorias_de_viagem_nos_dados = df_com_categoria['CATEGORIA_VIAGEM'].dropna().unique()
 
-        # 3. Cria a lista de opções para o seletor, respeitando a nova ordem
+        # 3. Cria a lista de opções para o seletor, respeitando a ordem
         opcoes_ordenadas = [tipo for tipo in ordem_personalizada if tipo in categorias_de_viagem_nos_dados]
+        
+        # 4. Adiciona "TODOS" no início da lista final
         opcoes_seletor = ["TODOS"] + opcoes_ordenadas
 
-        # 4. Mapeia os ícones. O ícone 'trailer' agora corresponde a 'CARRETA'.
-        icones_veiculos = {
-            "CARRETA": "trailer",  # <-- Ícone associado à nova categoria
-            "TRUCK": "truck",
-            "TOCO": "truck-moving",
-            "3/4 - CAMINHAO PEQUE": "truck-pickup",
-            "TODOS": "layer-group"
-        }
-        icones_seletor = [icones_veiculos.get(opt, "question-circle") for opt in opcoes_seletor]
+        # 5. Remove ícones completamente
+        icones_seletor = [""] * len(opcoes_seletor)
 
-        # 5. Cria o seletor dinâmico (option_menu) com as opções e nomes corretos
+        # 6. Cria o seletor dinâmico
         selecionar_veiculo = option_menu(
             menu_title=None,
-            options=opcoes_seletor, # A lista agora contém 'CARRETA' em vez de 'CAVALO'
+            options=opcoes_seletor,
             icons=icones_seletor,
-            menu_icon="cast",
+            menu_icon=None,
             default_index=0,
             orientation="horizontal",
             styles={
-                "container": {"padding": "6px", "background-color": "rgba(30, 30, 40, 0.4)", "border-radius": "16px", "backdrop-filter": "blur(10px)", "box-shadow": "0 4px 15px rgba(0, 0, 0, 0.3)", "justify-content": "center"},
-                "icon": {"color": "#A3A3A3", "font-size": "18px"},
-                "nav-link": {"font-size": "14px", "font-weight": "600", "color": "#E5E7EB", "padding": "10px 26px", "border-radius": "12px", "margin": "0px 6px", "background-color": "rgba(255, 255, 255, 0.05)", "transition": "all 0.4s ease-in-out"},
-                "nav-link:hover": {"background-color": "rgba(255, 255, 255, 0.12)", "color": "#fff", "transform": "translateY(-2px)"},
-                "nav-link-selected": {"background-color": "#222433", "color": "#FFFFFF", "border": "1.5px solid #5D9CEC", "box-shadow": "0 0 15px rgba(93, 156, 236, 0.6)", "transform": "translateY(-2px)"},
+                "container": {"padding": "6px", "background-color": "rgba(30, 30, 40, 0.4)", "border-radius": "16px", "justify-content": "center"},
+                "nav-link": {"font-size": "14px", "font-weight": "600", "color": "#E5E7EB", "padding": "10px 26px", "border-radius": "12px", "margin": "0px 6px", "background-color": "rgba(255, 255, 255, 0.05)"},
+                "nav-link:hover": {"background-color": "rgba(255,255,255,0.12)", "color": "#fff"},
+                "nav-link-selected": {"background-color": "rgba(34, 36, 51, 0.8)", "color": "#FFFFFF", "border": "1.5px solid #5D9CEC", "box-shadow": "0 0 15px rgba(93, 156, 236, 0.6)"},
             },
         )
 
-        # 6. Cria o DataFrame final para análise ('df_para_analise')
+
+        # 7. Cria o DataFrame final para análise ('df_para_analise')
         df_para_analise = df_com_categoria.copy()
         if selecionar_veiculo != "TODOS":
             df_para_analise = df_para_analise[df_para_analise['CATEGORIA_VIAGEM'] == selecionar_veiculo]
+
 
         # ===============================================
         # LÓGICA DE OCUPAÇÃO (MODO VISÃO GERAL)
@@ -2786,7 +2946,7 @@ with tab1:
                     return
 
                 if tipo_metrica == 'peso':
-                    titulo = f"⚖️ Ocupação de Peso (KG)"
+                    titulo = "⚖️ Ocupação de Peso (KG)"
                     ocup_perc = dados['ocup_peso_perc']
                     total_valor = dados['total_peso']
                     cap_total = dados['cap_total_peso']
@@ -2795,8 +2955,8 @@ with tab1:
                     potencial_nao_utilizado = dados['potencial_nao_utilizado_kg']
                     icone_ociosidade = "fa-solid fa-scale-unbalanced-flip"
                     titulo_ociosidade = "Ociosidade de Peso"
-                else:
-                    titulo = f"📦 Ocupação de Cubagem (M³)"
+                else: # tipo_metrica == 'volume'
+                    titulo = "📦 Ocupação de Cubagem (M³)"
                     ocup_perc = dados['ocup_volume_perc']
                     total_valor = dados['total_volume']
                     cap_total = dados['cap_total_volume']
@@ -2808,9 +2968,13 @@ with tab1:
 
                 cor_ocup = obter_cor_ocupacao(ocup_perc)
                 cor_ocios = obter_cor_ociosidade(ociosidade_perc)
-                borda_ocios = cor_ocios.split(',')[1].strip()
+                
+                # --- LINHA CORRIGIDA/ADICIONADA AQUI ---
+                # Extrai a cor secundária do gradiente para usar na borda
+                borda_ocios = cor_ocios.split(',')[1].strip() if ',' in cor_ocios else cor_ocios
 
                 with container:
+                    # Card de Ocupação (sem alterações)
                     st.markdown(f"""
                     <div class="ocupacao-card-custom"> 
                         <div class="progress-card-header">
@@ -2825,9 +2989,11 @@ with tab1:
                             <span>Capacidade: {formatar_numero(cap_total, 0 if unidade == 'KG' else 2)} {unidade}</span>
                         </div>
                     </div>""", unsafe_allow_html=True)
+                    
+                    # Card de Ociosidade (HTML corrigido para usar a variável 'borda_ocios')
                     st.markdown(f"""
-                    <div style="display: flex; align-items: center; justify-content: space-between; background-color: #1E1E2E; border-left: 5px solid {borda_ocios}; padding: 10px 16px; border-radius: 8px; margin-top: 10px; color: #e4e4e7; font-size: 0.95rem;">
-                        <span><i class="{icone_ociosidade}"></i> <b>{titulo_ociosidade}:</b> {ociosidade_perc:.0f}%</span>
+                    <div style="display: flex; align-items: center; justify-content: space-between; background-color: #1E1E2E; border-left: 5px solid {borda_ocios}; padding: 10px 16px; border-radius: 8px; margin-top: 10px; color: #e4e4e7;">
+                        <span class="aviso-ociosidade-texto"><i class="{icone_ociosidade}"></i> {titulo_ociosidade}: {ociosidade_perc:.0f}%</span>
                         <div style="flex: 1; height: 10px; margin: 0 15px; background-color: #2a2a3a; border-radius: 5px; overflow: hidden;">
                             <div style="width: {min(ociosidade_perc, 100)}%; height: 100%; background: {cor_ocios};"></div>
                         </div>
@@ -4481,11 +4647,42 @@ with tab5:
 
                 dados['cap_total_volume'] = viagens_unicas['CAP_VOL_VIAGEM'].sum()
 
-                # Corrige a unidade do volume total se necessário
-                total_volume_bruto = df_dados['M3'].sum()
-                dados['total_volume'] = total_volume_bruto / 10000 if total_volume_bruto > 1000 else total_volume_bruto
+                            # --- CÁLCULO E EXIBIÇÃO DOS CARDS DE OCUPAÇÃO ---
+            def calcular_dados_ocupacao(df_dados):
+                """
+                VERSÃO CORRIGIDA: Remove a divisão por 10.000 da cubagem,
+                assumindo que os dados do Excel já estão em M³.
+                """
+                if df_dados.empty:
+                    return None
 
-                # 4. Calcula os percentuais de ocupação e ociosidade
+                dados = {}
+
+                # 1. Identifica cada viagem única para evitar contagem duplicada de capacidade
+                viagens_unicas = df_dados.drop_duplicates(subset=['PLACA_CAVALO', 'DIA_EMISSAO_STR', 'MOTORISTA']).copy()
+
+                # 2. Lógica de capacidade de PESO (sem alterações)
+                def get_capacidade_viagem_peso(row):
+                    if row.get('TIPO_CAVALO') == 'CAVALO':
+                        return row.get('CAPACIDADE_KG', 0)
+                    return row.get('CAPAC_CAVALO', 0)
+
+                viagens_unicas['CAPACIDADE_PESO_VIAGEM'] = viagens_unicas.apply(get_capacidade_viagem_peso, axis=1)
+                dados['cap_total_peso'] = viagens_unicas['CAPACIDADE_PESO_VIAGEM'].sum()
+                dados['total_peso'] = df_dados['PESO REAL (KG)'].sum()
+
+                # 3. Lógica de capacidade de VOLUME (M³) (sem alterações)
+                capacidades_volume_por_tipo = {'TRUCK': 75, 'CAVALO': 110, 'TOCO': 55, 'PADRAO': 80}
+                viagens_unicas['CAP_VOL_VIAGEM'] = viagens_unicas['TIPO_CAVALO'].map(capacidades_volume_por_tipo).fillna(capacidades_volume_por_tipo['PADRAO'])
+                dados['cap_total_volume'] = viagens_unicas['CAP_VOL_VIAGEM'].sum()
+
+                # --- ▼▼▼ AQUI ESTÁ A CORREÇÃO PRINCIPAL ▼▼▼ ---
+                # A linha que dividia por 10.000 foi removida.
+                # Agora, simplesmente somamos os valores da coluna 'M3'.
+                dados['total_volume'] = df_dados['M3'].sum()
+                # --- ▲▲▲ FIM DA CORREÇÃO ▲▲▲ ---
+
+                # 4. Calcula os percentuais de ocupação e ociosidade (agora com o valor correto)
                 dados['ocup_peso_perc'] = (dados['total_peso'] / dados['cap_total_peso'] * 100) if dados['cap_total_peso'] > 0 else 0
                 dados['ociosidade_peso_perc'] = 100 - dados['ocup_peso_perc']
                 dados['potencial_nao_utilizado_kg'] = max(0, dados['cap_total_peso'] - dados['total_peso'])
@@ -4495,6 +4692,7 @@ with tab5:
                 dados['potencial_nao_utilizado_m3'] = max(0, dados['cap_total_volume'] - dados['total_volume'])
 
                 return dados
+
 
             dados_agregados = calcular_dados_ocupacao(df_para_ocupacao)
 
@@ -4516,10 +4714,11 @@ with tab5:
                             </div>
                         </div>
                     """, unsafe_allow_html=True)
+
                     cor_ocios_peso = obter_cor_ociosidade(dados_agregados['ociosidade_peso_perc'])
                     st.markdown(f"""
                         <div style="display: flex; align-items: center; justify-content: space-between; background-color: #1E1E2E; border-left: 5px solid {cor_ocios_peso.split(',')[1].strip()}; padding: 10px 16px; border-radius: 8px; margin-top: 10px; color: #e4e4e7; font-size: 0.95rem;">
-                            <span><i class="fa-solid fa-scale-unbalanced-flip"></i> <b>Ociosidade de Peso:</b> {dados_agregados['ociosidade_peso_perc']:.0f}%</span>
+                            <span class="aviso-ociosidade-texto"><i class="fa-solid fa-scale-unbalanced-flip"></i> Ociosidade de Peso: {dados_agregados['ociosidade_peso_perc']:.0f}%</span>
                             <div style="flex: 1; height: 10px; margin: 0 15px; background-color: #2a2a3a; border-radius: 5px; overflow: hidden;">
                                 <div style="width: {min(dados_agregados['ociosidade_peso_perc'], 100)}%; height: 100%; background: {cor_ocios_peso};"></div>
                             </div>
@@ -4543,10 +4742,11 @@ with tab5:
                             </div>
                         </div>
                     """, unsafe_allow_html=True)
+                    
                     cor_ocios_vol = obter_cor_ociosidade(dados_agregados['ociosidade_volume_perc'])
                     st.markdown(f"""
                         <div style="display: flex; align-items: center; justify-content: space-between; background-color: #1E1E2E; border-left: 5px solid {cor_ocios_vol.split(',')[1].strip()}; padding: 10px 16px; border-radius: 8px; margin-top: 10px; color: #e4e4e7; font-size: 0.95rem;">
-                            <span><i class="fa-solid fa-box-open"></i> <b>Ociosidade de Cubagem (M³):</b> {dados_agregados['ociosidade_volume_perc']:.0f}%</span>
+                            <span class="aviso-ociosidade-texto"><i class="fa-solid fa-box-open"></i> Ociosidade de Cubagem (M³): {dados_agregados['ociosidade_volume_perc']:.0f}%</span>
                             <div style="flex: 1; height: 10px; margin: 0 15px; background-color: #2a2a3a; border-radius: 5px; overflow: hidden;">
                                 <div style="width: {min(dados_agregados['ociosidade_volume_perc'], 100)}%; height: 100%; background: {cor_ocios_vol};"></div>
                             </div>
@@ -4641,14 +4841,17 @@ with tab5:
                     margin-bottom: 1rem;
                 }
                 .detail-card-title {
-                    font-size: 1rem;
-                    font-weight: 600;
-                    color: #E5E7EB;
+                    font-size: 1.2rem;          /* <<< TAMANHO DA FONTE AUMENTADO */
+                    font-weight: 700;           /* <<< PESO DA FONTE AUMENTADO (BOLD) */
+                    color: #FFFFFF;             /* Cor mais branca para destaque */
                     margin-bottom: 1.5rem;
                     display: flex;
                     align-items: center;
-                    gap: 8px;
+                    justify-content: flex-start; /* <<< ALTERADO DE 'center' PARA 'flex-start' */
+                    gap: 10px;                  /* Espaço entre o ícone e o texto */
+                    text-transform: uppercase;  /* Garante que o texto fique em maiúsculas */
                 }
+                            
                 .detail-card-title .fa-map-pin { color: #EF4444; }
                 .detail-grid {  
                     display: grid;
@@ -4661,16 +4864,17 @@ with tab5:
                     border-radius: 8px;
                 }
                 .metric-label {
-                    font-size: 0.8rem;
-                    color: #9CA3AF;
-                    margin-bottom: 6px;
+                    font-size: 0.9rem;      /* <<< TAMANHO DA FONTE AUMENTADO */
+                    color: #B0B8C4;         /* Cor um pouco mais clara para legibilidade */
+                    margin-bottom: 8px;     /* Aumenta o espaço entre o rótulo e o valor */
                     display: flex;
                     align-items: center;
-                    gap: 6px;
-                }
+                    gap: 8px;               /* Aumenta o espaço entre o ícone e o texto */
+                    font-weight: 500;       /* Deixa a fonte um pouco mais encorpada */
+}
                 .metric-value {
-                    font-size: 1rem;
-                    font-weight: 600;
+                    font-size: 1.3rem;
+                    font-weight: 700;
                     color: #FFFFFF;
                 }
                 .metric-label .fa-weight-hanging { color: #F59E0B; }

@@ -1,0 +1,81 @@
+
+=============
+ROTA COMPLETA
+==============
+
+📍 Rota: IVINHEMA
+NSU: Nova Alvorada do Sul
+IVM: Ivinhema
+
+📍 Rota: JARDIM
+NQU: Nioaque
+JDM: Jardim
+
+📍 Rota: COSTA RICA
+CMP: Camapuã
+CRC: Costa Rica
+
+📍 Rota: RIBAS
+ACL: Água Clara
+RRP: Ribas do Rio Pardo
+
+📍 Rota: NOVA ANDRADINA
+NAD: Nova Andradina
+
+📍 Rota: BONITO
+BTO: Bonito
+
+📍 Rota: MARACAJU
+SDL: Sidrolândia
+MJU: Maracaju
+
+📍 Rota: AQUIDAUANA
+AQU - Aquidauana
+
+📍 Rota: BODOQUENA
+BDQ - Bodoquena
+MDA: Miranda
+
+📍 Rota: COXIM
+COX: Coxim
+PGO: Pedro Gomes
+SNR: Sonora
+
+📍 Rota: PONTA PORÃ
+PPR - Ponta Porã
+
+📍 Rota: SÃO GABRIEL
+RVM: Rio Verde de Mato Grosso
+SGO: São Gabriel do Oeste
+
+📍 Rota: BATAGUASSU
+BAT: Bataguassu
+BLD: Brasilândia
+SRP: Santa Rita do Pardo
+
+📍 Rota: SÃO PAULO
+CSL: Cassilândia
+PBA: Paranaíba
+ATB: Aparecida do Taboado
+SPO: São Paulo
+
+📍 Rota: TRÊS LAGOAS
+TLG: Três Lagoas
+
+📍 Rota: CORUMBÁ
+COR: Corumbá
+
+📍 Rota: RIO BRILHANTE
+RBT: Rio Brilhante
+DOU: Dourados
+
+📍 Rota: DOURADOS
+DOU: Dourados
+
+📍 Rota - GOIÂNIA
+PDA: Paraíso das Águas
+CDS: Chapadão do Sul
+GYN: Goiânia
+
+
+
